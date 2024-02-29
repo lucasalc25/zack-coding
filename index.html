@@ -8,103 +8,21 @@
 </head>
 <body>
 
-<h1>Coding Life - Fase 1</h1>
+<h1>Coding Life</h1>
 
-<p>Monte o algoritmo da forma correta:</p>
-<ul id="sortable">
-   
-</ul>
-<button onclick="verificarOrdem()">Confirmar</button>
-<p id="feedback"></p>
+<div id="main">
+  <div id="complete"></div>
+  
+  <ul id="sortable"></ul>
+  
+  <div id="output"></div>
+  
+  <div id="wrong"></div>
+</div>
 
-<div id="output"></div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
-<script>
-  $( function() {
-    $( "#sortable" ).sortable();
-    $( "#sortable" ).disableSelection();
-  } );
-
-  window.onload = iniciarFase;
-
-  function iniciarFase() {
-    const etapasCorretas = [
-      "Ler a primeira nota do aluno.",
-      "Ler a segunda nota do aluno.",
-      "Ler a terceira nota do aluno.",
-      "Calcular a soma das três notas.",
-      "Dividir a soma pelo número de notas (3) para obter a média.",
-      "Mostrar a média calculada."
-    ];
-
-    // Desordena as opções
-    const opcoesDesordenadas = etapasCorretas.sort(() => Math.random() - 0.5);
-
-    const sortableList = document.getElementById('sortable');
-    sortableList.innerHTML = '';
-    opcoesDesordenadas.forEach(opcao => {
-      const li = document.createElement('li');
-      li.classList.add('ui-state-default');
-      li.textContent = opcao;
-      sortableList.appendChild(li);
-    });
-  }
-
-  function verificarOrdem() {
-    const etapas = document.querySelectorAll("#sortable li");
-    const etapasCorretas = [
-      "Ler a primeira nota do aluno.",
-      "Ler a segunda nota do aluno.",
-      "Ler a terceira nota do aluno.",
-      "Calcular a soma das três notas.",
-      "Dividir a soma pelo número de notas (3) para obter a média.",
-      "Mostrar a média calculada."
-    ];
-
-    let ordemCorreta = true;
-    for (let i = 0; i < etapas.length; i++) {
-      if (etapas[i].textContent !== etapasCorretas[i]) {
-        ordemCorreta = false;
-        break;
-      }
-    }
-
-    if (ordemCorreta) {
-      document.getElementById('feedback').textContent = "Ordem correta! Agora escreva o algoritmo em Portugol para calcular a média.";
-      document.getElementById('output').innerHTML = "<textarea id='inputBox' rows='10' cols='50' placeholder='Escreva o algoritmo em Portugol aqui...'></textarea><br><button onclick='verificarResposta()'>Verificar Resposta</button>";
-    } else {
-      document.getElementById('feedback').textContent = "Errado! Tente novamente.";
-      document.getElementById('output').innerHTML = '';
-    }
-  }
-
-  function verificarResposta() {
-    const inputBox = document.getElementById('inputBox');
-    const respostaUsuario = inputBox.value.trim().toLowerCase();
-    const respostaCorreta = [
-      "VARIAVEIS",
-      "PRIMEIRA DO TIPO FLUTUANTE",
-      "SEGUNDA DO TIPO FLUTUANTE",
-      "TERCEIRA DO TIPO FLUTUANTE",
-      "SOMA",
-      "MEDIA",
-      "INICIO",
-      "LEIA A PRIMEIRA NOTA",
-      "LEIA A SEGUNDA NOTA",
-      "LEIA A TERCEIRA NOTA"
-    ];
-
-    // Aqui você pode adicionar a lógica para verificar a resposta do jogador em Portugol
-    // Por simplicidade, vamos apenas alertar se o campo estiver vazio ou não
-    if (respostaUsuario === "") {
-      alert("Por favor, escreva o algoritmo em Portugol antes de verificar.");
-    } else {
-      alert("Implemente a lógica para verificar a resposta do jogador em Portugol.");
-    }
-  }
-</script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="./assets/js/scripts.js"></script>
 
 </body>
 </html>

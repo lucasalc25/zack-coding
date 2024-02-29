@@ -5,8 +5,27 @@ body {
     margin: 0;
     padding: 0;
   }
+
+  #main {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
   
-  h1, p {
+  h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    background: linear-gradient(180deg, #a333db 0%, #6802b6 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 6px;
+    margin-top: 1rem;
+  }
+
+  h1, h2, h3, p {
     text-align: center;
   }
 
@@ -14,45 +33,36 @@ body {
   #sortable {
     list-style-type: none;
     padding: 0;
-    margin: 20px auto;
-    max-width: 400px;
+    margin: 30px auto;
+    width: 100%;
+    text-align: center;
   }
   
   #sortable li {
     background-color: #444;
     border: 1px solid #666;
     padding: 10px;
-    margin: 5px 0;
+    margin: 10px 0;
     cursor: move;
   }
   
   button {
     display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #007bff;
+    margin: 30px auto 10px;
+    padding: 15px 30px;
+    background-color: #6802b6;
     color: #fff;
+    font-size: 1rem;
     border: none;
     border-radius: 5px;
     cursor: pointer;
   }
   
   button:hover {
-    background-color: #0056b3;
+    background-color: #8602c9;
   }
   
-  textarea {
-    display: block;
-    margin: 0 auto;
-    padding: 10px;
-    width: 100%;
-    max-width: 400px;
-    border: 1px solid #666;
-    border-radius: 5px;
-    resize: vertical;
-  }
-  
-  #feedback {
+  #wrong, #correct {
     text-align: center;
   }
   
