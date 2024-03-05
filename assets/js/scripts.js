@@ -13,6 +13,11 @@ document.addEventListener('DOMContentLoaded', function() {
   let indiceFalaAtual = 0;
   let falaAtual = faseAtual.falas[indiceFalaAtual];
   let animacaoAtiva = false;
+
+  function completarFala(fala) {
+    texto.textContent = fala;
+    animacaoAtiva = false;
+  }
  
    // Função para exibir o texto gradualmente
    function exibirTextoGradualmente(text, index) {
@@ -30,27 +35,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Função para avançar para o próximo texto ou fase
   function proximoTextoOuFase() {
-    if (animacaoAtiva) return; // Se a animação estiver ativa, não fazer nada
-    if (indiceFalaAtual < faseAtual.falas.length - 1) {
-      // Se houver mais textos na fase, avançar para o próximo texto
-      indiceFalaAtual++;
-      falaAtual = faseAtual.falas[indiceFalaAtual];
-      texto.textContent = ''; // Limpar o texto atual
-      exibirTextoGradualmente(falaAtual, 0);
-    } else {
-      // Se todos os textos da fase foram exibidos, avançar para a próxima fase
-      if (indiceFaseAtual < fases.length - 1) {
-        indiceFaseAtual++;
-        faseAtual = fases[indiceFaseAtual];
-        indiceFalaAtual = 0;
+    if (animacaoAtiva) {
+      completarFala(falaAtual);
+    } else {  // Se a animação estiver ativa, não fazer nada
+      let faseAtual = fases[indiceFaseAtual];
+
+      if (indiceFalaAtual < faseAtual.falas.length - 1) {
+        // Se houver mais textos na fase, avançar para o próximo texto
+        indiceFalaAtual++;
         falaAtual = faseAtual.falas[indiceFalaAtual];
-        gameContainerElemento.style.backgroundImage = 'url(' + faseAtual.background + ')';
-        gameContainerElemento.style.backgroundSize = 'cover';
         texto.textContent = ''; // Limpar o texto atual
         exibirTextoGradualmente(falaAtual, 0);
+      } else {
+        // Se todos os textos da fase foram exibidos, avançar para a próxima fase
+        if (indiceFaseAtual < fases.length - 1) {
+          indiceFaseAtual++;
+          indiceFalaAtual = 0;
+          faseAtual = fases[indiceFaseAtual];
+          falaAtual = faseAtual.falas[indiceFalaAtual];
+          gameContainerElemento.style.backgroundImage = 'url(' + faseAtual.background + ')';
+          gameContainerElemento.style.backgroundSize = 'cover';
+          texto.textContent = ''; // Limpar o texto atual
+          animacaoAtiva = true; // Indicar que a animação está ativa
+          exibirTextoGradualmente(falaAtual, 0);
+        }
       }
     }
   }
+
+    gameContainerElemento.style.backgroundImage = 'url(' + faseAtual.background + ')';
+    gameContainerElemento.style.backgroundSize = 'cover';
 
   // Adicionar evento de clique à tela
   document.addEventListener('click', proximoTextoOuFase);
