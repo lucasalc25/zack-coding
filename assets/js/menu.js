@@ -1,1 +1,1 @@
-let menuState = {};
+var menuState = {};

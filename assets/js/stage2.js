@@ -1,1 +1,1 @@
-let stage2State = {};
+var stage2State = {};
