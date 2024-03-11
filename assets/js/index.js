@@ -31,6 +31,7 @@ var scenes = [
 
 // Função de pré-carregamento   
 function preload() {
+    this.load.image('background', './assets/img/bg_menu.jpg');
     this.load.image('sala', './assets/img/sala.jpg');
     this.load.image('cozinha', './assets/img/cozinha.jpg');
     this.load.image('zack', './assets/img/zack.png');
@@ -38,62 +39,87 @@ function preload() {
 
 // Função de criação
 function create() {
-    // Adiciona o fundo
-    this.add.image(400, 283, scenes[currentScene].background);
-     
-    // Adiciona o personagem
-    var personagem = this.add.image(-200, 400, 'zack');
+    const bgMenu = this.add.image(400, 283, 'background');
 
-    // Define a animação de movimento horizontal
-    this.tweens.add({
-        targets: personagem, // O alvo da animação é o sprite do personagem
-        x: 400, // Coordenada X final para onde o personagem se moverá
-        duration: 400, // Duração da animação em milissegundos (0.5 segundo neste caso)
-        ease: 'Linear', // Tipo de easing (suavização) da animação
-        yoyo: false, // Define se a animação deve se repetir reversamente (vai e volta)
-        repeat: 0, // Define quantas vezes a animação deve ser repetida (-1 significa repetir infinitamente)
-        onComplete: function() {
-            // Adiciona a caixa de diálogo
-            dialogueBox = this.add.rectangle(0, 470, 800, 5, 0x000000, 0.7);
-            dialogueBox.setOrigin(0.5, 0.5);
+    // Adicionando opções do menu
+    const playButton = this.add.text(400, 200, 'Jogar', { fontSize: '32px', fill: '#fff' }).setOrigin(0.5);
+    const settingsButton = this.add.text(400, 300, 'Configurações', { fontSize: '32px', fill: '#fff' }).setOrigin(0.5);
+    const quitButton = this.add.text(400, 400, 'Sair', { fontSize: '32px', fill: '#fff' }).setOrigin(0.5);
 
-            // Animaçao 1 da dialogueBox
-            this.tweens.add({
-                targets: dialogueBox,
-                x: 400,
-                duration: 100, // Duração da animação em milissegundos (0.5 segundo neste caso)
-                ease: 'Linear'
-            });
+     // Configurando interações dos botões
+     playButton.setInteractive();
+     settingsButton.setInteractive();
+     quitButton.setInteractive();
 
-            setTimeout(() => {
-                // Animaçao 2 da dialogueBox
+     playButton.on('pointerdown', () => {
+        // Adicione aqui a lógica para iniciar o jogo
+        // Adiciona o fundo
+        this.add.image(400, 283, scenes[currentScene].background);
+        
+        // Adiciona o personagem
+        var personagem = this.add.image(-200, 400, 'zack');
+
+        // Define a animação de movimento horizontal
+        this.tweens.add({
+            targets: personagem, // O alvo da animação é o sprite do personagem
+            x: 400, // Coordenada X final para onde o personagem se moverá
+            duration: 400, // Duração da animação em milissegundos (0.5 segundo neste caso)
+            ease: 'Linear', // Tipo de easing (suavização) da animação
+            yoyo: false, // Define se a animação deve se repetir reversamente (vai e volta)
+            repeat: 0, // Define quantas vezes a animação deve ser repetida (-1 significa repetir infinitamente)
+            onComplete: function() {
+                // Adiciona a caixa de diálogo
+                dialogueBox = this.add.rectangle(0, 470, 800, 5, 0x000000, 0.7);
+                dialogueBox.setOrigin(0.5, 0.5);
+
+                // Animaçao 1 da dialogueBox
                 this.tweens.add({
-                    targets: dialogueBox, // O alvo da animação é o sprite do personagem
-                    scaleY: 30, // Fator de escala vertical
+                    targets: dialogueBox,
+                    x: 400,
                     duration: 100, // Duração da animação em milissegundos (0.5 segundo neste caso)
-                    ease: 'Linear' // Tipo de easing (suavização) da animação
+                    ease: 'Linear'
                 });
-            }, 300);
 
-            setTimeout(() => {
-                 // Adiciona o texto da caixa de diálogo
-                 dialogueText = this.add.text(400, 470, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' });
-                 dialogueText.setOrigin(0.5, 0.5);
-                 dialogueText.setWordWrapWidth(600); // Largura máxima da caixa de texto
- 
-                 nextDialogue.call(this)
- 
-                 // Adiciona um evento de clique
-                 this.input.on('pointerdown', () => {
-                     // Se houver texto para mostrar e o texto não estiver completamente visível ainda
-                     if (textToShow && dialogueText.text !== textToShow) {
-                     dialogueText.setText(textToShow); // Define o texto completamente
-                     }
-                 });
-            }, 500);
-        },
-        callbackScope: this
-    }); 
+                setTimeout(() => {
+                    // Animaçao 2 da dialogueBox
+                    this.tweens.add({
+                        targets: dialogueBox, // O alvo da animação é o sprite do personagem
+                        scaleY: 30, // Fator de escala vertical
+                        duration: 100, // Duração da animação em milissegundos (0.5 segundo neste caso)
+                        ease: 'Linear' // Tipo de easing (suavização) da animação
+                    });
+                }, 300);
+
+                setTimeout(() => {
+                    // Adiciona o texto da caixa de diálogo
+                    dialogueText = this.add.text(400, 470, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' });
+                    dialogueText.setOrigin(0.5, 0.5);
+                    dialogueText.setWordWrapWidth(600); // Largura máxima da caixa de texto
+    
+                    nextDialogue.call(this)
+    
+                    // Adiciona um evento de clique
+                    this.input.on('pointerdown', () => {
+                        // Se houver texto para mostrar e o texto não estiver completamente visível ainda
+                        if (textToShow && dialogueText.text !== textToShow) {
+                        dialogueText.setText(textToShow); // Define o texto completamente
+                        }
+                    });
+                }, 500);
+            },
+            callbackScope: this
+        }); 
+     });
+
+     settingsButton.on('pointerdown', () => {
+         // Adicione aqui a lógica para ir para a tela de configurações
+         console.log('Indo para a tela de configurações...');
+     });
+
+     quitButton.on('pointerdown', () => {
+         // Adicione aqui a lógica para sair do jogo
+         console.log('Saindo do jogo...');
+     });
 }
 
 // Função de criação
