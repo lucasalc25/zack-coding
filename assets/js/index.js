@@ -106,11 +106,11 @@ function create() {
             }
         });
         button.on('pointerover', () => {
-            button.setStyle({ fill: '#ff0' }); // Cor amarela ao passar o mouse
+            button.setStyle({ fontSize: '42px', fill: '#FFA500' }); // Cor amarela ao passar o mouse
             hover.play();
         });
         button.on('pointerout', () => {
-            button.setStyle({ fill: '#fff' }); // Restaura a cor original ao retirar o mouse
+            button.setStyle({ fontSize: '36px', fill: '#fff' }); // Restaura a cor original ao retirar o mouse
         });
     });
 
