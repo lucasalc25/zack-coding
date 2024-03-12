@@ -33,7 +33,7 @@ var scenes = [
 
 // Função de pré-carregamento   
 function preload() {
-    this.load.video('bgMenu', './assets/vfx/bgMenu.mp4');
+    this.load.image('bgMenu', './assets/img/bgMenu.jpg');
     this.load.image('sala', './assets/img/sala.jpg');
     this.load.image('cozinha', './assets/img/cozinha.jpg');
     this.load.image('zack', './assets/img/zack.png');
@@ -48,8 +48,7 @@ function create() {
     const menuMusic = this.sound.add('menuMusic', { loop: true });
     menuMusic.play();   
 
-    const bgMenu = this.add.video(400, 283, 'bgMenu');
-    bgMenu.play(true);
+    const bgMenu = this.add.image(400, 283, 'bgMenu');
 
     const hover = this.sound.add('hover');
     hover.setVolume(0.5);
@@ -89,16 +88,16 @@ function create() {
                     targets: blackOverlay,
                     alpha: 0.7, // Escurece até 70% de opacidade (ou seja, torna 30% transparente)
                     duration: 2000, // Tempo da animação em milissegundos (1 segundo)
-                    onComplete: () => {
+                    onComplete: function() {
                         // Criando uma animação para escurecer gradualmente o retângulo
                         this.tweens.add({
                             targets: blackOverlay,
                             alpha: 0, // Escurece até 70% de opacidade (ou seja, torna 30% transparente)
                             duration: 2000, // Tempo da animação em milissegundos (1 segundo)
-                            onComplete: () => {
+                            onComplete: function() {
+                                startGame.call();
                                 // Removendo o retângulo da cena
                                 blackOverlay.destroy();
-                                startGame();
                             }
                         });
                     }
@@ -106,7 +105,7 @@ function create() {
             }
         });
         button.on('pointerover', () => {
-            button.setStyle({ fontSize: '42px', fill: '#FFA500' }); // Cor amarela ao passar o mouse
+            button.setStyle({ fontSize: '42px', fill: '#00BBFF' }); // Cor amarela ao passar o mouse
             hover.play();
         });
         button.on('pointerout', () => {
@@ -137,7 +136,7 @@ function startGame() {
     const playMusic = this.sound.add('playMusic', { loop: true });
     playMusic.setVolume(0.05);
     menuMusic.stop();
-    playMusic.play();   
+    playMusic.play(); 
     
     // Adiciona o personagem
     var personagem = this.add.image(-200, 400, 'zack');
