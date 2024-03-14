@@ -1,8 +1,8 @@
 class Play extends Phaser.Scene {
     constructor() {
         super({ key: 'Play' });
-        this.dialogueBox;
-        this.dialogueText; // Variável global para o texto do diálogo
+        this.dialogueBox = null;
+        this.dialogueText = null; // Variável global para o texto do diálogo
         this.textToShow = ''; // Variável global para o texto a ser exibido
         this.currentSceneIndex = 0;
         this.scenes = [
@@ -22,10 +22,10 @@ class Play extends Phaser.Scene {
         // Adiciona o fundo
         this.add.image(400, 283, 'sala');
 
+        // Adiciona o personagem
+        const personagem = this.add.image(-200, 400, 'zack');
+
         const playMusic = this.sound.add('playMusic', { loop: true });
-        const confirm = this.sound.add('confirm');
-        confirm.setVolume(0.5);
-        confirm.play(); 
 
         // Adiciona o audio
         playMusic.setVolume(0.05);
@@ -39,9 +39,8 @@ class Play extends Phaser.Scene {
             alpha: 0, // Escurece até 70% de opacidade (ou seja, torna 30% transparente)
             duration: 2000, // Tempo da animação em milissegundos (2 segundos)
             onComplete: function() {
+                blackOverlay.destroy();
                 // Adicione aqui a lógica para iniciar o jogo ou transição para a próxima cena          
-                // Adiciona o personagem
-                this.add.image(-200, 400, 'zack');
             
                 // Define a animação de movimento horizontal
                 this.tweens.add({
@@ -52,11 +51,11 @@ class Play extends Phaser.Scene {
                     yoyo: false, // Define se a animação deve se repetir reversamente (vai e volta)
                     onComplete: function() {
                         // Adiciona a caixa de diálogo
-                        dialogueBox = this.add.rectangle(0, 470, 800, 5, 0x000000, 0.7).setOrigin(0.5, 0.5);
+                        this.dialogueBox = this.add.rectangle(0, 470, 800, 5, 0x000000, 0.7).setOrigin(0.5, 0.5);
             
                         // Animaçao 1 da dialogueBox
                         this.tweens.add({
-                            targets: dialogueBox,
+                            targets: this.dialogueBox,
                             x: 400,
                             duration: 100, // Duração da animação em milissegundos (0.5 segundo neste caso)
                             ease: 'Linear'
@@ -65,7 +64,7 @@ class Play extends Phaser.Scene {
                         setTimeout(() => {
                             // Animaçao 2 da dialogueBox
                             this.tweens.add({
-                                targets: dialogueBox, // O alvo da animação é o sprite do personagem
+                                targets: this.dialogueBox, // O alvo da animação é o sprite do personagem
                                 scaleY: 30, // Fator de escala vertical
                                 duration: 100, // Duração da animação em milissegundos (0.5 segundo neste caso)
                                 ease: 'Linear' // Tipo de easing (suavização) da animação
@@ -74,39 +73,40 @@ class Play extends Phaser.Scene {
             
                         setTimeout(() => {
                             // Adiciona o texto da caixa de diálogo
-                            dialogueText = this.add.text(400, 470, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5, 0.5).setWordWrapWidth(600); // Largura máxima da caixa de texto
+                            this.dialogueText = this.add.text(400, 470, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5, 0.5).setWordWrapWidth(600); // Largura máxima da caixa de texto
             
-                            nextDialogue.call(this)
+                            this.nextDialogue.call(this)
             
                             // Adiciona um evento de clique
                             this.input.on('pointerdown', () => {
                                 // Se houver texto para mostrar e o texto não estiver completamente visível ainda
-                                if (textToShow && dialogueText.text !== textToShow) {
-                                dialogueText.setText(textToShow); // Define o texto completamente
+                                if (this.textToShow && this.dialogueText.text !== this.textToShow) {
+                                    this.dialogueText.setText(this.textToShow); // Define o texto completamente
                                 }
                             });
                         }, 500);
                     },
                     callbackScope: this
                 }); 
-            }
+            },
+            callbackScope: this
         })
     }
 
     // Função para avançar para o próximo diálogo
     nextDialogue() {
-        dialogueText.setText('');
-        if (currentSceneIndex < scenes.length) {
-            var currentDialogue = scenes[currentSceneIndex].dialogues.shift();
+        this.dialogueText.setText('');
+        if (this.currentSceneIndex < this.scenes.length) {
+            var currentDialogue = this.scenes[this.currentSceneIndex].dialogues.shift();
             if (currentDialogue) {
-                typeText(dialogueText, currentDialogue, 0, () => {
+                this.typeText(this.dialogueText, currentDialogue, 0, () => {
                     // Espera pelo clique do jogador
-                    this.input.once('pointerdown', nextDialogue, this);
+                    this.input.once('pointerdown', this.nextDialogue, this);
                 });
             } else {
                 // Avança para a próxima cena
-                currentSceneIndex++;
-                if (currentSceneIndex < scenes.length) {
+                this.currentSceneIndex++;
+                if (this.currentSceneIndex < this.scenes.length) {
                     this.scene.restart();
                 } else {
                     console.log('Fim do jogo.');
@@ -122,7 +122,7 @@ class Play extends Phaser.Scene {
             textObject.text += text[index];
             index++;
             setTimeout(() => {
-                typeText(textObject, text, index, callback);
+                this.typeText(textObject, text, index, callback);
             }, 50); // Velocidade de digitação (em milissegundos)
         } else {
             if (typeof callback === 'function') {

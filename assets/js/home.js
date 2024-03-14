@@ -7,14 +7,10 @@ class Home extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('bgMenu', './assets/img/bgMenu.jpg');
         this.load.audio('menuMusic', './assets/sfx/new future.mp3');
+        this.load.image('bgMenu', './assets/img/bgMenu.jpg');
         this.load.audio('hover', './assets/sfx/hover.mp3');
         this.load.audio('confirm', './assets/sfx/confirm.mp3');
-        this.load.image('sala', './assets/img/sala.jpg');
-        this.load.image('cozinha', './assets/img/cozinha.jpg');
-        this.load.image('zack', './assets/img/zack.png');
-        this.load.audio('playMusic', './assets/sfx/elapse.mp3');
     }
 
     create() {
@@ -25,6 +21,7 @@ class Home extends Phaser.Scene {
 
         const hover = this.sound.add('hover');
         hover.setVolume(0.5);
+        const confirm = this.sound.add('confirm');
 
         // Adicionando opções do menu
         const playButton = this.add.text(400, 200, 'Jogar', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
@@ -41,10 +38,12 @@ class Home extends Phaser.Scene {
             button.setInteractive();
             button.on('pointerdown', () => {
                 // Desabilitando o botão para evitar ações repetidas
+                menuMusic.stop();
                 playButton.disableInteractive();
                 settingsButton.disableInteractive();
                 quitButton.disableInteractive();
-                menuMusic.stop();
+                confirm.setVolume(0.7);
+                confirm.play(); 
                 this.scene.start('Play')
             });
             button.on('pointerover', () => {
