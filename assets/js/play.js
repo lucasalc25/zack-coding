@@ -6,8 +6,8 @@ class Play extends Phaser.Scene {
         this.textToShow = ''; // Variável global para o texto a ser exibido
         this.currentSceneIndex = 0;
         this.scenes = [
-            { background: 'sala', dialogues: ["E aí, beleza? Que bom que apareceu.", "Meus pais precisaram fazer uma viagem e deixaram algumas tarefas pra mim.", "O problema é que não sei fazer muita coisa. Será que pode me dar uma força?"] },
-            { background: 'cozinha', dialogues: ["A primeira tarefa é levar o lixo pra fora. Você só precisa organizar o algoritmo certinho, beleza?", "Caso não saiba, um algoritmo é nada mais que um conjunto de ações que depois de serem executadas deverão resolver algum problema.", "Agora é com você, manda ver!"] }
+            { background: 'sala', dialogues: ["E aí, beleza? Que bom que apareceu.", "Estou aprendendo programação e estou com dificuldade para fazer alguns exercícios", "Será que pode me dar uma força?"] },
+            { background: 'sala', dialogues: ["", "", ""] }
         ];
     }
 
