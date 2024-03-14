@@ -6,21 +6,20 @@ class Play extends Phaser.Scene {
         this.textToShow = ''; // Variável global para o texto a ser exibido
         this.currentSceneIndex = 0;
         this.scenes = [
-            { background: 'sala', dialogues: ["E aí, beleza? Que bom que apareceu.", "Estou aprendendo programação e estou com dificuldade para fazer alguns exercícios", "Será que pode me dar uma força?"] },
+            { background: 'sala', dialogues: ["E aí, beleza? Que bom que apareceu.", "Estou aprendendo programação e estou com dificuldade para fazer alguns exercícios", "Você já tem noções de programação?"] },
             { background: 'sala', dialogues: ["", "", ""] }
         ];
     }
 
     preload() {
-        this.load.image('sala', './assets/img/sala.jpg');
-        this.load.image('cozinha', './assets/img/cozinha.jpg');
+        this.load.image('quarto', './assets/img/quarto.png');
         this.load.image('zack', './assets/img/zack.png');
         this.load.audio('playMusic', './assets/sfx/elapse.mp3');
     }
 
     create() {
         // Adiciona o fundo
-        this.add.image(400, 283, 'sala');
+        this.add.image(400, 283, 'quarto');
 
         // Adiciona o personagem
         const personagem = this.add.image(-200, 400, 'zack');
@@ -73,7 +72,7 @@ class Play extends Phaser.Scene {
             
                         setTimeout(() => {
                             // Adiciona o texto da caixa de diálogo
-                            this.dialogueText = this.add.text(400, 470, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5, 0.5).setWordWrapWidth(600); // Largura máxima da caixa de texto
+                            this.dialogueText = this.add.text(400, 470, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5, 0.5).setWordWrapWidth(700); // Largura máxima da caixa de texto
             
                             this.nextDialogue.call(this)
             
