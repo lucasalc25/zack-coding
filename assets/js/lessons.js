@@ -1,6 +1,11 @@
 class Lessons extends Phaser.Scene {
     constructor() {
+<<<<<<< Updated upstream
         super({ key: 'Home' });
+=======
+        super({ key: 'Lessons' });
+        // Outras variáveis da cena...
+>>>>>>> Stashed changes
     }
 
     preload() {
@@ -8,5 +13,9 @@ class Lessons extends Phaser.Scene {
     }
 
     create() {
+<<<<<<< Updated upstream
+=======
+        
+>>>>>>> Stashed changes
     }
 }
