@@ -10,7 +10,7 @@ var config = {
             debug: false
         }
     },
-    scene: [Home, Play]
+    scene: [Home, Play, Quizzes]
 };
 
 // Inicializa o jogo
