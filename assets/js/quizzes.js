@@ -85,94 +85,72 @@ class Quizzes extends Phaser.Scene {
 
         // Cria zonas para as opções
         const zones = [];
+        const textObjects = [];
+
+        const zonePositions = []; // Array para armazenar as posições dos retângulos
+
         this.phaseCode.forEach((option, index) => {
             const zone = this.add.rectangle(400, y, zoneWidth, zoneHeight, 0xffffff, 0.3);
             zone.index = index;
             zones.push(zone);
+            zonePositions.push(y); // Armazena a posição do retângulo
+
+            const text = this.add.text(400, y, option, { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
+            textObjects.push(text);
+
+            text.dataValues = { originalY: y }; // Configura a propriedade dataValues com a posição original
             y += zoneHeight + padding;
         });
 
-        // Renderiza as opções na tela
-        y = 150;
-        const textObjects = this.phaseCode.map((option, index) => {
-            const zone = zones[index];
-            const codeLine = this.add.text(400, y, option, { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
-            zone.setInteractive({ draggable: true });
-            codeLine.dataValues = {
-                index: index,
-                correctIndex: index,
-                originalY: y,
-                zone: zone
-            };
-
-            y += zoneHeight + padding;
+        // Habilita a opção de arrastar para as zonas (retângulos)
+        zones.forEach((zone, index) => {
+            zone.setInteractive();
+            this.input.setDraggable(zone);
 
             zone.on('drag', (pointer, dragX, dragY) => {
-                codeLine.x = dragX;
-                codeLine.y = dragY;
-                zone.x = dragX;
+                const text = textObjects[index];
                 zone.y = dragY;
+                text.y = dragY; // Atualiza a posição do texto para acompanhar o retângulo
             });
 
             zone.on('dragend', (pointer, dragX, dragY, dropped) => {
-                if (!dropped) {
-                    codeLine.x = 400;
-                    codeLine.y = codeLine.dataValues.originalY;
-                    zone.x = 400;
-                    zone.y = codeLine.dataValues.originalY;
-                } else {
-                    const droppedZone = zones.find(zone => {
-                        const bounds = zone.getBounds();
-                        return bounds.contains(dragX, dragY);
-                    });
+                if (dropped) {
+                const droppedIndex = zonePositions.indexOf(zone.y); // Verifica se o retângulo foi solto em cima de outro retângulo
+                if (droppedIndex !== -1 && droppedIndex !== index) {
+                    // Troca as posições dos retângulos e dos textos
+                    const tempY = zonePositions[droppedIndex];
+                    zonePositions[droppedIndex] = zonePositions[index];
+                    zonePositions[index] = tempY;
 
-                    if (droppedZone) {
-                        const currentIndex = codeLine.dataValues.index;
-                        const correctIndex = droppedZone.index;
+                    const tempTextY = textObjects[droppedIndex].y;
+                    textObjects[droppedIndex].y = textObjects[index].y;
+                    textObjects[index].y = tempTextY;
 
-                        // Troca os índices das opções
-                        codeLine.dataValues.index = correctIndex;
-                        codeLine.dataValues.correctIndex = correctIndex;
-
-                        const correctText = textObjects.find(text => text.dataValues.index === correctIndex);
-                        if (correctText && correctText !== codeLine) {
-                            correctText.dataValues.index = currentIndex;
-                            correctText.dataValues.correctIndex = currentIndex;
-                            correctText.x = 400;
-                            correctText.y = correctText.dataValues.originalY;
-                            correctText.dataValues.zone.x = 400;
-                            correctText.dataValues.zone.y = correctText.dataValues.originalY;
-                        }
-
-                        codeLine.x = 400;
-                        codeLine.y = droppedZone.y;
-                        zone.x = 400;
-                        zone.y = droppedZone.y;
-                    } else {
-                        codeLine.x = 400;
-                        codeLine.y = codeLine.dataValues.originalY;
-                        zone.x = 400;
-                        zone.y = codeLine.dataValues.originalY;
-                    }
+                    // Troca os textos
+                    const tempText = textObjects[droppedIndex];
+                    textObjects[droppedIndex] = textObjects[index];
+                    textObjects[index] = tempText;
+                }
+            } else {
+                zone.y = zonePositions[index];
+                textObjects[index].y = textObjects[index].dataValues.originalY;
                 }
             });
-
-            return codeLine;    
         });
-    
+
         // Botão para verificar a ordem das opções
-        const button = this.add.text(400, 500, 'Confirmar', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
+        const button = this.add.text(400, 485, 'Verificar', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
         button.setInteractive();
-        button.on('pointerdown', function () {
-            const isCorrectOrder = textObjects.every((text, index) => text.getData('correctIndex') === index);
+        button.on('pointerdown', () => {
+            const isCorrectOrder = textObjects.every((text, index) => text.dataValues.correctIndex === index);
 
             if (isCorrectOrder) {
-                console.log('Parabéns! Você acertou!');
+                console.log('Parabéns! Você reordenou a lista corretamente.');
                 // Adicione a lógica para a condição de vitória aqui
             } else {
-                console.log('Ainda não está na ordem correta.');
+                console.log('A lista ainda não está na ordem correta.');
             }
-        });
+    });
 
     }
 
