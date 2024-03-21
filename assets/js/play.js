@@ -185,7 +185,7 @@ class Play extends Phaser.Scene {
                 [beginner, intermediary, advanced].forEach(option => {
                     option.setText('');
                 });
-                this.typeText(this.dialogueText, `Então você é nível ${this.level}. Beleza, preparado? \nQue comecem os jogos!`, 0, () => {
+                this.typeText(this.dialogueText, `Então você é nível ${this.level}. Beleza!\nQue comecem os jogos!`, 0, () => {
                     // Espera pelo clique do jogador
                     this.input.once('pointerdown', () => {
                         this.endScene()
