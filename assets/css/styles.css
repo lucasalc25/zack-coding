@@ -6,3 +6,34 @@ body {
   align-items: center;
   height: 100vh;
 }
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  background-color: transparent;
+  min-width: 300px;
+  border-radius: 5px;
+  position: absolute; 
+  top: 37%; 
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  text-align: center;
+}
+
+.line {
+  background-color: #eee;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 18px;
+}
+
+.column .line:last-child {
+  background-color: transparent;
+}
+
+.dragging {
+  opacity: 0.5;
+}
