@@ -96,18 +96,23 @@ class Quizzes extends Phaser.Scene {
 
         // Criação de três divs filhas com classe "line" e atributo draggable definido como true
         for (let i = 0; i < this.phaseCode.length+1; i++) {
+            let y = 60;
             const lineDiv = document.createElement('div');
-            lineDiv.className = 'line';
+            lineDiv.className = 'line animacao';
             lineDiv.draggable = true;
             // Defina o conteúdo do div como a string atual
-            lineDiv.textContent = this.phaseCode[i];
+            lineDiv.textContent = this.quizzCode[i];
             column.appendChild(lineDiv);
+            if(i == this.phaseCode.length) {
+                lineDiv.classList.remove("animacao");
+            }
         };
 
         // Adiciona a div pai ao corpo do documento
         document.body.appendChild(column);
 
         const columns = document.querySelectorAll(".column");
+        const lines = document.querySelectorAll(".line");
 
         document.addEventListener("dragstart", (e) => {
             e.target.classList.add("dragging");
@@ -117,9 +122,29 @@ class Quizzes extends Phaser.Scene {
             e.target.classList.remove("dragging");
         });
 
+        // Botão para verificar a ordem das opções
+        const button = this.add.text(400, 500, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff' }).setOrigin(0.5);
+        button.setInteractive();
+        button.on('pointerdown', () => {
+            // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
+            if (this.checkOrder()) {
+                this.phaseIndex += 1;
+                this.showQuizScreen();
+            } else {
+                console.log("A ordem está incorreta!");
+            }
+            
+        });
+
         columns.forEach((item) => {
             item.addEventListener("dragover", (e) => {
                 e.preventDefault(); // Previne o comportamento padrão de não permitir soltar
+
+                // Impede que a animação aconteça ao realocar uma linha e que a coluna volte para o início
+                for (let i = 0; i < lines.length; i++) {
+                    lines[i].style.transform = "translateX(0%)";
+                    lines[i].classList.remove('animacao');
+                }
 
                 const dragging = document.querySelector(".dragging");
                 const cards = column.querySelectorAll(".line:not(.dragging)");
@@ -131,8 +156,9 @@ class Quizzes extends Phaser.Scene {
 
                     return e.clientY > box.y && e.clientY < boxCenterY;
                 });
-        
+
                 if (referenceCard) {
+
                     referenceCard.insertAdjacentElement("beforebegin", dragging);
                 } else {
                     referenceCard.insertAdjacentElement("beforeend", dragging);
@@ -155,5 +181,28 @@ class Quizzes extends Phaser.Scene {
                 callback();
             }
         }
+    }
+
+    // Função para verificar se a ordem dos textos nas divs é igual ao array inicial
+    checkOrder() {
+        const lineDivs = document.querySelectorAll(".line");
+
+        // Verifica se a ordem dos textos nas divs é a mesma que o array inicial
+        for (let i = 0; i < lineDivs.length-1; i++) {  
+            if (lineDivs[i].textContent !== this.phaseCode[i]) {
+                this.showError();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    showSuccess() {
+        
+    }
+
+    showError() {
+
     }
 }   

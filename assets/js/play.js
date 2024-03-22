@@ -127,7 +127,8 @@ class Play extends Phaser.Scene {
             // Adiciona o texto da caixa de diálogo
             this.dialogueText = this.add.text(400, 470, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5, 0.5).setWordWrapWidth(700); // Largura máxima da caixa de texto
 
-            this.nextDialogue.call(this);
+            this.showChoices();
+            // this.nextDialogue.call(this);
 
         }, 500);
     }

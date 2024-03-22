@@ -19,7 +19,6 @@ body {
   top: 37%; 
   left: 50%; 
   transform: translate(-50%, -50%);
-  z-index: 1000;
   text-align: center;
 }
 
@@ -28,6 +27,24 @@ body {
   padding: 10px;
   border-radius: 5px;
   font-size: 18px;
+  /* Defina a posição inicial fora da tela */
+  transform: translateX(-100%);
+}
+
+.animacao {
+  animation-name: slideIn;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+/* Defina os keyframes para a animação */
+@keyframes slideIn {
+  from {
+      transform: translateX(-100%);
+  }
+  to {
+      transform: translateX(0%);
+  }
 }
 
 .column .line:last-child {
@@ -36,4 +53,5 @@ body {
 
 .dragging {
   opacity: 0.5;
+  
 }
