@@ -148,6 +148,13 @@ class Quizzes extends Phaser.Scene {
             
         });
 
+        button.on('pointerover', () => {
+            button.setStyle({ fontSize: '20px', backgroundColor: '#0077FF' }); // Cor amarela ao passar o mouse
+        });
+        button.on('pointerout', () => {
+            button.setStyle({ fontSize: '18px', backgroundColor: '#00BBFF' }); // Restaura a cor original ao retirar o mouse
+        });
+
         lines.forEach((item) => {
             item.addEventListener("dragover", (e) => {
                 e.preventDefault(); // Previne o comportamento padrão de não permitir soltar
