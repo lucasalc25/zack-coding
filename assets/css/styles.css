@@ -55,3 +55,30 @@ body {
   opacity: 0.5;
   
 }
+
+.message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: transparent;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.message-show {
+  opacity: 1;
+}
+
+#message-success {
+  color: forestgreen;
+}
+
+
+#message-error {
+  margin-top: 3rem;
+  color:red;
+}

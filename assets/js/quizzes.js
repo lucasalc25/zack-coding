@@ -7,13 +7,13 @@ class Quizzes extends Phaser.Scene {
         this.confirm;
         this.beginnerPhases = [
             {phase: 1, title: "Fase 1: Monte a estrutura base de um código", tips: ["Primeiro declaramos as variáveis"], code: ["VAR", "INICIO", "FIMALGORITMO"]},
-            {phase: 2, tips: ["Sem dica"], code: ["VAR", "a: inteiro", "INICIO", "LEIA (a)", "ESCREVA(a)", "FIMALGORITMO"]},
+            {phase: 2, title: "Fase 2: Monte um código que declare duas variáveis do tipo inteiro", tips: ["Nomeie as variáveis sem espaço, caractere especial e sem iniciar com número ou letra maiúscula"], code: ["VAR", "a, b: inteiro", "INICIO", "FIMALGORITMO"]},
         ]
         this.phaseIndex = 0;
         this.phase = this.beginnerPhases[this.phaseIndex];
-        this.phaseTitle = this.phase.title;
-        this.phaseTips = this.phase.tips;
-        this.phaseCode = this.phase.code;
+        this.phaseTitle;
+        this.phaseTips;
+        this.phaseCode;
         this.column;
         this.lines;
         this.draggingCard;
@@ -29,17 +29,13 @@ class Quizzes extends Phaser.Scene {
 
     create() {
 
-        // Embaralha as opções
-        this.quizzCode = this.shuffle([...this.phaseCode]); // Cópia embaralhada do phaseCode
-        console.log(this.quizzCode)
-
         // Adiciona o fundo
         this.add.image(400, 283, 'quarto');
 
         this.playMusic = this.sound.add('playMusic', { loop: true });
         this.playMusic.setVolume(0.05);
 
-        this.showQuizScreen();
+        this.showQuizScreen(this.phase);
                  
     }
 
@@ -56,9 +52,14 @@ class Quizzes extends Phaser.Scene {
         return array;
     }
 
-    showQuizScreen() {
+    showQuizScreen(phase) {
+        this.phase = phase;
+        this.phaseTitle = this.phase.title;
+        this.phaseTips = this.phase.tips;
+        this.phaseCode = this.phase.code;
+
         // Adiciona a caixa de diálogo
-        this.dialogueBox = this.add.rectangle(400, 565, 10, 565, 0x000000, 0.9).setOrigin(0.5, 0.5);
+        this.dialogueBox = this.add.rectangle(400, 565, 10, 570, 0x000000, 1).setOrigin(0.5, 0.5);
     
         // Mostrando parte da dialogueBox
         this.tweens.add({
@@ -79,7 +80,7 @@ class Quizzes extends Phaser.Scene {
         }, 300);
 
         // Adiciona o titulo no painel
-        this.textPhaseTitle = this.add.text(400, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '20px', fill: '#ffffff' }).setOrigin(0.5, 0.5).setWordWrapWidth(700); // Largura máxima da caixa de texto
+        this.textPhaseTitle = this.add.text(400, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '20px', fill: '#ffffff', marginTop: '10px' }).setOrigin(0.5, 0.5).setWordWrapWidth(500); // Largura máxima da caixa de texto
 
         setTimeout(() => {
             // Animaçao do titulo
@@ -90,6 +91,9 @@ class Quizzes extends Phaser.Scene {
                 ease: 'Linear', // Tipo de easing (suavização) da animação
             });
         }, 300);
+
+        // Embaralha as opções
+        this.quizzCode = this.shuffle([...this.phaseCode]); // Cópia embaralhada do phaseCode
 
         const column = document.createElement('div');
         column.className = 'column';
@@ -123,20 +127,28 @@ class Quizzes extends Phaser.Scene {
         });
 
         // Botão para verificar a ordem das opções
-        const button = this.add.text(400, 500, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff' }).setOrigin(0.5);
+        const button = this.add.text(400, 500, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: '10px', padding: 10, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
         button.setInteractive();
         button.on('pointerdown', () => {
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
             if (this.checkOrder()) {
-                this.phaseIndex += 1;
-                this.showQuizScreen();
+                // Remove todos os elementos filhos
+                while (column.firstChild) {
+                    column.removeChild(column.firstChild);
+                }   
+                this.showSuccess();
+                this.phaseIndex++;
+                this.phase = this.beginnerPhases[this.phaseIndex];
+                setTimeout(() => {
+                    this.showQuizScreen(this.phase);
+                }, 3000);
             } else {
-                console.log("A ordem está incorreta!");
+                this.showError();
             }
             
         });
 
-        columns.forEach((item) => {
+        lines.forEach((item) => {
             item.addEventListener("dragover", (e) => {
                 e.preventDefault(); // Previne o comportamento padrão de não permitir soltar
 
@@ -190,7 +202,6 @@ class Quizzes extends Phaser.Scene {
         // Verifica se a ordem dos textos nas divs é a mesma que o array inicial
         for (let i = 0; i < lineDivs.length-1; i++) {  
             if (lineDivs[i].textContent !== this.phaseCode[i]) {
-                this.showError();
                 return false;
             }
         }
@@ -199,10 +210,42 @@ class Quizzes extends Phaser.Scene {
     }
 
     showSuccess() {
-        
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "message";
+        messageDiv.textContent = "Você acertou!";
+
+        // Adiciona a mensagem à tela
+        document.body.appendChild(messageDiv);
+
+        // Aplica a animação CSS à mensagem
+        setTimeout(() => {
+            messageDiv.classList.add("message-show");
+            messageDiv.id = 'message-success';
+        }, 100);
+
+        // Remove a mensagem após algum tempo
+        setTimeout(() => {
+            document.body.removeChild(messageDiv);
+        }, 3000); // Tempo em milissegundos antes de remover a mensagem
     }
 
     showError() {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "message";
+        messageDiv.textContent = "Errado! Tente de novo!";
 
+        // Adiciona a mensagem à tela
+        document.body.appendChild(messageDiv);
+
+        // Aplica a animação CSS à mensagem
+        setTimeout(() => {
+            messageDiv.classList.add("message-show");
+            messageDiv.id = 'message-error';
+        }, 100);
+
+        // Remove a mensagem após algum tempo
+        setTimeout(() => {
+            document.body.removeChild(messageDiv);
+        }, 3000); // Tempo em milissegundos antes de remover a mensagem
     }
 }   
