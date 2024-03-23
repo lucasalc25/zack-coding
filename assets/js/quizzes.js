@@ -127,7 +127,7 @@ class Quizzes extends Phaser.Scene {
         });
 
         // Botão para verificar a ordem das opções
-        const button = this.add.text(400, 500, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: '10px', padding: 10, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+        const button = this.add.text(400, 500, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
         button.setInteractive();
         button.on('pointerdown', () => {
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
