@@ -21,7 +21,7 @@ class Home extends Phaser.Scene {
         this.add.image(270, 283, 'bgMenu');
 
         const hover = this.sound.add('hover');
-        hover.setVolume(0.5);
+        hover.setVolume(0.4);
         const confirm = this.sound.add('confirm');
         confirm.setVolume(0.1);
 

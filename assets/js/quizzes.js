@@ -5,9 +5,12 @@ class Quizzes extends Phaser.Scene {
         this.quizzBox;
         this.playMusic;
         this.confirm;
+        this.correct;
+        this.wrong;
         this.beginnerPhases = [
             {phase: 1, title: "Fase 1: Monte a estrutura base de um código", tips: ["Primeiro declaramos as variáveis"], code: ["VAR", "INICIO", "FIMALGORITMO"]},
-            {phase: 2, title: "Fase 2: Monte um código que declare duas variáveis do tipo inteiro", tips: ["Nomeie as variáveis sem espaço, caractere especial e sem iniciar com número ou letra maiúscula"], code: ["VAR", "a, b: inteiro", "INICIO", "FIMALGORITMO"]},
+            {phase: 2, title: "Fase 2: Monte o código que declare duas variáveis do tipo inteiro", tips: ["Nomeie as variáveis sem espaço, caractere especial e sem iniciar com número ou letra maiúscula"], code: ["VAR", "a, b: inteiro", "INICIO", "FIMALGORITMO"]},
+            {phase: 3, title: "Fase 3: Monte o código que leia um número inteiro e o mostre na tela", tips: [""], code: ["VAR", "x: inteiro", "INICIO", "LEIA(x)", "ESCREVA(x)", "FIMALGORITMO"]},
         ]
         this.phaseIndex = 0;
         this.phase = this.beginnerPhases[this.phaseIndex];
@@ -25,6 +28,8 @@ class Quizzes extends Phaser.Scene {
     preload() {
         this.load.audio('playMusic', './assets/sfx/elapse.mp3');
         this.load.audio('confirm', './assets/sfx/confirm.mp3');
+        this.load.audio('correct', './assets/sfx/correct.mp3');
+        this.load.audio('wrong', './assets/sfx/wrong.mp3');
     }
 
     create() {
@@ -33,7 +38,11 @@ class Quizzes extends Phaser.Scene {
         this.add.image(400, 283, 'quarto');
 
         this.playMusic = this.sound.add('playMusic', { loop: true });
-        this.playMusic.setVolume(0.05);
+        this.playMusic.setVolume(0.1);
+        this.correct = this.sound.add('correct');
+        this.correct.setVolume(0.8);
+        this.wrong = this.sound.add('wrong');
+        this.wrong.setVolume(0.4);
 
         this.showQuizScreen(this.phase);
                  
@@ -115,7 +124,6 @@ class Quizzes extends Phaser.Scene {
         // Adiciona a div pai ao corpo do documento
         document.body.appendChild(column);
 
-        const columns = document.querySelectorAll(".column");
         const lines = document.querySelectorAll(".line");
 
         document.addEventListener("dragstart", (e) => {
@@ -128,22 +136,31 @@ class Quizzes extends Phaser.Scene {
 
         // Botão para verificar a ordem das opções
         const button = this.add.text(400, 500, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+        button
         button.setInteractive();
         button.on('pointerdown', () => {
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
             if (this.checkOrder()) {
-                // Remove todos os elementos filhos
-                while (column.firstChild) {
-                    column.removeChild(column.firstChild);
-                }   
-                this.showSuccess();
+                this.clearMessages();
+                this.showCorrect();
+                this.correct.play();
+                // Itera sobre cada elemento filho e aplica uma cor de fundo
+                for (var i = 0; i < lines.length-1; i++) {
+                    lines[i].style.backgroundColor = '#228b22'; // Defina a cor de fundo desejada aqui
+                }
                 this.phaseIndex++;
                 this.phase = this.beginnerPhases[this.phaseIndex];
+                this.textPhaseTitle.y = 40;
                 setTimeout(() => {
+                    // Remove todos os elementos filhos e inicia a proxima cena
+                    while (column.firstChild) {
+                        column.removeChild(column.firstChild);
+                    }  
                     this.showQuizScreen(this.phase);
                 }, 3000);
             } else {
-                this.showError();
+                this.showWrong();
+                this.wrong.play();
             }
             
         });
@@ -216,7 +233,14 @@ class Quizzes extends Phaser.Scene {
         return true;
     }
 
-    showSuccess() {
+    clearMessages() {
+        const existingMessages = document.querySelectorAll(".message");
+        existingMessages.forEach((message) => {
+            document.body.removeChild(message);
+        });
+    }
+
+    showCorrect() {
         const messageDiv = document.createElement("div");
         messageDiv.className = "message";
         messageDiv.textContent = "Você acertou!";
@@ -227,7 +251,7 @@ class Quizzes extends Phaser.Scene {
         // Aplica a animação CSS à mensagem
         setTimeout(() => {
             messageDiv.classList.add("message-show");
-            messageDiv.id = 'message-success';
+            messageDiv.id = 'message-correct';
         }, 100);
 
         // Remove a mensagem após algum tempo
@@ -236,7 +260,7 @@ class Quizzes extends Phaser.Scene {
         }, 3000); // Tempo em milissegundos antes de remover a mensagem
     }
 
-    showError() {
+    showWrong() {
         const messageDiv = document.createElement("div");
         messageDiv.className = "message";
         messageDiv.textContent = "Errado! Tente de novo!";
@@ -247,7 +271,7 @@ class Quizzes extends Phaser.Scene {
         // Aplica a animação CSS à mensagem
         setTimeout(() => {
             messageDiv.classList.add("message-show");
-            messageDiv.id = 'message-error';
+            messageDiv.id = 'message-wrong';
         }, 100);
 
         // Remove a mensagem após algum tempo

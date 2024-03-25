@@ -21,6 +21,8 @@ class Play extends Phaser.Scene {
         this.load.audio('playMusic', './assets/sfx/elapse.mp3');
         this.load.audio('hover', './assets/sfx/hover.mp3');
         this.load.audio('confirm', './assets/sfx/confirm.mp3');
+        this.load.audio('correct', './assets/sfx/correct.mp3');
+        this.load.audio('wrong', './assets/sfx/wrongconfirm.mp3');
     }
 
     create() {
@@ -30,11 +32,11 @@ class Play extends Phaser.Scene {
         this.playMusic = this.sound.add('playMusic', { loop: true });
         this.hover = this.sound.add('hover');
         this.confirm =  this.sound.add('confirm');
-        this.confirm.setVolume(0.1);
-        this.hover.setVolume(0.5);
+        this.confirm.setVolume(0.05);
+        this.hover.setVolume(0.4);
 
         // Adiciona o audio
-        this.playMusic.setVolume(0.05);
+        this.playMusic.setVolume(0.1);
         this.playMusic.play(); 
 
         this.showScreen();
