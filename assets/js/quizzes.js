@@ -8,9 +8,61 @@ class Quizzes extends Phaser.Scene {
         this.correct;
         this.wrong;
         this.beginnerPhases = [
-            {phase: 1, title: "Fase 1: Monte a estrutura base de um código", tips: ["Primeiro declaramos as variáveis"], code: ["VAR", "INICIO", "FIMALGORITMO"]},
-            {phase: 2, title: "Fase 2: Monte o código que declare duas variáveis do tipo inteiro", tips: ["Nomeie as variáveis sem espaço, caractere especial e sem iniciar com número ou letra maiúscula"], code: ["VAR", "a, b: inteiro", "INICIO", "FIMALGORITMO"]},
-            {phase: 3, title: "Fase 3: Monte o código que leia um número inteiro e o mostre na tela", tips: [""], code: ["VAR", "x: inteiro", "INICIO", "LEIA(x)", "ESCREVA(x)", "FIMALGORITMO"]},
+            { 
+                phase: 1, 
+                title: "Fase 1: Monte a estrutura base de um algoritmo", 
+                tips: ["Primeiro declaramos as variáveis"], 
+                code: [ "var", 
+                        "inicio", 
+                        "fimalgoritmo"]
+            },
+            {
+                phase: 2, 
+                title: "Fase 2: Monte o algoritmo para declarar duas variáveis do tipo inteiro", tips: ["Nomeie as variáveis sem espaço, caractere especial e sem iniciar com número ou letra maiúscula"], 
+                code: [ "var", 
+                        "num1, num2: inteiro", 
+                        "inicio", 
+                        "fimalgoritmo"]
+            },
+            {
+                phase: 3, 
+                title: "Fase 3: Monte o algoritmo para ler um número inteiro e o mostrá-lo na tela", tips: [""], 
+                code: [ "var", 
+                        "num: inteiro", 
+                        "inicio", 
+                        "leia(num)", 
+                        "escreva(num)", 
+                        "fimalgoritmo"]
+            },
+            {
+                phase: 4, 
+                title: "Fase 4: Monte o algoritmo para ler dois números e exibir a soma deles", tips: [""], 
+                code: [ "var",
+                        "num1, num2, soma: inteiro",
+                        "inicio",
+                        "escreva('Digite o primeiro número: ')",
+                        "leia(num1)",
+                        "escreva('Digite o segundo número: ')",
+                        "leia(num2)",
+                        "soma <- num1 + num2",
+                        "escreva('A soma dos números é: ', soma)",
+                        "fimalgoritmo"]
+            },
+            {
+                phase: 5, 
+                title: "Fase 5: Monte o algoritmo para ler um número inteiro e mostrar se ele é par ou ímpar", tips: [""], 
+                code: [ "var",
+                        "num: inteiro",
+                        "inicio",
+                        "escreva('Digite um número: ')",
+                        "leia(num)",
+                        "se num mod 2 = 0 entao",
+                        "escreva(num, ' é par.')",
+                        "senao",
+                        "escreva(num, ' é ímpar.')",
+                        "fimse",
+                        "fimalgoritmo"]
+            },
         ]
         this.phaseIndex = 0;
         this.phase = this.beginnerPhases[this.phaseIndex];
@@ -89,7 +141,7 @@ class Quizzes extends Phaser.Scene {
         }, 300);
 
         // Adiciona o titulo no painel
-        this.textPhaseTitle = this.add.text(400, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '20px', fill: '#ffffff', marginTop: '10px' }).setOrigin(0.5, 0.5).setWordWrapWidth(500); // Largura máxima da caixa de texto
+        this.textPhaseTitle = this.add.text(400, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px' }).setOrigin(0.5, 0.5).setWordWrapWidth(500); // Largura máxima da caixa de texto
 
         setTimeout(() => {
             // Animaçao do titulo

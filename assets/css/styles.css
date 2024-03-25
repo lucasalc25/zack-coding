@@ -26,7 +26,7 @@ body {
   background-color: #eee;
   padding: 10px;
   border-radius: 5px;
-  font-size: 18px;
+  font-size: 14px;
   /* Defina a posição inicial fora da tela */
   transform: translateX(-100%);
 }
@@ -65,7 +65,7 @@ body {
   padding: 10px;
   margin-top: 3.5rem;
   opacity: 0;
-  font-size: 26px;
+  font-size: 20px;
   font-weight: bold;
 }
 
