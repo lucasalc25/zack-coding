@@ -118,6 +118,8 @@ class Quizzes extends Phaser.Scene {
         this.phaseTitle = this.phase.title;
         this.phaseTips = this.phase.tips;
         this.phaseCode = this.phase.code;
+        // Calcule a largura e a altura máximas dos objetos na tela
+        let alturaMaxima = 565;
 
         // Adiciona a caixa de diálogo
         this.dialogueBox = this.add.rectangle(400, 565, 10, 570, 0x000000, 1).setOrigin(0.5, 0.5);
@@ -141,7 +143,7 @@ class Quizzes extends Phaser.Scene {
         }, 300);
 
         // Adiciona o titulo no painel
-        this.textPhaseTitle = this.add.text(400, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px' }).setOrigin(0.5, 0.5).setWordWrapWidth(500); // Largura máxima da caixa de texto
+        this.textPhaseTitle = this.add.text(400, alturaMaxima, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px' }).setOrigin(0.5, 0.5).setWordWrapWidth(500); // Largura máxima da caixa de texto
 
         setTimeout(() => {
             // Animaçao do titulo
@@ -161,7 +163,7 @@ class Quizzes extends Phaser.Scene {
 
         // Criação de três divs filhas com classe "line" e atributo draggable definido como true
         for (let i = 0; i < this.phaseCode.length+1; i++) {
-            let y = 60;
+            let y = 60
             const lineDiv = document.createElement('div');
             lineDiv.className = 'line animacao';
             lineDiv.draggable = true;
@@ -171,7 +173,13 @@ class Quizzes extends Phaser.Scene {
             if(i == this.phaseCode.length) {
                 lineDiv.classList.remove("animacao");
             }
+            if(i >= 2) {
+                alturaMaxima += 100;
+            }
         };
+
+        // Atualize o tamanho do canvas
+        this.game.canvas.height = alturaMaxima;
 
         // Adiciona a div pai ao corpo do documento
         document.body.appendChild(column);

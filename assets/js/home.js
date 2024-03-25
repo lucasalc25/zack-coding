@@ -1,9 +1,6 @@
 class Home extends Phaser.Scene {
     constructor() {
         super({ key: 'Home' });
-        this.playButton;
-        this.settingsButton;
-        this.quitButton;
     }
 
     preload() {
@@ -30,43 +27,47 @@ class Home extends Phaser.Scene {
         const settingsButton = this.add.text(400, 300, 'Configurações', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
         const quitButton = this.add.text(400, 400, 'Sair', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
 
-        // Configurando interações dos botões
+       // Configurando interações dos botões
         [playButton, settingsButton, quitButton].forEach(button => {
-            // Configurando interações dos botões
+            button.setInteractive();
             button.on('pointerdown', () => {
-                // Adicione aqui a lógica para cada botão
-                if(button.text == "Jogar") { 
-                    // Desabilitando o botão para evitar ações repetidas
-                    playButton.disableInteractive();
-                    settingsButton.disableInteractive();
-                    quitButton.disableInteractive();
+                if(button.text == 'Jogar') {
                     // Desabilitando o botão para evitar ações repetidas
                     menuMusic.stop();
                     playButton.disableInteractive();
                     settingsButton.disableInteractive();
                     quitButton.disableInteractive();
                     confirm.play(); 
+                    this.scene.stop('Home');
                     this.scene.start('Play');
                 }
-               
+                if(button.text == 'Sair') {
+                    // Desabilitando o botão para evitar ações repetidas
+                    menuMusic.stop();
+                    playButton.disableInteractive();
+                    settingsButton.disableInteractive();
+                    quitButton.disableInteractive();
+                    confirm.play(); 
+                    this.scene.stop('Home')
+                    this.scene.start('End');
+                }
             });
-
-            playButton.on('pointerover', () => {
-                playButton.setStyle({ fontSize: '42px', fill: '#00BBFF' }); // Cor amarela ao passar o mouse
+            button.on('pointerover', () => {
+                button.setStyle({ fontSize: '42px', fill: '#00BBFF' }); // Cor amarela ao passar o mouse
                 hover.play();
             });
-            playButton.on('pointerout', () => {
-                playButton.setStyle({ fontSize: '36px', fill: '#fff' }); // Restaura a cor original ao retirar o mouse
+            button.on('pointerout', () => {
+                button.setStyle({ fontSize: '36px', fill: '#fff' }); // Restaura a cor original ao retirar o mouse
             });
+        });
 
-            // Adicionando animação de flutuação às opções do menu
-            this.tweens.add({
-                targets: [playButton, settingsButton, quitButton],
-                y: '+=5',
-                duration: 1000,
-                yoyo: true,
-                repeat: -1
-            });
+        // Adicionando animação de flutuação às opções do menu
+        this.tweens.add({
+            targets: [playButton, settingsButton, quitButton],
+            y: '+=5',
+            duration: 1000,
+            yoyo: true,
+            repeat: -1
         });
         
     }
