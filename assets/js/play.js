@@ -27,7 +27,7 @@ class Play extends Phaser.Scene {
 
     create() {
         // Adiciona o fundo
-        this.add.image(400, 283, 'quarto');
+        this.add.image(0, 0, 'quarto').setOrigin(0);
         this.typing =  this.sound.add('typing', { loop: true });
         this.playMusic = this.sound.add('playMusic', { loop: true });
         this.hover = this.sound.add('hover');

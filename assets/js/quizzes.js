@@ -87,7 +87,7 @@ class Quizzes extends Phaser.Scene {
     create() {
 
         // Adiciona o fundo
-        this.add.image(400, 283, 'quarto');
+        this.add.image(0, 0, 'quarto').setOrigin(0);
 
         this.playMusic = this.sound.add('playMusic', { loop: true });
         this.playMusic.setVolume(0.1);
@@ -143,7 +143,7 @@ class Quizzes extends Phaser.Scene {
         }, 300);
 
         // Adiciona o titulo no painel
-        this.textPhaseTitle = this.add.text(400, alturaMaxima, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px' }).setOrigin(0.5, 0.5).setWordWrapWidth(500); // Largura máxima da caixa de texto
+        this.textPhaseTitle = this.add.text(400, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px' }).setOrigin(0.5, 0).setWordWrapWidth(500); // Largura máxima da caixa de texto
 
         setTimeout(() => {
             // Animaçao do titulo
@@ -173,9 +173,6 @@ class Quizzes extends Phaser.Scene {
             if(i == this.phaseCode.length) {
                 lineDiv.classList.remove("animacao");
             }
-            if(i >= 2) {
-                alturaMaxima += 100;
-            }
         };
 
         // Atualize o tamanho do canvas
@@ -195,8 +192,7 @@ class Quizzes extends Phaser.Scene {
         });
 
         // Botão para verificar a ordem das opções
-        const button = this.add.text(400, 500, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
-        button
+        const button = this.add.text(400, 500, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
         button.setInteractive();
         button.on('pointerdown', () => {
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
