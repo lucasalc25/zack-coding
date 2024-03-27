@@ -2,7 +2,6 @@
 class Quizzes extends Phaser.Scene {
     constructor() {
         super({ key: 'Quizzes' });
-        this.quizzBox;
         this.playMusic;
         this.confirm;
         this.correct;
@@ -71,7 +70,6 @@ class Quizzes extends Phaser.Scene {
         this.phaseCode;
         this.column;
         this.lines;
-        this.draggingCard;
         this.quizzCode = [];
         this.currentOrder = [];
         this.codeIndex = 0;
@@ -118,11 +116,18 @@ class Quizzes extends Phaser.Scene {
         this.phaseTitle = this.phase.title;
         this.phaseTips = this.phase.tips;
         this.phaseCode = this.phase.code;
-        // Calcule a largura e a altura máximas dos objetos na tela
-        let alturaMaxima = 565;
+        
+         // Obtenha a altura total das opções arrastáveis (supondo que você tenha um array chamado 'options' contendo as opções)
+         const totalOptionsHeight = this.phaseCode.length * 50; // Supondo que cada opção tenha uma altura de 50 pixels
+
+         // Defina a altura do canvas com base na altura total das opções arrastáveis
+         const canvasHeight = Math.max(600, totalOptionsHeight); // Defina uma altura mínima de 600 pixels
+ 
+         // Defina o tamanho do canvas
+         this.scale.setGameSize(800, canvasHeight);
 
         // Adiciona a caixa de diálogo
-        this.dialogueBox = this.add.rectangle(400, 565, 10, 570, 0x000000, 1).setOrigin(0.5, 0.5);
+        this.dialogueBox = this.add.rectangle(400, canvasHeight, 10, 570, 0x000000, 0.9).setOrigin(0.5, 0.5);
     
         // Mostrando parte da dialogueBox
         this.tweens.add({
@@ -175,9 +180,6 @@ class Quizzes extends Phaser.Scene {
             }
         };
 
-        // Atualize o tamanho do canvas
-        this.game.canvas.height = alturaMaxima;
-
         // Adiciona a div pai ao corpo do documento
         document.body.appendChild(column);
 
@@ -192,7 +194,7 @@ class Quizzes extends Phaser.Scene {
         });
 
         // Botão para verificar a ordem das opções
-        const button = this.add.text(400, 500, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
+        const button = this.add.text(400, canvasHeight-100, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
         button.setInteractive();
         button.on('pointerdown', () => {
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
@@ -296,10 +298,12 @@ class Quizzes extends Phaser.Scene {
         });
     }
 
-    showCorrect() {
+    showCorrect(alturaTela) {
         const messageDiv = document.createElement("div");
+        const messagePos = alturaTela
         messageDiv.className = "message";
         messageDiv.textContent = "Você acertou!";
+        messageDiv.style.marginTop = alturaTela;
 
         // Adiciona a mensagem à tela
         document.body.appendChild(messageDiv);
