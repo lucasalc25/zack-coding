@@ -25,7 +25,7 @@ class Quizzes extends Phaser.Scene {
             },
             {
                 phase: 3, 
-                title: "Fase 3: Monte o algoritmo para ler um número inteiro e o mostrá-lo na tela", tips: [""], 
+                title: "Fase 3: Monte o algoritmo para ler um número inteiro e mostrá-lo na tela", tips: [""], 
                 code: [ "var", 
                         "num: inteiro", 
                         "inicio", 
@@ -39,9 +39,7 @@ class Quizzes extends Phaser.Scene {
                 code: [ "var",
                         "num1, num2, soma: inteiro",
                         "inicio",
-                        "escreva('Digite o primeiro número: ')",
                         "leia(num1)",
-                        "escreva('Digite o segundo número: ')",
                         "leia(num2)",
                         "soma <- num1 + num2",
                         "escreva('A soma dos números é: ', soma)",
@@ -53,9 +51,8 @@ class Quizzes extends Phaser.Scene {
                 code: [ "var",
                         "num: inteiro",
                         "inicio",
-                        "escreva('Digite um número: ')",
                         "leia(num)",
-                        "se num mod 2 = 0 entao",
+                        "se num % 2 = 0 entao",
                         "escreva(num, ' é par.')",
                         "senao",
                         "escreva(num, ' é ímpar.')",
@@ -118,10 +115,10 @@ class Quizzes extends Phaser.Scene {
         this.phaseCode = this.phase.code;
         
          // Obtenha a altura total das opções arrastáveis (supondo que você tenha um array chamado 'options' contendo as opções)
-         const totalOptionsHeight = this.phaseCode.length * 50; // Supondo que cada opção tenha uma altura de 50 pixels
+         let totalOptionsHeight = this.phaseCode.length * 50; // Supondo que cada opção tenha uma altura de 50 pixels
 
          // Defina a altura do canvas com base na altura total das opções arrastáveis
-         const canvasHeight = Math.max(600, totalOptionsHeight); // Defina uma altura mínima de 600 pixels
+         let canvasHeight = Math.max(600, totalOptionsHeight); // Defina uma altura mínima de 600 pixels
  
          // Defina o tamanho do canvas
          this.scale.setGameSize(800, canvasHeight);
@@ -168,7 +165,6 @@ class Quizzes extends Phaser.Scene {
 
         // Criação de três divs filhas com classe "line" e atributo draggable definido como true
         for (let i = 0; i < this.phaseCode.length+1; i++) {
-            let y = 60
             const lineDiv = document.createElement('div');
             lineDiv.className = 'line animacao';
             lineDiv.draggable = true;
@@ -194,26 +190,29 @@ class Quizzes extends Phaser.Scene {
         });
 
         // Botão para verificar a ordem das opções
-        const button = this.add.text(400, canvasHeight-100, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
+        const button = this.add.text(400, canvasHeight-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
         button.setInteractive();
         button.on('pointerdown', () => {
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
             if (this.checkOrder()) {
-                this.clearMessages();
+                this.clearLines();
                 this.showCorrect();
                 this.correct.play();
+
                 // Itera sobre cada elemento filho e aplica uma cor de fundo
                 for (var i = 0; i < lines.length-1; i++) {
                     lines[i].style.backgroundColor = '#228b22'; // Defina a cor de fundo desejada aqui
                 }
                 this.phaseIndex++;
                 this.phase = this.beginnerPhases[this.phaseIndex];
-                this.textPhaseTitle.y = 40;
+                button.y = canvasHeight-80;
                 setTimeout(() => {
                     // Remove todos os elementos filhos e inicia a proxima cena
                     while (column.firstChild) {
                         column.removeChild(column.firstChild);
                     }  
+                    this.textPhaseTitle.destroy();
+                    button.destroy();
                     this.showQuizScreen(this.phase);
                 }, 3000);
             } else {
@@ -223,13 +222,17 @@ class Quizzes extends Phaser.Scene {
             
         });
 
+        // Evento de hover
         button.on('pointerover', () => {
             button.setStyle({ fontSize: '20px', backgroundColor: '#0077FF' }); // Cor amarela ao passar o mouse
         });
+
+        // Evento de hout
         button.on('pointerout', () => {
             button.setStyle({ fontSize: '18px', backgroundColor: '#00BBFF' }); // Restaura a cor original ao retirar o mouse
         });
 
+        // Evento arrastar e soltar as opções
         lines.forEach((item) => {
             item.addEventListener("dragover", (e) => {
                 e.preventDefault(); // Previne o comportamento padrão de não permitir soltar
@@ -291,16 +294,15 @@ class Quizzes extends Phaser.Scene {
         return true;
     }
 
-    clearMessages() {
-        const existingMessages = document.querySelectorAll(".message");
-        existingMessages.forEach((message) => {
-            document.body.removeChild(message);
+    clearLines() {
+        const lines = document.querySelectorAll(".message");
+        lines.forEach((line) => {
+            document.body.removeChild(line);
         });
     }
 
     showCorrect(alturaTela) {
         const messageDiv = document.createElement("div");
-        const messagePos = alturaTela
         messageDiv.className = "message";
         messageDiv.textContent = "Você acertou!";
         messageDiv.style.marginTop = alturaTela;
