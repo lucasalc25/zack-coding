@@ -196,7 +196,7 @@ class Quizzes extends Phaser.Scene {
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
             if (this.checkOrder()) {
                 this.clearLines();
-                this.showCorrect();
+                this.showCorrect(canvasHeight);
                 this.correct.play();
 
                 // Itera sobre cada elemento filho e aplica uma cor de fundo
@@ -216,7 +216,7 @@ class Quizzes extends Phaser.Scene {
                     this.showQuizScreen(this.phase);
                 }, 3000);
             } else {
-                this.showWrong();
+                this.showWrong(canvasHeight);
                 this.wrong.play();
             }
             
@@ -305,7 +305,11 @@ class Quizzes extends Phaser.Scene {
         const messageDiv = document.createElement("div");
         messageDiv.className = "message";
         messageDiv.textContent = "Você acertou!";
-        messageDiv.style.marginTop = alturaTela;
+
+        
+        messageDiv.style.position = 'fixed';
+        messageDiv.style.left = '50%';
+        messageDiv.style.top = alturaTela + 50 + 'px';
 
         // Adiciona a mensagem à tela
         document.body.appendChild(messageDiv);
@@ -322,13 +326,17 @@ class Quizzes extends Phaser.Scene {
         }, 3000); // Tempo em milissegundos antes de remover a mensagem
     }
 
-    showWrong() {
+    showWrong(alturaTela) {
         const messageDiv = document.createElement("div");
         messageDiv.className = "message";
         messageDiv.textContent = "Errado! Tente de novo!";
 
         // Adiciona a mensagem à tela
         document.body.appendChild(messageDiv);
+
+        messageDiv.style.position = 'fixed';
+        messageDiv.style.left = '50%';
+        messageDiv.style.top = alturaTela + 50 + 'px';
 
         // Aplica a animação CSS à mensagem
         setTimeout(() => {

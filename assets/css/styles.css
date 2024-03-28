@@ -57,15 +57,11 @@ body {
 }
 
 .message {
-  position: fixed;
-  top: 60%;
-  left: 50%;
   transform: translate(-50%, -50%);
   background-color: transparent;
   padding: 10px;
-  margin-top: 3.5rem;
   opacity: 0;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
 }
 
@@ -75,6 +71,8 @@ body {
 
 #message-correct {
   color: #228b22;
+  animation: correct 0.5s;
+  animation-iteration-count: 3;
 }
 
 
@@ -90,4 +88,12 @@ body {
   50% {margin-left: 0;}
   75% {margin-left: -5px;}
   100% {margin-left: 0;}
+}
+
+@keyframes correct {
+  0% {font-size: 22px;}
+  25% {font-size: 24px;}
+  50% {font-size: 26px;}
+  75% {font-size: 24px;}
+  100% {font-size: 22px;}
 }
