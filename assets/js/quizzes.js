@@ -80,7 +80,6 @@ class Quizzes extends Phaser.Scene {
     }
 
     create() {
-
         // Adiciona o fundo
         this.add.image(0, 0, 'quarto').setOrigin(0);
 
@@ -118,7 +117,7 @@ class Quizzes extends Phaser.Scene {
          let totalObjectsHeight = this.phaseCode.length * 50 + 300; // Supondo que cada opção tenha uma altura de 50 pixels
 
          // Defina a altura do canvas com base na altura total das opções arrastáveis
-         let canvasHeight = Math.max(600, totalObjectsHeight); // Defina uma altura mínima de 600 pixels
+         let canvasHeight = Math.max(565, totalObjectsHeight); // Defina uma altura mínima de 600 pixels
  
          // Defina o tamanho do canvas
          this.scale.setGameSize(800, canvasHeight);
