@@ -80,6 +80,8 @@ class Quizzes extends Phaser.Scene {
     }
 
     create() {
+        // Ouça o evento de redimensionamento da tela
+        this.scene.get('Home').events.on('resize', this.ajustarElementos, this);
         // Adiciona o fundo
         this.add.image(0, 0, 'quarto').setOrigin(0);
 
@@ -97,6 +99,18 @@ class Quizzes extends Phaser.Scene {
     update() {
 
     }
+
+    ajustarElementos(larguraTela, alturaTela) {
+        // Ajuste os elementos do jogo para se adequarem às novas dimensões da tela
+        this.bgImage.setDisplaySize(larguraTela, alturaTela);
+        // Centralize a imagem de fundo na tela
+        this.bgImage.setPosition(larguraTela / 2, alturaTela / 2);
+
+        this.personagem.setDisplaySize(larguraTela/2.35, alturaTela/0.75);
+        // Centralize a imagem de fundo na tela
+        this.personagem.setPosition(larguraTela / 2, alturaTela / 2);
+    }
+
 
     // Função para embaralhar uma lista
     shuffle(array) {

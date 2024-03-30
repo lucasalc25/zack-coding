@@ -12,6 +12,9 @@ class Home extends Phaser.Scene {
     }
 
     create() {
+        // Defina o evento personalizado para o redimensionamento
+        window.addEventListener('resize', this.redimensionarTela.bind(this));
+
         const menuMusic = this.sound.add('menuMusic', { loop: true });
         menuMusic.play();
 
@@ -70,5 +73,18 @@ class Home extends Phaser.Scene {
             repeat: -1
         });
         
+    }
+
+    redimensionarTela() {
+        const canvas = game.canvas;
+        const largura = window.innerWidth;
+        const altura = window.innerHeight;
+
+        // Redimensione o canvas para corresponder à nova largura e altura da janela
+        canvas.style.width = largura + 'px';
+        canvas.style.height = altura + 'px';
+
+        // Emita um evento personalizado para notificar outras cenas sobre o redimensionamento
+        this.events.emit('redimensionarTela', larguraTela, alturaTela);
     }
 }

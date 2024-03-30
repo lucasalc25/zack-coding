@@ -1,6 +1,9 @@
 class Play extends Phaser.Scene {
     constructor() {
         super({ key: 'Play' });
+        this.altura;
+        this.largura;
+        this.bgImage;
         this.personagem;
         this.level;
         this.dialogueBox;
@@ -26,8 +29,10 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        this.largura = window.innerWidth;
+        this.altura = window.innerHeight;
         // Adiciona o fundo
-        this.add.image(0, 0, 'quarto').setOrigin(0);
+        this.bgImage = this.add.image(0, 0, 'quarto').setOrigin(0);
         this.typing =  this.sound.add('typing', { loop: true });
         this.playMusic = this.sound.add('playMusic', { loop: true });
         this.hover = this.sound.add('hover');
@@ -45,9 +50,23 @@ class Play extends Phaser.Scene {
         }, 1000);                   
     }
 
+    update() {
+         // Ouça o evento de redimensionamento da tela
+         this.scene.get('Home').events.on('redimensionarTela', this.ajustarElementos, this);
+    }
+
+    ajustarElementos(larguraTela, alturaTela) {
+        // Ajuste os elementos do jogo para se adequarem às novas dimensões da tela
+        this.bgImage.setDisplaySize(larguraTela, alturaTela);
+        // Centralize a imagem de fundo na tela
+        this.bgImage.setPosition(larguraTela/2, alturaTela/2);
+
+        this.personagem.setDisplaySize(larguraTela/2.35, alturaTela/0.75);
+    }
+
     showScreen() {
         // Adicionando um retângulo preto que cobre a tela inteira
-        const blackOverlay = this.add.rectangle(300, 300, 1000, 600, 0x000000);
+        const blackOverlay = this.add.rectangle(this.largura/2, this.altura/2, this.largura, this.altura, 0x000000);
 
         this.tweens.add({
             targets: blackOverlay,
@@ -103,9 +122,10 @@ class Play extends Phaser.Scene {
             }        
         });
     }
+
     startDialog() {
         // Adiciona a caixa de diálogo
-        this.dialogueBox = this.add.rectangle(0, 470, 800, 5, 0x000000, 0.7).setOrigin(0.5, 0.5);
+        this.dialogueBox = this.add.rectangle(0, 470, this.largura, this.altura/100, 0x000000, 0.7).setOrigin(0.5, 0.5);
     
         // Mostrando parte da dialogueBox
         this.tweens.add({
