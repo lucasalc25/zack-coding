@@ -80,10 +80,12 @@ class Quizzes extends Phaser.Scene {
     }
 
     create() {
-        // Ouça o evento de redimensionamento da tela
-        this.scene.get('Home').events.on('resize', this.ajustarElementos, this);
         // Adiciona o fundo
-        this.add.image(0, 0, 'quarto').setOrigin(0);
+        this.bgImage = this.add.image(0, 0, 'quarto').setOrigin(0);
+        // Adiciona o personagem
+        this.personagem = this.add.image(-200, this.game.canvas.height/1.5, 'zack');
+        // Adiciona a caixa de diálogo
+        this.dialogueBox = this.add.rectangle(-this.game.canvas.width, this.game.canvas.height/1.3, this.game.canvas.width, this.game.canvas.height/100, 0x000000, 0.7).setOrigin(0.5, 0.5);
 
         this.playMusic = this.sound.add('playMusic', { loop: true });
         this.playMusic.setVolume(0.1);
@@ -100,18 +102,6 @@ class Quizzes extends Phaser.Scene {
 
     }
 
-    ajustarElementos(larguraTela, alturaTela) {
-        // Ajuste os elementos do jogo para se adequarem às novas dimensões da tela
-        this.bgImage.setDisplaySize(larguraTela, alturaTela);
-        // Centralize a imagem de fundo na tela
-        this.bgImage.setPosition(larguraTela / 2, alturaTela / 2);
-
-        this.personagem.setDisplaySize(larguraTela/2.35, alturaTela/0.75);
-        // Centralize a imagem de fundo na tela
-        this.personagem.setPosition(larguraTela / 2, alturaTela / 2);
-    }
-
-
     // Função para embaralhar uma lista
     shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -126,23 +116,11 @@ class Quizzes extends Phaser.Scene {
         this.phaseTitle = this.phase.title;
         this.phaseTips = this.phase.tips;
         this.phaseCode = this.phase.code;
-        
-         // Obtenha a altura total das opções arrastáveis (supondo que você tenha um array chamado 'options' contendo as opções)
-         let totalObjectsHeight = this.phaseCode.length * 50 + 300; // Supondo que cada opção tenha uma altura de 50 pixels
-
-         // Defina a altura do canvas com base na altura total das opções arrastáveis
-         let canvasHeight = Math.max(565, totalObjectsHeight); // Defina uma altura mínima de 600 pixels
- 
-         // Defina o tamanho do canvas
-         this.scale.setGameSize(800, canvasHeight);
-
-        // Adiciona a caixa de diálogo
-        this.dialogueBox = this.add.rectangle(400, canvasHeight, 10, 570, 0x000000, 0.9).setOrigin(0.5, 0.5);
     
         // Mostrando parte da dialogueBox
         this.tweens.add({
             targets: this.dialogueBox,
-            y: 285,
+            y: game.canvas.height/2,
             duration: 200, // Duração da animação em milissegundos (0.5 segundo neste caso)
             ease: 'Linear'
         });
@@ -158,13 +136,13 @@ class Quizzes extends Phaser.Scene {
         }, 300);
 
         // Adiciona o titulo no painel
-        this.textPhaseTitle = this.add.text(400, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px' }).setOrigin(0.5, 0).setWordWrapWidth(500); // Largura máxima da caixa de texto
+        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px' }).setOrigin(0.5, 0).setWordWrapWidth(500); // Largura máxima da caixa de texto
 
         setTimeout(() => {
             // Animaçao do titulo
             this.tweens.add({
                 targets: this.textPhaseTitle, // O alvo da animação é o texto com o título
-                y: 35, // Fator de escala vertical
+                y: game.canvas.height/15, // Fator de escala vertical
                 duration: 300, // Duração da animação em milissegundos (0.5 segundo neste caso)
                 ease: 'Linear', // Tipo de easing (suavização) da animação
             });
@@ -203,13 +181,13 @@ class Quizzes extends Phaser.Scene {
         });
 
         // Botão para verificar a ordem das opções
-        const button = this.add.text(400, canvasHeight-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
+        const button = this.add.text(400, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
         button.setInteractive();
         button.on('pointerdown', () => {
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
             if (this.checkOrder()) {
                 this.clearLines();
-                this.showCorrect(canvasHeight);
+                this.showCorrect(this.game.canvas.height-120);
                 this.correct.play();
 
                 // Itera sobre cada elemento filho e aplica uma cor de fundo
@@ -218,7 +196,8 @@ class Quizzes extends Phaser.Scene {
                 }
                 this.phaseIndex++;
                 this.phase = this.beginnerPhases[this.phaseIndex];
-                button.y = canvasHeight-80;
+                button.y = this.game.canvas.height-80;
+                this.dialogueBox.y = this.game.canvas.height;
                 setTimeout(() => {
                     // Remove todos os elementos filhos e inicia a proxima cena
                     while (column.firstChild) {
@@ -229,7 +208,7 @@ class Quizzes extends Phaser.Scene {
                     this.showQuizScreen(this.phase);
                 }, 3000);
             } else {
-                this.showWrong(canvasHeight);
+                this.showWrong(this.game.canvas.height);
                 this.wrong.play();
             }
             

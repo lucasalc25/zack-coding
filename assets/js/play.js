@@ -1,12 +1,11 @@
 class Play extends Phaser.Scene {
     constructor() {
         super({ key: 'Play' });
-        this.altura;
-        this.largura;
         this.bgImage;
         this.personagem;
         this.level;
         this.dialogueBox;
+        this.dialogueBoxAnimated = false;
         this.dialogueText; // Variável global para o texto do diálogo
         this.textToShow = ''; // Variável global para o texto a ser exibido
         this.currentDialogueIndex = 0;
@@ -14,6 +13,10 @@ class Play extends Phaser.Scene {
         this.hover;
         this.confirm;
         this.typing;
+        this.textTitle;
+        this.beginnerOption;
+        this.intermediaryOption;
+        this.advancedOption;
         this.dialogues = ["E aí! Beleza? Sou o Zack...", "Bom, você já deve saber que sua missão é me ajudar, então vamos lá...", "Vou te explicar como vai funcionar.", "Você vai precisar colocar as linhas de código na ordem certa para resolver cada problema.", "Pra isso basta você clicar com o mouse na opção que quer mudar de lugar, e sem soltar o botão, arrastá-la até a posição que deseja", "Daí você solta o botão e a opção vai ser fixada, beleza?","Primeiro preciso saber qual o seu nível de programação"]
     }
 
@@ -24,15 +27,16 @@ class Play extends Phaser.Scene {
         this.load.audio('playMusic', './assets/sfx/elapse.mp3');
         this.load.audio('hover', './assets/sfx/hover.mp3');
         this.load.audio('confirm', './assets/sfx/confirm.mp3');
-        this.load.audio('correct', './assets/sfx/correct.mp3');
-        this.load.audio('wrong', './assets/sfx/wrongconfirm.mp3');
     }
 
     create() {
-        this.largura = window.innerWidth;
-        this.altura = window.innerHeight;
         // Adiciona o fundo
         this.bgImage = this.add.image(0, 0, 'quarto').setOrigin(0);
+        // Adiciona o personagem
+        this.personagem = this.add.image(-200, this.game.canvas.height/1.5, 'zack');
+        // Adiciona a caixa de diálogo
+        this.dialogueBox = this.add.rectangle(-this.game.canvas.width, this.game.canvas.height/1.3, this.game.canvas.width, this.game.canvas.height/100, 0x000000, 0.7).setOrigin(0.5, 0.5);
+
         this.typing =  this.sound.add('typing', { loop: true });
         this.playMusic = this.sound.add('playMusic', { loop: true });
         this.hover = this.sound.add('hover');
@@ -45,28 +49,19 @@ class Play extends Phaser.Scene {
         this.playMusic.play(); 
 
         this.showScreen();
+
         setTimeout(() => {
             this.showCharacter();
         }, 1000);                   
     }
 
     update() {
-         // Ouça o evento de redimensionamento da tela
-         this.scene.get('Home').events.on('redimensionarTela', this.ajustarElementos, this);
-    }
-
-    ajustarElementos(larguraTela, alturaTela) {
-        // Ajuste os elementos do jogo para se adequarem às novas dimensões da tela
-        this.bgImage.setDisplaySize(larguraTela, alturaTela);
-        // Centralize a imagem de fundo na tela
-        this.bgImage.setPosition(larguraTela/2, alturaTela/2);
-
-        this.personagem.setDisplaySize(larguraTela/2.35, alturaTela/0.75);
+        this.checkScreen();
     }
 
     showScreen() {
         // Adicionando um retângulo preto que cobre a tela inteira
-        const blackOverlay = this.add.rectangle(this.largura/2, this.altura/2, this.largura, this.altura, 0x000000);
+        const blackOverlay = this.add.rectangle(this.game.canvas.width/2, this.game.canvas.height/2, this.game.canvas.width, this.game.canvas.height, 0x000000);
 
         this.tweens.add({
             targets: blackOverlay,
@@ -83,7 +78,7 @@ class Play extends Phaser.Scene {
 
         // Condensando a dialogueBox
         this.tweens.add({
-            targets: this.dialogueBox, // O alvo da animação é o sprite do personagem
+            targets: this.dialogueBox, // O alvo da animação é a caixa de diálogo
             scaleY: 2, // Fator de escala vertical
             duration: 200, // Duração da animação em milissegundos (0.5 segundo neste caso)
             ease: 'Linear' // Tipo de easing (suavização) da animação
@@ -92,13 +87,13 @@ class Play extends Phaser.Scene {
             // Removendo a dialogueBox 
             this.tweens.add({
                 targets: this.dialogueBox,
-                x: -800,
+                x: -this.game.canvas.width,
                 duration: 200, // Duração da animação em milissegundos (0.5 segundo neste caso)
                 ease: 'Linear',
                 onComplete: () => {
                     this.tweens.add({
                         targets: this.personagem, // O alvo da animação é a imagem do personagem
-                        x: -400, // Coordenada X final para onde o personagem se moverá
+                        x: -this.game.canvas.width, // Coordenada X final para onde o personagem se moverá
                         duration: 500, // Duração da animação em milissegundos (0.5 segundo neste caso)
                         ease: 'Linear', // Tipo de easing (suavização) da animação
                         yoyo: false, // Define se a animação deve se repetir reversamente (vai e volta)     
@@ -109,11 +104,9 @@ class Play extends Phaser.Scene {
     }
 
     showCharacter() {
-        // Adiciona o personagem
-        this.personagem = this.add.image(-200, 400, 'zack');
         this.tweens.add({
             targets: this.personagem, // O alvo da animação é a imagem do personagem
-            x: 400, // Coordenada X final para onde o personagem se moverá
+            x: this.game.canvas.width/2, // Coordenada X final para onde o personagem se moverá
             duration: 400, // Duração da animação em milissegundos (0.5 segundo neste caso)
             ease: 'Linear', // Tipo de easing (suavização) da animação
             yoyo: false, // Define se a animação deve se repetir reversamente (vai e volta)
@@ -124,13 +117,10 @@ class Play extends Phaser.Scene {
     }
 
     startDialog() {
-        // Adiciona a caixa de diálogo
-        this.dialogueBox = this.add.rectangle(0, 470, this.largura, this.altura/100, 0x000000, 0.7).setOrigin(0.5, 0.5);
-    
         // Mostrando parte da dialogueBox
         this.tweens.add({
             targets: this.dialogueBox,
-            x: 400,
+            x: this.game.canvas.width/2,
             duration: 100, // Duração da animação em milissegundos (0.5 segundo neste caso)
             ease: 'Linear'
         });
@@ -141,13 +131,16 @@ class Play extends Phaser.Scene {
                 targets: this.dialogueBox, // O alvo da animação é o sprite do personagem
                 scaleY: 30, // Fator de escala vertical
                 duration: 100, // Duração da animação em milissegundos (0.5 segundo neste caso)
-                ease: 'Linear' // Tipo de easing (suavização) da animação
+                ease: 'Linear',
+                onComplete: () => {
+                    this.dialogueBoxAnimated = true;
+                } // Tipo de easing (suavização) da animação
             });
         }, 300);
 
         setTimeout(() => {
             // Adiciona o texto da caixa de diálogo
-            this.dialogueText = this.add.text(400, 470, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5, 0.5).setWordWrapWidth(700); // Largura máxima da caixa de texto
+            this.dialogueText = this.add.text(this.game.canvas.width/2, this.game.canvas.height/1.3, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5, 0.5).setWordWrapWidth(700); // Largura máxima da caixa de texto
 
             this.showChoices();
             // this.nextDialogue.call(this);
@@ -192,20 +185,20 @@ class Play extends Phaser.Scene {
     }
      // Função para mostrar as opçoes de escolha
      showChoices() {
-        const text = this.add.text(400, 440, 'Clique no seu nível:', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
+        this.textTitle = this.add.text(game.canvas.width*0.5, game.canvas.height*0.7, 'Clique no seu nível:', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
         // Cria botões de escolha
-        const beginner = this.add.text(200, 500, 'Iniciante', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
-        const intermediary = this.add.text(400, 500, 'Intermediário', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
-        const advanced = this.add.text(600, 500, 'Avançado', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
+        this.beginnerOption = this.add.text(game.canvas.width*0.2, game.canvas.height*0.8, 'Iniciante', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
+        this.intermediaryOption = this.add.text(game.canvas.width*0.5, game.canvas.height*0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
+        this.advancedOption = this.add.text(game.canvas.width*0.8, game.canvas.height*0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
         // Configurando interações dos botões
-        [beginner, intermediary, advanced].forEach(button => {
+        [this.beginnerOption, this.intermediaryOption, this.advancedOption].forEach(button => {
             button.setInteractive();
 
             button.on('pointerdown', () => {
                 this.level = button.text;
                 this.confirm.play();
-                text.setText('');
-                [beginner, intermediary, advanced].forEach(option => {
+                this.textTitle.setText('');
+                [this.beginnerOption, this.intermediaryOption, this.advancedOption].forEach(option => {
                     option.setText('');
                 });
                 this.typeText(this.dialogueText, `Então você é nível ${this.level}. Beleza!\nQue comecem os jogos!`, 0, () => {
@@ -227,5 +220,52 @@ class Play extends Phaser.Scene {
                 button.setStyle({ fontSize: '24px', fill: '#fff' }); // Restaura a cor original ao retirar o mouse
             });
         });
+    }
+
+    checkScreen() {
+        const larguraAtual = this.game.canvas.width;
+        const alturaAtual = this.game.canvas.height;
+
+        if (this.larguraAnterior !== larguraAtual || this.alturaAnterior !== alturaAtual) {
+            // O tamanho da tela foi alterado, chame o método resize() para ajustar os elementos da cena
+            this.resize(larguraAtual, alturaAtual);
+
+            // Atualize as variáveis de largura e altura anteriores
+            this.larguraAnterior = larguraAtual;
+            this.alturaAnterior = alturaAtual;
+        }
+    }
+
+    ajustarElementos(larguraTela, alturaTela) {
+        this.bgImage.setDisplaySize(larguraTela, alturaTela);
+        this.personagem.setDisplaySize(larguraTela-(larguraTela*0.5), alturaTela);
+        this.personagem.setPosition(larguraTela / 2, alturaTela/1.5);
+
+        if(this.dialogueBoxAnimated == true) {
+            this.dialogueBox.setDisplaySize(larguraTela*2, (alturaTela/100)*30);
+            this.dialogueBox.setPosition(0, alturaTela/1.3);
+            this.beginnerOption.setPosition(larguraTela*0.2, alturaTela*0.8);
+            this.intermediaryOption.setPosition(larguraTela*0.5, alturaTela*0.8);
+            this.advancedOption.setPosition(larguraTela*0.8, alturaTela*0.8);
+            this.textTitle.setPosition(game.canvas.width*0.5, game.canvas.height*0.7);
+        }
+
+        if(larguraTela < 500) {
+             // Ajuste os elementos, incluindo os tamanhos dos textos
+            if (this.textTitle) this.textTitle.setFontSize(18);
+            if (this.beginnerOption) this.beginnerOption.setFontSize(18);
+            if (this.intermediaryOption) this.intermediaryOption.setFontSize(18);
+            if (this.advancedOption) this.advancedOption.setFontSize(18);
+        } else {
+            if (this.textTitle) this.textTitle.setFontSize(24);
+            if (this.beginnerOption) this.beginnerOption.setFontSize(24);
+            if (this.intermediaryOption) this.intermediaryOption.setFontSize(24);
+            if (this.advancedOption) this.advancedOption.setFontSize(24);
+        }
+    }
+
+    resize(larguraTela, alturaTela) {
+        // Redimensione os elementos da cena quando o tamanho da tela for alterado
+        this.ajustarElementos(larguraTela, alturaTela);
     }
 }

@@ -1,6 +1,10 @@
 class Home extends Phaser.Scene {
     constructor() {
         super({ key: 'Home' });
+        this.playButton;
+        this.settingsButton;
+        this.quitButton;
+        this.bgImage;
     }
 
     preload() {
@@ -12,13 +16,10 @@ class Home extends Phaser.Scene {
     }
 
     create() {
-        // Defina o evento personalizado para o redimensionamento
-        window.addEventListener('resize', this.redimensionarTela.bind(this));
-
         const menuMusic = this.sound.add('menuMusic', { loop: true });
         menuMusic.play();
 
-        this.add.image(270, 283, 'bgMenu');
+        this.bgImage = this.add.image(-50, -75, 'bgMenu').setOrigin(0);
 
         const hover = this.sound.add('hover');
         hover.setVolume(0.4);
@@ -26,32 +27,25 @@ class Home extends Phaser.Scene {
         confirm.setVolume(0.1);
 
         // Adicionando opções do menu
-        const playButton = this.add.text(400, 200, 'Jogar', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
-        const settingsButton = this.add.text(400, 300, 'Configurações', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
-        const quitButton = this.add.text(400, 400, 'Sair', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
+        this.playButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.35, 'Jogar', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
+        this.settingsButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.5, 'Configurações', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
+        this.quitButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.65, 'Sair', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
 
        // Configurando interações dos botões
-        [playButton, settingsButton, quitButton].forEach(button => {
+        [this.playButton, this.settingsButton, this.quitButton].forEach(button => {
             button.setInteractive();
             button.on('pointerdown', () => {
+                this.playButton.disableInteractive();
+                this.settingsButton.disableInteractive();
+                this.quitButton.disableInteractive();
+                confirm.play(); 
+                menuMusic.stop();
+                this.scene.stop('Home');
                 if(button.text == 'Jogar') {
-                    // Desabilitando o botão para evitar ações repetidas
-                    menuMusic.stop();
-                    playButton.disableInteractive();
-                    settingsButton.disableInteractive();
-                    quitButton.disableInteractive();
-                    confirm.play(); 
-                    this.scene.stop('Home');
                     this.scene.start('Play');
                 }
                 if(button.text == 'Sair') {
                     // Desabilitando o botão para evitar ações repetidas
-                    menuMusic.stop();
-                    playButton.disableInteractive();
-                    settingsButton.disableInteractive();
-                    quitButton.disableInteractive();
-                    confirm.play(); 
-                    this.scene.stop('Home')
                     this.scene.start('End');
                 }
             });
@@ -66,7 +60,7 @@ class Home extends Phaser.Scene {
 
         // Adicionando animação de flutuação às opções do menu
         this.tweens.add({
-            targets: [playButton, settingsButton, quitButton],
+            targets: [this.playButton, this.settingsButton, this.quitButton],
             y: '+=5',
             duration: 1000,
             yoyo: true,
@@ -75,16 +69,33 @@ class Home extends Phaser.Scene {
         
     }
 
-    redimensionarTela() {
-        const canvas = game.canvas;
-        const largura = window.innerWidth;
-        const altura = window.innerHeight;
+    update() {
+        this.checkScreen();
+    }
 
-        // Redimensione o canvas para corresponder à nova largura e altura da janela
-        canvas.style.width = largura + 'px';
-        canvas.style.height = altura + 'px';
+    checkScreen() {
+        const larguraAtual = this.scale.width;
+        const alturaAtual = this.scale.height;
 
-        // Emita um evento personalizado para notificar outras cenas sobre o redimensionamento
-        this.events.emit('redimensionarTela', larguraTela, alturaTela);
+        if (this.larguraAnterior !== larguraAtual || this.alturaAnterior !== alturaAtual) {
+            // O tamanho da tela foi alterado, chame o método resize() para ajustar os elementos da cena
+            this.resize(larguraAtual, alturaAtual);
+
+            // Atualize as variáveis de largura e altura anteriores
+            this.larguraAnterior = larguraAtual;
+            this.alturaAnterior = alturaAtual;
+        }
+    }
+
+    ajustarElementos(larguraTela, alturaTela) {
+        this.bgImage.setDisplaySize(larguraTela, alturaTela);
+        this.playButton.setPosition(larguraTela/2, alturaTela*0.35);
+        this.settingsButton.setPosition(larguraTela/2, alturaTela*0.5)
+        this.quitButton.setPosition(larguraTela/2, alturaTela*0.65)
+    }
+
+    resize(larguraTela, alturaTela) {
+        // Redimensione os elementos da cena quando o tamanho da tela for alterado
+        this.ajustarElementos(larguraTela, alturaTela);
     }
 }
