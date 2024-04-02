@@ -58,14 +58,6 @@ class Home extends Phaser.Scene {
             });
         });
 
-        // Adicionando animação de flutuação às opções do menu
-        this.tweens.add({
-            targets: [this.playButton, this.settingsButton, this.quitButton],
-            y: '+=5',
-            duration: 1000,
-            yoyo: true,
-            repeat: -1
-        });
         
     }
 

@@ -234,11 +234,29 @@ class Play extends Phaser.Scene {
             this.larguraAnterior = larguraAtual;
             this.alturaAnterior = alturaAtual;
         }
+
+        // Tamanho mínimo e máximo da fonte
+        const minFontSize = 18;
+        const maxFontSize = 30;
+
+        const baseFontSize = 24;
+        // Fator de escala com base na largura de referência
+        let scaleFactor = larguraAtual / 600;
+
+        // Garantir que o tamanho da fonte permaneça dentro do intervalo desejado
+        scaleFactor = Math.max(Math.min(scaleFactor, maxFontSize / baseFontSize), minFontSize / baseFontSize);
+
+        // Tamanho da fonte para cada elemento de texto
+        if(this.textTitle) this.textTitle.setFontSize(baseFontSize * scaleFactor);
+        if(this.beginnerOption) this.beginnerOption.setFontSize(baseFontSize * scaleFactor);
+        if(this.intermediaryOption) this.intermediaryOption.setFontSize(baseFontSize * scaleFactor);
+        if(this.advancedOption) this.advancedOption.setFontSize(baseFontSize * scaleFactor);
+        if(this.dialogueText) this.dialogueText.setFontSize(baseFontSize * scaleFactor);
     }
 
     ajustarElementos(larguraTela, alturaTela) {
+
         this.bgImage.setDisplaySize(larguraTela, alturaTela);
-        this.personagem.setDisplaySize(larguraTela-(larguraTela*0.5), alturaTela);
         this.personagem.setPosition(larguraTela / 2, alturaTela/1.5);
 
         if(this.dialogueBoxAnimated == true) {
@@ -247,21 +265,9 @@ class Play extends Phaser.Scene {
             this.beginnerOption.setPosition(larguraTela*0.2, alturaTela*0.8);
             this.intermediaryOption.setPosition(larguraTela*0.5, alturaTela*0.8);
             this.advancedOption.setPosition(larguraTela*0.8, alturaTela*0.8);
-            this.textTitle.setPosition(game.canvas.width*0.5, game.canvas.height*0.7);
+            this.textTitle.setPosition(larguraTela*0.5, alturaTela*0.7);
         }
 
-        if(larguraTela < 500) {
-             // Ajuste os elementos, incluindo os tamanhos dos textos
-            if (this.textTitle) this.textTitle.setFontSize(18);
-            if (this.beginnerOption) this.beginnerOption.setFontSize(18);
-            if (this.intermediaryOption) this.intermediaryOption.setFontSize(18);
-            if (this.advancedOption) this.advancedOption.setFontSize(18);
-        } else {
-            if (this.textTitle) this.textTitle.setFontSize(24);
-            if (this.beginnerOption) this.beginnerOption.setFontSize(24);
-            if (this.intermediaryOption) this.intermediaryOption.setFontSize(24);
-            if (this.advancedOption) this.advancedOption.setFontSize(24);
-        }
     }
 
     resize(larguraTela, alturaTela) {

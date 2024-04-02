@@ -2,6 +2,8 @@
 class Quizzes extends Phaser.Scene {
     constructor() {
         super({ key: 'Quizzes' });
+        this.bgImage;
+        this.dialogueBoxAnimated;
         this.playMusic;
         this.confirm;
         this.correct;
@@ -82,8 +84,7 @@ class Quizzes extends Phaser.Scene {
     create() {
         // Adiciona o fundo
         this.bgImage = this.add.image(0, 0, 'quarto').setOrigin(0);
-        // Adiciona o personagem
-        this.personagem = this.add.image(-200, this.game.canvas.height/1.5, 'zack');
+
         // Adiciona a caixa de diálogo
         this.dialogueBox = this.add.rectangle(-this.game.canvas.width, this.game.canvas.height/1.3, this.game.canvas.width, this.game.canvas.height/100, 0x000000, 0.7).setOrigin(0.5, 0.5);
 
@@ -99,7 +100,7 @@ class Quizzes extends Phaser.Scene {
     }
 
     update() {
-
+        this.checkScreen();
     }
 
     // Função para embaralhar uma lista
@@ -131,7 +132,10 @@ class Quizzes extends Phaser.Scene {
                 targets: this.dialogueBox, // O alvo da animação é o sprite do personagem
                 scaleX: 60, // Fator de escala vertical
                 duration: 200, // Duração da animação em milissegundos (0.5 segundo neste caso)
-                ease: 'Linear' // Tipo de easing (suavização) da animação
+                ease: 'Linear', // Tipo de easing (suavização) da animação
+                onComplete: () => {
+                    this.dialogueBoxAnimated = true;
+                }
             });
         }, 300);
 
@@ -341,4 +345,51 @@ class Quizzes extends Phaser.Scene {
             document.body.removeChild(messageDiv);
         }, 3000); // Tempo em milissegundos antes de remover a mensagem
     }
+
+    checkScreen() {
+        const larguraAtual = this.game.canvas.width;
+        const alturaAtual = this.game.canvas.height;
+
+        if (this.larguraAnterior !== larguraAtual || this.alturaAnterior !== alturaAtual) {
+            // O tamanho da tela foi alterado, chame o método resize() para ajustar os elementos da cena
+            this.resize(larguraAtual, alturaAtual);
+
+            // Atualize as variáveis de largura e altura anteriores
+            this.larguraAnterior = larguraAtual;
+            this.alturaAnterior = alturaAtual;
+        }
+
+        // Tamanho mínimo e máximo da fonte
+        const minFontSize = 18;
+        const maxFontSize = 30;
+
+        const baseFontSize = 24;
+        // Fator de escala com base na largura de referência
+        let scaleFactor = larguraAtual / 600;
+
+        // Garantir que o tamanho da fonte permaneça dentro do intervalo desejado
+        scaleFactor = Math.max(Math.min(scaleFactor, maxFontSize / baseFontSize), minFontSize / baseFontSize);
+
+        // Tamanho da fonte para cada elemento de texto
+        if(this.textTitle) this.textTitle.setFontSize(baseFontSize * scaleFactor);
+        if(this.dialogueText) this.dialogueText.setFontSize(baseFontSize * scaleFactor);
+    }
+
+    ajustarElementos(larguraTela, alturaTela) {
+
+        this.bgImage.setDisplaySize(larguraTela, alturaTela);
+
+        if(this.dialogueBoxAnimated == true) {
+            this.dialogueBox.setDisplaySize(larguraTela*2, (alturaTela/100)*30);
+            this.dialogueBox.setPosition(larguraTela/2, alturaTela/1.3);
+            this.textPhaseTitle.setPosition(larguraTela*0.5, alturaTela*0.7);
+        }
+
+    }
+
+    resize(larguraTela, alturaTela) {
+        // Redimensione os elementos da cena quando o tamanho da tela for alterado
+        this.ajustarElementos(larguraTela, alturaTela);
+    }
+
 }   
