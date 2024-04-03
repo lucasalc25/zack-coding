@@ -19,7 +19,7 @@ class Home extends Phaser.Scene {
         const menuMusic = this.sound.add('menuMusic', { loop: true });
         menuMusic.play();
 
-        this.bgImage = this.add.image(-50, -75, 'bgMenu').setOrigin(0);
+        this.bgImage = this.add.tileSprite(0, 0, this.game.canvas.width, this.game.canvas.height, 'bgMenu').setOrigin(0,0);
 
         const hover = this.sound.add('hover');
         hover.setVolume(0.4);
@@ -62,6 +62,7 @@ class Home extends Phaser.Scene {
     }
 
     update() {
+        this.bgImage.tilePositionY += 0.3; // Ajuste este valor para controlar a velocidade do efeito parallax
         this.checkScreen();
     }
 

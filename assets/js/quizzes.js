@@ -86,7 +86,7 @@ class Quizzes extends Phaser.Scene {
         this.bgImage = this.add.image(0, 0, 'quarto').setOrigin(0);
 
         // Adiciona a caixa de diálogo
-        this.dialogueBox = this.add.rectangle(-this.game.canvas.width, this.game.canvas.height/1.3, this.game.canvas.width, this.game.canvas.height/100, 0x000000, 0.7).setOrigin(0.5, 0.5);
+        this.dialogueBox = this.add.rectangle(this.game.canvas.width/2, this.game.canvas.height, 10, this.game.canvas.height, 0x000000, 0.7).setOrigin(0.5, 0.5);
 
         this.playMusic = this.sound.add('playMusic', { loop: true });
         this.playMusic.setVolume(0.1);
@@ -121,7 +121,7 @@ class Quizzes extends Phaser.Scene {
         // Mostrando parte da dialogueBox
         this.tweens.add({
             targets: this.dialogueBox,
-            y: game.canvas.height/2,
+            y: this.game.canvas.height/2,
             duration: 200, // Duração da animação em milissegundos (0.5 segundo neste caso)
             ease: 'Linear'
         });
@@ -185,7 +185,7 @@ class Quizzes extends Phaser.Scene {
         });
 
         // Botão para verificar a ordem das opções
-        const button = this.add.text(400, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
+        const button = this.add.text(this.game.canvas.width/2, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
         button.setInteractive();
         button.on('pointerdown', () => {
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
@@ -200,8 +200,6 @@ class Quizzes extends Phaser.Scene {
                 }
                 this.phaseIndex++;
                 this.phase = this.beginnerPhases[this.phaseIndex];
-                button.y = this.game.canvas.height-80;
-                this.dialogueBox.y = this.game.canvas.height;
                 setTimeout(() => {
                     // Remove todos os elementos filhos e inicia a proxima cena
                     while (column.firstChild) {
@@ -305,7 +303,7 @@ class Quizzes extends Phaser.Scene {
         
         messageDiv.style.position = 'fixed';
         messageDiv.style.left = '50%';
-        messageDiv.style.top = alturaTela + 50 + 'px';
+        messageDiv.style.top = '84%';
 
         // Adiciona a mensagem à tela
         document.body.appendChild(messageDiv);
@@ -332,7 +330,7 @@ class Quizzes extends Phaser.Scene {
 
         messageDiv.style.position = 'fixed';
         messageDiv.style.left = '50%';
-        messageDiv.style.top = alturaTela + 50 + 'px';
+        messageDiv.style.top = alturaTela - alturaTela*0.15 + 'px';
 
         // Aplica a animação CSS à mensagem
         setTimeout(() => {
@@ -361,9 +359,9 @@ class Quizzes extends Phaser.Scene {
 
         // Tamanho mínimo e máximo da fonte
         const minFontSize = 18;
-        const maxFontSize = 30;
+        const maxFontSize = 24;
 
-        const baseFontSize = 24;
+        const baseFontSize = 20;
         // Fator de escala com base na largura de referência
         let scaleFactor = larguraAtual / 600;
 
@@ -371,7 +369,7 @@ class Quizzes extends Phaser.Scene {
         scaleFactor = Math.max(Math.min(scaleFactor, maxFontSize / baseFontSize), minFontSize / baseFontSize);
 
         // Tamanho da fonte para cada elemento de texto
-        if(this.textTitle) this.textTitle.setFontSize(baseFontSize * scaleFactor);
+        if(this.textPhaseTitle) this.textPhaseTitle.setFontSize(baseFontSize * scaleFactor);
         if(this.dialogueText) this.dialogueText.setFontSize(baseFontSize * scaleFactor);
     }
 
@@ -382,7 +380,7 @@ class Quizzes extends Phaser.Scene {
         if(this.dialogueBoxAnimated == true) {
             this.dialogueBox.setDisplaySize(larguraTela*2, (alturaTela/100)*30);
             this.dialogueBox.setPosition(larguraTela/2, alturaTela/1.3);
-            this.textPhaseTitle.setPosition(larguraTela*0.5, alturaTela*0.7);
+            this.textPhaseTitle.setPosition(larguraTela/2, alturaTela/15);
         }
 
     }
