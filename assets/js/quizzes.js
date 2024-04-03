@@ -295,15 +295,22 @@ class Quizzes extends Phaser.Scene {
         });
     }
 
-    showCorrect(alturaTela) {
+    showCorrect() {
         const messageDiv = document.createElement("div");
         messageDiv.className = "message";
         messageDiv.textContent = "Você acertou!";
 
         
-        messageDiv.style.position = 'fixed';
+        // Seleciona o último elemento da lista
+        const lastLine = document.querySelector('.column .line:last-child');
+        // Obtém as coordenadas do último elemento da lista
+        const LastLinePosition = lastLine.getBoundingClientRect();
+        const posY = LastLinePosition.bottom + 100; // Ajuste a posição vertical conforme necessário
+
+        // Define a posição do elemento alvo com base nas coordenadas do último elemento da lista
+        messageDiv.style.position = 'absolute';
         messageDiv.style.left = '50%';
-        messageDiv.style.top = '84%';
+        messageDiv.style.top = posY + 'px'; // Define a posição vertical
 
         // Adiciona a mensagem à tela
         document.body.appendChild(messageDiv);
@@ -320,7 +327,7 @@ class Quizzes extends Phaser.Scene {
         }, 3000); // Tempo em milissegundos antes de remover a mensagem
     }
 
-    showWrong(alturaTela) {
+    showWrong() {
         const messageDiv = document.createElement("div");
         messageDiv.className = "message";
         messageDiv.textContent = "Errado! Tente de novo!";
@@ -328,9 +335,16 @@ class Quizzes extends Phaser.Scene {
         // Adiciona a mensagem à tela
         document.body.appendChild(messageDiv);
 
-        messageDiv.style.position = 'fixed';
+        // Seleciona o último elemento da lista
+        const lastLine = document.querySelector('.column .line:last-child');
+        // Obtém as coordenadas do último elemento da lista
+        const LastLinePosition = lastLine.getBoundingClientRect();
+        const posY = LastLinePosition.bottom + 100; // Ajuste a posição vertical conforme necessário
+
+        // Define a posição do elemento alvo com base nas coordenadas do último elemento da lista
+        messageDiv.style.position = 'absolute';
         messageDiv.style.left = '50%';
-        messageDiv.style.top = alturaTela - alturaTela*0.15 + 'px';
+        messageDiv.style.top = posY + 'px'; // Define a posição vertical
 
         // Aplica a animação CSS à mensagem
         setTimeout(() => {
