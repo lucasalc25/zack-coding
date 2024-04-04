@@ -139,7 +139,7 @@ class Quizzes extends Phaser.Scene {
         }, 300);
 
         // Adiciona o titulo no painel
-        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '14px', fill: '#ffffff', marginTop: '10px' }).setOrigin(0.5, 0).setWordWrapWidth(400); // Largura máxima da caixa de texto
+        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px', align: 'center' }).setOrigin(0.5, 0).setWordWrapWidth(game.canvas.width-60); // Largura máxima da caixa de texto
 
         setTimeout(() => {
             // Animaçao do titulo
@@ -172,7 +172,7 @@ class Quizzes extends Phaser.Scene {
 
         // Adiciona a div pai ao corpo do documento
         document.body.appendChild(column);
-
+        
         const lines = document.querySelectorAll(".line");
 
         document.addEventListener("dragstart", (e) => {
@@ -181,48 +181,6 @@ class Quizzes extends Phaser.Scene {
 
         document.addEventListener("dragend", (e) => {
             e.target.classList.remove("dragging");
-        });
-
-        // Botão para verificar a ordem das opções
-        const button = this.add.text(this.game.canvas.width/2, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
-        button.setInteractive();
-        button.on('pointerdown', () => {
-            // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
-            if (this.checkOrder()) {
-                this.clearLines();
-                this.showCorrect(this.game.canvas.height-120);
-                this.correct.play();
-
-                // Itera sobre cada elemento filho e aplica uma cor de fundo
-                for (var i = 0; i < lines.length-1; i++) {
-                    lines[i].style.backgroundColor = '#228b22'; // Defina a cor de fundo desejada aqui
-                }
-                this.phaseIndex++;
-                this.phase = this.beginnerPhases[this.phaseIndex];
-                setTimeout(() => {
-                    // Remove todos os elementos filhos e inicia a proxima cena
-                    while (column.firstChild) {
-                        column.removeChild(column.firstChild);
-                    }  
-                    this.textPhaseTitle.destroy();
-                    button.destroy();
-                    this.showQuizScreen(this.phase);
-                }, 3000);
-            } else {
-                this.showWrong(this.game.canvas.height);
-                this.wrong.play();
-            }
-            
-        });
-
-        // Evento de hover
-        button.on('pointerover', () => {
-            button.setStyle({ fontSize: '20px', backgroundColor: '#0077FF' }); // Cor amarela ao passar o mouse
-        });
-
-        // Evento de hout
-        button.on('pointerout', () => {
-            button.setStyle({ fontSize: '18px', backgroundColor: '#00BBFF' }); // Restaura a cor original ao retirar o mouse
         });
 
         // Evento arrastar e soltar as opções
@@ -255,6 +213,48 @@ class Quizzes extends Phaser.Scene {
                 }
             });
         });
+
+          // Botão para verificar a ordem das opções
+          const button = this.add.text(this.game.canvas.width/2, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
+          button.setInteractive();
+          button.on('pointerdown', () => {
+              // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
+              if (this.checkOrder()) {
+                  this.clearLines();
+                  this.showCorrect(this.game.canvas.height-120);
+                  this.correct.play();
+  
+                  // Itera sobre cada elemento filho e aplica uma cor de fundo
+                  for (var i = 0; i < lines.length-1; i++) {
+                      lines[i].style.backgroundColor = '#228b22'; // Defina a cor de fundo desejada aqui
+                  }
+                  this.phaseIndex++;
+                  this.phase = this.beginnerPhases[this.phaseIndex];
+                  setTimeout(() => {
+                      // Remove todos os elementos filhos e inicia a proxima cena
+                      while (column.firstChild) {
+                          column.removeChild(column.firstChild);
+                      }  
+                      this.textPhaseTitle.destroy();
+                      button.destroy();
+                      this.showQuizScreen(this.phase);
+                  }, 3000);
+              } else {
+                  this.showWrong(this.game.canvas.height);
+                  this.wrong.play();
+              }
+              
+          });
+  
+          // Evento de hover
+          button.on('pointerover', () => {
+              button.setStyle({ fontSize: '20px', backgroundColor: '#0077FF' }); // Cor amarela ao passar o mouse
+          });
+  
+          // Evento de hout
+          button.on('pointerout', () => {
+              button.setStyle({ fontSize: '18px', backgroundColor: '#00BBFF' }); // Restaura a cor original ao retirar o mouse
+          });
 
         this.scale.on('resize', this.resize, this);
 
@@ -373,14 +373,14 @@ class Quizzes extends Phaser.Scene {
             if(this.dialogueBoxAnimated == true) {
                 this.dialogueBox.setDisplaySize(width*2, (height/100)*30);
                 this.dialogueBox.setPosition(width/2, height/1.3);
-                this.textPhaseTitle.setPosition(width/2, height/15);
+                this.textPhaseTitle.setPosition(width/2, height/15).setWordWrapWidth(width-60);
             }
 
             // Tamanho mínimo e máximo da fonte
             const minFontSize = 18;
             const maxFontSize = 24;
 
-            const baseFontSize = 18;
+            const baseFontSize = 20;
             // Fator de escala com base na largura de referência
             let scaleFactor = width / 600;
 
