@@ -61,7 +61,7 @@ body {
   background-color: transparent;
   padding: 10px;
   opacity: 0;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: bold;
 }
 
@@ -91,9 +91,9 @@ body {
 }
 
 @keyframes correct {
-  0% {font-size: 22px;}
-  25% {font-size: 24px;}
-  50% {font-size: 26px;}
-  75% {font-size: 24px;}
-  100% {font-size: 22px;}
+  0% {font-size: 28px;}
+  25% {font-size: 30px;}
+  50% {font-size: 32px;}
+  75% {font-size: 30px;}
+  100% {font-size: 28px;}
 }

@@ -30,8 +30,10 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        this.scale.on('resize', this.resize, this);
+
         // Adiciona o fundo
-        this.bgImage = this.add.image(0, 0, 'quarto').setOrigin(0);
+        this.bgImage = this.add.image(0, 0,'quarto');
         // Adiciona o personagem
         this.personagem = this.add.image(-200, this.game.canvas.height/1.5, 'zack');
         // Adiciona a caixa de diálogo
@@ -236,22 +238,33 @@ class Play extends Phaser.Scene {
         }
 
         // Tamanho mínimo e máximo da fonte
-        const minFontSize = 18;
-        const maxFontSize = 30;
+        const minFontSize = 20;
+        const maxFontSize = 28;
 
         const baseFontSize = 24;
         // Fator de escala com base na largura de referência
-        let scaleFactor = larguraAtual / 600;
+        let TextScaleFactor = larguraAtual / 600;
 
         // Garantir que o tamanho da fonte permaneça dentro do intervalo desejado
-        scaleFactor = Math.max(Math.min(scaleFactor, maxFontSize / baseFontSize), minFontSize / baseFontSize);
+        TextScaleFactor = Math.max(Math.min(TextScaleFactor, maxFontSize / baseFontSize), minFontSize / baseFontSize);
 
         // Tamanho da fonte para cada elemento de texto
-        if(this.textTitle) this.textTitle.setFontSize(baseFontSize * scaleFactor);
-        if(this.beginnerOption) this.beginnerOption.setFontSize(baseFontSize * scaleFactor);
-        if(this.intermediaryOption) this.intermediaryOption.setFontSize(baseFontSize * scaleFactor);
-        if(this.advancedOption) this.advancedOption.setFontSize(baseFontSize * scaleFactor);
-        if(this.dialogueText) this.dialogueText.setFontSize(baseFontSize * scaleFactor);
+        if(this.textTitle) this.textTitle.setFontSize(baseFontSize * TextScaleFactor);
+        if(this.beginnerOption) this.beginnerOption.setFontSize(baseFontSize * TextScaleFactor);
+        if(this.intermediaryOption) this.intermediaryOption.setFontSize(baseFontSize * TextScaleFactor);
+        if(this.advancedOption) this.advancedOption.setFontSize(baseFontSize * TextScaleFactor);
+        if(this.dialogueText) this.dialogueText.setFontSize(baseFontSize * TextScaleFactor);
+
+        // Tamanho mínimo e máximo da fonte
+        const minBgSize = 18;
+        const maxBgSize = 800;
+
+        const baseBgSize = 24;
+        // Fator de escala com base na largura de referência
+        let bgScaleFactor = larguraAtual / 600;
+
+        // Garantir que o tamanho da fonte permaneça dentro do intervalo desejado
+        bgScaleFactor = Math.max(Math.min(bgScaleFactor, maxBgSize / baseBgSize), minBgSize / baseBgSize);
     }
 
     ajustarElementos(larguraTela, alturaTela) {

@@ -305,7 +305,7 @@ class Quizzes extends Phaser.Scene {
         const lastLine = document.querySelector('.column .line:last-child');
         // Obtém as coordenadas do último elemento da lista
         const LastLinePosition = lastLine.getBoundingClientRect();
-        const posY = LastLinePosition.bottom + 100; // Ajuste a posição vertical conforme necessário
+        const posY = LastLinePosition.bottom + 50; // Ajuste a posição vertical conforme necessário
 
         // Define a posição do elemento alvo com base nas coordenadas do último elemento da lista
         messageDiv.style.position = 'absolute';
@@ -339,7 +339,7 @@ class Quizzes extends Phaser.Scene {
         const lastLine = document.querySelector('.column .line:last-child');
         // Obtém as coordenadas do último elemento da lista
         const LastLinePosition = lastLine.getBoundingClientRect();
-        const posY = LastLinePosition.bottom + 100; // Ajuste a posição vertical conforme necessário
+        const posY = LastLinePosition.bottom + 50; // Ajuste a posição vertical conforme necessário
 
         // Define a posição do elemento alvo com base nas coordenadas do último elemento da lista
         messageDiv.style.position = 'absolute';
