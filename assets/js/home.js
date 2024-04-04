@@ -73,21 +73,18 @@ class Home extends Phaser.Scene {
 
     resize() {
         var orientation = this.scale.orientation;
-        var width, height;
+        var width = this.game.canvas.width;
+        var height = this.game.canvas.height;
 
         if (orientation === Phaser.Scale.PORTRAIT) {
-            width = this.game.canvas.width;
-            height = this.game.canvas.height;
             // Ajustar elementos para orientação retrato
-            this.bgImage.setDisplaySize(width, 565);
-            this.playButton.setPosition(width/2, height*0.3);
+            this.bgImage.setDisplaySize(width, height);
+            this.playButton.setPosition(width/2, height*0.35);
             this.settingsButton.setPosition(width/2, height*0.5)
-            this.quitButton.setPosition(width/2, height*0.7)
+            this.quitButton.setPosition(width/2, height*0.65)
         } else if (orientation === Phaser.Scale.LANDSCAPE) {
-            width = this.game.canvas.width;
-            height = this.game.canvas.height;
             // Ajustar elementos para orientação paisagem
-            this.bgImage.setDisplaySize(800, height);
+            this.bgImage.setDisplaySize(width, height);
             this.playButton.setPosition(width/2, height*0.25);
             this.settingsButton.setPosition(width/2, height*0.5)
             this.quitButton.setPosition(width/2, height*0.75)

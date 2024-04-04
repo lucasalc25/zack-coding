@@ -2,7 +2,8 @@ class Play extends Phaser.Scene {
     constructor() {
         super({ key: 'Play' });
         this.bgImage;
-        this.personagem;
+        this.character;
+        this.characterAnimated = false;
         this.level;
         this.dialogueBox;
         this.dialogueBoxAnimated = false;
@@ -30,12 +31,10 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        this.scale.on('resize', this.resize, this);
-
         // Adiciona o fundo
-        this.bgImage = this.add.image(0, 0,'quarto');
+        this.bgImage = this.add.image(0, 0, 'quarto').setOrigin(0);
         // Adiciona o personagem
-        this.personagem = this.add.image(-200, this.game.canvas.height/1.5, 'zack');
+        this.character = this.add.image(-200, this.game.canvas.height/1.5, 'zack');
         // Adiciona a caixa de diálogo
         this.dialogueBox = this.add.rectangle(-this.game.canvas.width, this.game.canvas.height/1.3, this.game.canvas.width, this.game.canvas.height/100, 0x000000, 0.7).setOrigin(0.5, 0.5);
 
@@ -54,11 +53,15 @@ class Play extends Phaser.Scene {
 
         setTimeout(() => {
             this.showCharacter();
-        }, 1000);                   
+        }, 1000); 
+        
+        this.scale.on('resize', this.resize, this);
+
+        this.scale.on('orientationchange', this.resize, this);
     }
 
     update() {
-        this.checkScreen();
+
     }
 
     showScreen() {
@@ -94,7 +97,7 @@ class Play extends Phaser.Scene {
                 ease: 'Linear',
                 onComplete: () => {
                     this.tweens.add({
-                        targets: this.personagem, // O alvo da animação é a imagem do personagem
+                        targets: this.character, // O alvo da animação é a imagem do personagem
                         x: -this.game.canvas.width, // Coordenada X final para onde o personagem se moverá
                         duration: 500, // Duração da animação em milissegundos (0.5 segundo neste caso)
                         ease: 'Linear', // Tipo de easing (suavização) da animação
@@ -107,12 +110,13 @@ class Play extends Phaser.Scene {
 
     showCharacter() {
         this.tweens.add({
-            targets: this.personagem, // O alvo da animação é a imagem do personagem
+            targets: this.character, // O alvo da animação é a imagem do personagem
             x: this.game.canvas.width/2, // Coordenada X final para onde o personagem se moverá
             duration: 400, // Duração da animação em milissegundos (0.5 segundo neste caso)
             ease: 'Linear', // Tipo de easing (suavização) da animação
             yoyo: false, // Define se a animação deve se repetir reversamente (vai e volta)
             onComplete: () => {
+                this.characterAnimated = true;
                 this.startDialog() 
             }        
         });
@@ -192,6 +196,9 @@ class Play extends Phaser.Scene {
         this.beginnerOption = this.add.text(game.canvas.width*0.2, game.canvas.height*0.8, 'Iniciante', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
         this.intermediaryOption = this.add.text(game.canvas.width*0.5, game.canvas.height*0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
         this.advancedOption = this.add.text(game.canvas.width*0.8, game.canvas.height*0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
+
+        this.resize(this.scale.gameSize);
+        
         // Configurando interações dos botões
         [this.beginnerOption, this.intermediaryOption, this.advancedOption].forEach(button => {
             button.setInteractive();
@@ -224,37 +231,52 @@ class Play extends Phaser.Scene {
         });
     }
 
-    checkScreen() {
-        const larguraAtual = this.game.canvas.width;
-        const alturaAtual = this.game.canvas.height;
+    resize() {
+        var orientation = this.scale.orientation;
+        var width = this.game.canvas.width;
+        var height = this.game.canvas.height;
 
-        if (this.larguraAnterior !== larguraAtual || this.alturaAnterior !== alturaAtual) {
-            // O tamanho da tela foi alterado, chame o método resize() para ajustar os elementos da cena
-            this.resize(larguraAtual, alturaAtual);
+        if (orientation === Phaser.Scale.PORTRAIT) {
+            // Ajustar elementos para orientação retrato
 
-            // Atualize as variáveis de largura e altura anteriores
-            this.larguraAnterior = larguraAtual;
-            this.alturaAnterior = alturaAtual;
+            if(this.characterAnimated == true) {
+                this.character.setPosition(width / 2, height/1.5);
+            }
+
+            if(this.dialogueBoxAnimated == true) {
+                this.dialogueBox.setDisplaySize(width*2, (height/100)*30);
+                this.dialogueBox.setPosition(0, height/1.3);
+                this.beginnerOption.setPosition(width*0.2, height*0.8);
+                this.intermediaryOption.setPosition(width*0.5, height*0.8);
+                this.advancedOption.setPosition(width*0.8, height*0.8);
+                this.textTitle.setPosition(width*0.5, height*0.7);
+            }
+
+            // Tamanho mínimo e máximo da fonte
+            const minFontSize = 20;
+            const maxFontSize = 28;
+
+            const baseFontSize = 24;
+            // Fator de escala com base na largura de referência
+            let TextScaleFactor = width / 800;
+
+            // Garantir que o tamanho da fonte permaneça dentro do intervalo desejado
+            TextScaleFactor = Math.max(Math.min(TextScaleFactor, maxFontSize / baseFontSize), minFontSize / baseFontSize);
+
+            // Tamanho da fonte para cada elemento de texto
+            if(this.textTitle) this.textTitle.setFontSize(baseFontSize * TextScaleFactor);
+            if(this.beginnerOption) this.beginnerOption.setFontSize(baseFontSize * TextScaleFactor);
+            if(this.intermediaryOption) this.intermediaryOption.setFontSize(baseFontSize * TextScaleFactor);
+            if(this.advancedOption) this.advancedOption.setFontSize(baseFontSize * TextScaleFactor);
+            if(this.dialogueText) this.dialogueText.setFontSize(baseFontSize * TextScaleFactor);
+
+        } else if (orientation === Phaser.Scale.LANDSCAPE) {
+            // Ajustar elementos para orientação paisagem
+
         }
+    }
 
-        // Tamanho mínimo e máximo da fonte
-        const minFontSize = 20;
-        const maxFontSize = 28;
-
-        const baseFontSize = 24;
-        // Fator de escala com base na largura de referência
-        let TextScaleFactor = larguraAtual / 600;
-
-        // Garantir que o tamanho da fonte permaneça dentro do intervalo desejado
-        TextScaleFactor = Math.max(Math.min(TextScaleFactor, maxFontSize / baseFontSize), minFontSize / baseFontSize);
-
-        // Tamanho da fonte para cada elemento de texto
-        if(this.textTitle) this.textTitle.setFontSize(baseFontSize * TextScaleFactor);
-        if(this.beginnerOption) this.beginnerOption.setFontSize(baseFontSize * TextScaleFactor);
-        if(this.intermediaryOption) this.intermediaryOption.setFontSize(baseFontSize * TextScaleFactor);
-        if(this.advancedOption) this.advancedOption.setFontSize(baseFontSize * TextScaleFactor);
-        if(this.dialogueText) this.dialogueText.setFontSize(baseFontSize * TextScaleFactor);
-
+    checkScreen() {
         // Tamanho mínimo e máximo da fonte
         const minBgSize = 18;
         const maxBgSize = 800;
@@ -265,26 +287,5 @@ class Play extends Phaser.Scene {
 
         // Garantir que o tamanho da fonte permaneça dentro do intervalo desejado
         bgScaleFactor = Math.max(Math.min(bgScaleFactor, maxBgSize / baseBgSize), minBgSize / baseBgSize);
-    }
-
-    ajustarElementos(larguraTela, alturaTela) {
-
-        this.bgImage.setDisplaySize(larguraTela, alturaTela);
-        this.personagem.setPosition(larguraTela / 2, alturaTela/1.5);
-
-        if(this.dialogueBoxAnimated == true) {
-            this.dialogueBox.setDisplaySize(larguraTela*2, (alturaTela/100)*30);
-            this.dialogueBox.setPosition(0, alturaTela/1.3);
-            this.beginnerOption.setPosition(larguraTela*0.2, alturaTela*0.8);
-            this.intermediaryOption.setPosition(larguraTela*0.5, alturaTela*0.8);
-            this.advancedOption.setPosition(larguraTela*0.8, alturaTela*0.8);
-            this.textTitle.setPosition(larguraTela*0.5, alturaTela*0.7);
-        }
-
-    }
-
-    resize(larguraTela, alturaTela) {
-        // Redimensione os elementos da cena quando o tamanho da tela for alterado
-        this.ajustarElementos(larguraTela, alturaTela);
     }
 }

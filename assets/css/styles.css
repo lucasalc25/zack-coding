@@ -4,7 +4,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
+}
+
+.game-container {
+  max-width: 800px;
+  max-height: 565px;
 }
 
 .column {
@@ -63,6 +68,8 @@ body {
   opacity: 0;
   font-size: 28px;
   font-weight: bold;
+  width: 100%;
+  text-align: center;
 }
 
 .message-show {

@@ -100,7 +100,6 @@ class Quizzes extends Phaser.Scene {
     }
 
     update() {
-        this.checkScreen();
     }
 
     // Função para embaralhar uma lista
@@ -140,7 +139,7 @@ class Quizzes extends Phaser.Scene {
         }, 300);
 
         // Adiciona o titulo no painel
-        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px' }).setOrigin(0.5, 0).setWordWrapWidth(500); // Largura máxima da caixa de texto
+        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '14px', fill: '#ffffff', marginTop: '10px' }).setOrigin(0.5, 0).setWordWrapWidth(400); // Largura máxima da caixa de texto
 
         setTimeout(() => {
             // Animaçao do titulo
@@ -257,6 +256,12 @@ class Quizzes extends Phaser.Scene {
             });
         });
 
+        this.scale.on('resize', this.resize, this);
+
+        this.scale.on('orientationchange', this.resize, this);
+
+        this.resize(this.scale.gameSize);
+
     }
 
     // Função para exibir o texto de forma gradual
@@ -358,50 +363,38 @@ class Quizzes extends Phaser.Scene {
         }, 3000); // Tempo em milissegundos antes de remover a mensagem
     }
 
-    checkScreen() {
-        const larguraAtual = this.game.canvas.width;
-        const alturaAtual = this.game.canvas.height;
+    resize() {
+        var orientation = this.scale.orientation;
+        var width = this.game.canvas.width;
+        var height = this.game.canvas.height;
 
-        if (this.larguraAnterior !== larguraAtual || this.alturaAnterior !== alturaAtual) {
-            // O tamanho da tela foi alterado, chame o método resize() para ajustar os elementos da cena
-            this.resize(larguraAtual, alturaAtual);
+        if (orientation === Phaser.Scale.PORTRAIT) {
+            // Ajustar elementos para orientação retrato
+            if(this.dialogueBoxAnimated == true) {
+                this.dialogueBox.setDisplaySize(width*2, (height/100)*30);
+                this.dialogueBox.setPosition(width/2, height/1.3);
+                this.textPhaseTitle.setPosition(width/2, height/15);
+            }
 
-            // Atualize as variáveis de largura e altura anteriores
-            this.larguraAnterior = larguraAtual;
-            this.alturaAnterior = alturaAtual;
+            // Tamanho mínimo e máximo da fonte
+            const minFontSize = 18;
+            const maxFontSize = 24;
+
+            const baseFontSize = 18;
+            // Fator de escala com base na largura de referência
+            let scaleFactor = width / 600;
+
+            // Garantir que o tamanho da fonte permaneça dentro do intervalo desejado
+            scaleFactor = Math.max(Math.min(scaleFactor, maxFontSize / baseFontSize), minFontSize / baseFontSize);
+
+            // Tamanho da fonte para cada elemento de texto
+            if(this.textPhaseTitle) this.textPhaseTitle.setFontSize(baseFontSize * scaleFactor);
+            if(this.dialogueText) this.dialogueText.setFontSize(baseFontSize * scaleFactor);
+
+        } else if (orientation === Phaser.Scale.LANDSCAPE) {
+            // Ajustar elementos para orientação paisagem
+
         }
-
-        // Tamanho mínimo e máximo da fonte
-        const minFontSize = 18;
-        const maxFontSize = 24;
-
-        const baseFontSize = 20;
-        // Fator de escala com base na largura de referência
-        let scaleFactor = larguraAtual / 600;
-
-        // Garantir que o tamanho da fonte permaneça dentro do intervalo desejado
-        scaleFactor = Math.max(Math.min(scaleFactor, maxFontSize / baseFontSize), minFontSize / baseFontSize);
-
-        // Tamanho da fonte para cada elemento de texto
-        if(this.textPhaseTitle) this.textPhaseTitle.setFontSize(baseFontSize * scaleFactor);
-        if(this.dialogueText) this.dialogueText.setFontSize(baseFontSize * scaleFactor);
-    }
-
-    ajustarElementos(larguraTela, alturaTela) {
-
-        this.bgImage.setDisplaySize(larguraTela, alturaTela);
-
-        if(this.dialogueBoxAnimated == true) {
-            this.dialogueBox.setDisplaySize(larguraTela*2, (alturaTela/100)*30);
-            this.dialogueBox.setPosition(larguraTela/2, alturaTela/1.3);
-            this.textPhaseTitle.setPosition(larguraTela/2, alturaTela/15);
-        }
-
-    }
-
-    resize(larguraTela, alturaTela) {
-        // Redimensione os elementos da cena quando o tamanho da tela for alterado
-        this.ajustarElementos(larguraTela, alturaTela);
     }
 
 }   
