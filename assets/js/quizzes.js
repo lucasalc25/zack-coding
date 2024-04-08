@@ -1,4 +1,3 @@
-
 class Quizzes extends Phaser.Scene {
     constructor() {
         super({ key: 'Quizzes' });
@@ -14,6 +13,15 @@ class Quizzes extends Phaser.Scene {
                 title: "Fase 1: Monte a estrutura base de um algoritmo", 
                 tips: ["Primeiro declaramos as variáveis"], 
                 code: [ "var", 
+                        "inicio", 
+                        "fimalgoritmo",
+                        "var", 
+                        "inicio", 
+                        "fimalgoritmo",
+                        "var", 
+                        "inicio", 
+                        "fimalgoritmo",
+                        "var", 
                         "inicio", 
                         "fimalgoritmo"]
             },
@@ -397,4 +405,30 @@ class Quizzes extends Phaser.Scene {
         }
     }
 
-}   
+}
+
+
+const columnHeight = document.querySelector('.column').offsetHeight;
+const messageHeight = document.querySelector('.message').offsetHeight;
+
+// Calcula a altura total somando as alturas dos elementos
+const totalHeight = this.textPhaseTitle.offsetHeight + columnHeight + messageHeight + ;
+
+
+Quizzes.config = {
+    type: Phaser.AUTO,
+    parent: 'game-container', 
+    scale: {
+        mode: Phaser.Scale.RESIZE,
+        min: {
+            width: 365,
+            height: 365
+        },
+        max: {
+            width: 800,
+            height: totalHeight
+        },
+        orientation: Phaser.Scale.Orientation.DEFAULT,
+    },
+    scene: [Home, Play, Quizzes, End],
+};

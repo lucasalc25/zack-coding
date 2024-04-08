@@ -117,8 +117,8 @@ class Play extends Phaser.Scene {
             yoyo: false, // Define se a animação deve se repetir reversamente (vai e volta)
             onComplete: () => {
                 this.characterAnimated = true;
-                this.startDialog() 
-            }        
+                this.startDialog(); 
+            }       
         });
     }
 
@@ -189,6 +189,7 @@ class Play extends Phaser.Scene {
             }
         }
     }
+    
      // Função para mostrar as opçoes de escolha
      showChoices() {
         this.textTitle = this.add.text(game.canvas.width*0.5, game.canvas.height*0.7, 'Clique no seu nível:', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
