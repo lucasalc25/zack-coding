@@ -78,16 +78,12 @@ class Home extends Phaser.Scene {
 
         if (orientation === Phaser.Scale.PORTRAIT) {
             // Ajustar elementos para orientação retrato
-            document.body.style.height = "100%"
-            document.body.style.width = "100%"
             this.bgImage.setDisplaySize(width, height);
             this.playButton.setPosition(width/2, height*0.35);
             this.settingsButton.setPosition(width/2, height*0.5)
             this.quitButton.setPosition(width/2, height*0.65)
         } else if (orientation === Phaser.Scale.LANDSCAPE) {
             // Ajustar elementos para orientação paisagem
-            document.body.style.height = "100%"
-            document.body.style.width = "90%"
             this.bgImage.setDisplaySize(width, height);
             this.playButton.setPosition(width/2, height*0.25);
             this.settingsButton.setPosition(width/2, height*0.5)

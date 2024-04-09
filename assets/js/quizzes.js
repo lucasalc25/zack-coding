@@ -155,7 +155,7 @@ class Quizzes extends Phaser.Scene {
             // Animaçao do titulo
             this.tweens.add({
                 targets: this.textPhaseTitle, // O alvo da animação é o texto com o título
-                y: game.canvas.height/15, // Fator de escala vertical
+                y: game.canvas.height/14, // Fator de escala vertical
                 duration: 300, // Duração da animação em milissegundos (0.5 segundo neste caso)
                 ease: 'Linear', // Tipo de easing (suavização) da animação
             });
@@ -266,12 +266,6 @@ class Quizzes extends Phaser.Scene {
               this.confirmBtn.setStyle({ fontSize: '18px', backgroundColor: '#00BBFF' }); // Restaura a cor original ao retirar o mouse
           });
 
-        this.scale.on('resize', this.resize, this);
-
-        this.scale.on('orientationchange', this.resize, this);
-
-        this.resize(this.scale.gameSize);
-
     }
 
     // Função para exibir o texto de forma gradual
@@ -373,39 +367,6 @@ class Quizzes extends Phaser.Scene {
         }, 3000); // Tempo em milissegundos antes de remover a mensagem
     }
 
-    resize() {
-        var orientation = this.scale.orientation;
-        var width = this.game.canvas.width;
-        var height = this.game.canvas.height;
 
-        if (orientation === Phaser.Scale.PORTRAIT) {
-            // Ajustar elementos para orientação retrato
-
-            if(this.dialogueBoxAnimated == true) {
-                this.dialogueBox.setDisplaySize(width*2, (height/100)*30);
-                this.dialogueBox.setPosition(width/2, height/1.3);
-                this.textPhaseTitle.setPosition(width/2, height/15).setWordWrapWidth(width-50);
-            }
-
-            // Tamanho mínimo e máximo da fonte
-            const minFontSize = 18;
-            const maxFontSize = 24;
-
-            const baseFontSize = 20;
-            // Fator de escala com base na largura de referência
-            let scaleFactor = width / 600;
-
-            // Garantir que o tamanho da fonte permaneça dentro do intervalo desejado
-            scaleFactor = Math.max(Math.min(scaleFactor, maxFontSize / baseFontSize), minFontSize / baseFontSize);
-
-            // Tamanho da fonte para cada elemento de texto
-            if(this.textPhaseTitle) this.textPhaseTitle.setFontSize(baseFontSize * scaleFactor);
-            if(this.dialogueText) this.dialogueText.setFontSize(baseFontSize * scaleFactor);
-
-        } else if (orientation === Phaser.Scale.LANDSCAPE) {
-            // Ajustar elementos para orientação paisagem
-
-        }
-    }
 
 }
