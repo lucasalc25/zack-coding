@@ -4,12 +4,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
 }
 
 .game-container {
   max-width: 800px;
-  max-height: 565px;
+  max-height: 800px;
 }
 
 .column {

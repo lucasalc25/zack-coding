@@ -239,6 +239,9 @@ class Play extends Phaser.Scene {
 
         if (orientation === Phaser.Scale.PORTRAIT) {
             // Ajustar elementos para orientação retrato
+            document.body.style.overflowY = "auto";
+            document.body.style.height = "100%";
+            this.game.canvas.height = window.innerHeight;
 
             if(this.characterAnimated == true) {
                 this.character.setPosition(width / 2, height/1.5);

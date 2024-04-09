@@ -78,6 +78,7 @@ class Quizzes extends Phaser.Scene {
         this.column;
         this.lines;
         this.quizzCode = [];
+        this.confirmBtn;
         this.currentOrder = [];
         this.codeIndex = 0;
     }
@@ -108,6 +109,7 @@ class Quizzes extends Phaser.Scene {
     }
 
     update() {
+
     }
 
     // Função para embaralhar uma lista
@@ -223,9 +225,9 @@ class Quizzes extends Phaser.Scene {
         });
 
           // Botão para verificar a ordem das opções
-          const button = this.add.text(this.game.canvas.width/2, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
-          button.setInteractive();
-          button.on('pointerdown', () => {
+          this.confirmBtn = this.add.text(this.game.canvas.width/2, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
+          this.confirmBtn.setInteractive();
+          this.confirmBtn.on('pointerdown', () => {
               // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
               if (this.checkOrder()) {
                   this.clearLines();
@@ -244,7 +246,7 @@ class Quizzes extends Phaser.Scene {
                           column.removeChild(column.firstChild);
                       }  
                       this.textPhaseTitle.destroy();
-                      button.destroy();
+                      this.confirmBtn.destroy();
                       this.showQuizScreen(this.phase);
                   }, 3000);
               } else {
@@ -255,13 +257,13 @@ class Quizzes extends Phaser.Scene {
           });
   
           // Evento de hover
-          button.on('pointerover', () => {
-              button.setStyle({ fontSize: '20px', backgroundColor: '#0077FF' }); // Cor amarela ao passar o mouse
+          this.confirmBtn.on('pointerover', () => {
+              this.confirmBtn.setStyle({ fontSize: '20px', backgroundColor: '#0077FF' }); // Cor amarela ao passar o mouse
           });
   
           // Evento de hout
-          button.on('pointerout', () => {
-              button.setStyle({ fontSize: '18px', backgroundColor: '#00BBFF' }); // Restaura a cor original ao retirar o mouse
+          this.confirmBtn.on('pointerout', () => {
+              this.confirmBtn.setStyle({ fontSize: '18px', backgroundColor: '#00BBFF' }); // Restaura a cor original ao retirar o mouse
           });
 
         this.scale.on('resize', this.resize, this);
@@ -378,10 +380,11 @@ class Quizzes extends Phaser.Scene {
 
         if (orientation === Phaser.Scale.PORTRAIT) {
             // Ajustar elementos para orientação retrato
+
             if(this.dialogueBoxAnimated == true) {
                 this.dialogueBox.setDisplaySize(width*2, (height/100)*30);
                 this.dialogueBox.setPosition(width/2, height/1.3);
-                this.textPhaseTitle.setPosition(width/2, height/15).setWordWrapWidth(width-60);
+                this.textPhaseTitle.setPosition(width/2, height/15).setWordWrapWidth(width-50);
             }
 
             // Tamanho mínimo e máximo da fonte
@@ -406,29 +409,3 @@ class Quizzes extends Phaser.Scene {
     }
 
 }
-
-
-const columnHeight = document.querySelector('.column').offsetHeight;
-const messageHeight = document.querySelector('.message').offsetHeight;
-
-// Calcula a altura total somando as alturas dos elementos
-const totalHeight = this.textPhaseTitle.offsetHeight + columnHeight + messageHeight + ;
-
-
-Quizzes.config = {
-    type: Phaser.AUTO,
-    parent: 'game-container', 
-    scale: {
-        mode: Phaser.Scale.RESIZE,
-        min: {
-            width: 365,
-            height: 365
-        },
-        max: {
-            width: 800,
-            height: totalHeight
-        },
-        orientation: Phaser.Scale.Orientation.DEFAULT,
-    },
-    scene: [Home, Play, Quizzes, End],
-};

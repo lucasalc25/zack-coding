@@ -20,7 +20,7 @@ var config = {
         },
         max: {
             width: 800,
-            height: 565
+            height: 1000
         },
         orientation: Phaser.Scale.Orientation.DEFAULT,
     },
