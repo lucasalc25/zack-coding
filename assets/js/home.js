@@ -16,6 +16,8 @@ class Home extends Phaser.Scene {
     }
 
     create() {
+        // Adicione uma classe CSS específica para a div correspondente a esta cena
+        this.game.canvas.parentElement.classList.add('home');
 
         const menuMusic = this.sound.add('menuMusic', { loop: true });
         menuMusic.play();
@@ -43,10 +45,13 @@ class Home extends Phaser.Scene {
                 menuMusic.stop();
                 this.scene.stop('Home');
                 if(button.text == 'Jogar') {
+                    // Remove a classe home
+                    this.game.canvas.parentElement.classList.remove('home');
+
                     this.scene.start('Play');
                 }
                 if(button.text == 'Sair') {
-                    // Desabilitando o botão para evitar ações repetidas
+                    this.game.canvas.parentElement.classList.remove('home');
                     this.scene.start('End');
                 }
             });

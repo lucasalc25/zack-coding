@@ -31,6 +31,9 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        // Adicione uma classe CSS específica para a div correspondente a esta cena
+        this.game.canvas.parentElement.classList.add('play');
+
         // Adiciona o fundo
         this.bgImage = this.add.image(0, 0, 'quarto').setOrigin(0);
         // Adiciona o personagem
@@ -197,8 +200,6 @@ class Play extends Phaser.Scene {
         this.beginnerOption = this.add.text(game.canvas.width*0.2, game.canvas.height*0.8, 'Iniciante', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
         this.intermediaryOption = this.add.text(game.canvas.width*0.5, game.canvas.height*0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
         this.advancedOption = this.add.text(game.canvas.width*0.8, game.canvas.height*0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
-
-        this.resize(this.scale.gameSize);
         
         // Configurando interações dos botões
         [this.beginnerOption, this.intermediaryOption, this.advancedOption].forEach(button => {
@@ -216,6 +217,8 @@ class Play extends Phaser.Scene {
                     this.input.once('pointerdown', () => {
                         this.endScene()
                         setTimeout(() => {
+                            // Remove a classe home
+                            this.game.canvas.parentElement.classList.remove('play');
                             this.scene.start('Quizzes');
                         }, 1200);
                     });
@@ -230,64 +233,5 @@ class Play extends Phaser.Scene {
                 button.setStyle({ fontSize: '24px', fill: '#fff' }); // Restaura a cor original ao retirar o mouse
             });
         });
-    }
-
-    resize() {
-        var orientation = this.scale.orientation;
-        var width = this.game.canvas.width;
-        var height = this.game.canvas.height;
-
-        if (orientation === Phaser.Scale.PORTRAIT) {
-            // Ajustar elementos para orientação retrato
-            this.game.canvas.height = window.innerHeight;
-
-            if(this.characterAnimated == true) {
-                this.character.setPosition(width / 2, height/1.5);
-            }
-
-            if(this.dialogueBoxAnimated == true) {
-                this.dialogueBox.setDisplaySize(width*2, (height/100)*30);
-                this.dialogueBox.setPosition(0, height/1.3);
-                this.beginnerOption.setPosition(width*0.2, height*0.8);
-                this.intermediaryOption.setPosition(width*0.5, height*0.8);
-                this.advancedOption.setPosition(width*0.8, height*0.8);
-                this.textTitle.setPosition(width*0.5, height*0.7);
-            }
-
-            // Tamanho mínimo e máximo da fonte
-            const minFontSize = 20;
-            const maxFontSize = 28;
-
-            const baseFontSize = 24;
-            // Fator de escala com base na largura de referência
-            let TextScaleFactor = width / 800;
-
-            // Garantir que o tamanho da fonte permaneça dentro do intervalo desejado
-            TextScaleFactor = Math.max(Math.min(TextScaleFactor, maxFontSize / baseFontSize), minFontSize / baseFontSize);
-
-            // Tamanho da fonte para cada elemento de texto
-            if(this.textTitle) this.textTitle.setFontSize(baseFontSize * TextScaleFactor);
-            if(this.beginnerOption) this.beginnerOption.setFontSize(baseFontSize * TextScaleFactor);
-            if(this.intermediaryOption) this.intermediaryOption.setFontSize(baseFontSize * TextScaleFactor);
-            if(this.advancedOption) this.advancedOption.setFontSize(baseFontSize * TextScaleFactor);
-            if(this.dialogueText) this.dialogueText.setFontSize(baseFontSize * TextScaleFactor);
-
-        } else if (orientation === Phaser.Scale.LANDSCAPE) {
-            // Ajustar elementos para orientação paisagem
-
-        }
-    }
-
-    checkScreen() {
-        // Tamanho mínimo e máximo da fonte
-        const minBgSize = 18;
-        const maxBgSize = 800;
-
-        const baseBgSize = 24;
-        // Fator de escala com base na largura de referência
-        let bgScaleFactor = larguraAtual / 600;
-
-        // Garantir que o tamanho da fonte permaneça dentro do intervalo desejado
-        bgScaleFactor = Math.max(Math.min(bgScaleFactor, maxBgSize / baseBgSize), minBgSize / baseBgSize);
     }
 }

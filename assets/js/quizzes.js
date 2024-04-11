@@ -91,6 +91,10 @@ class Quizzes extends Phaser.Scene {
     }
 
     create() {
+        // Adiciona a classe quizzes
+        this.game.canvas.parentElement.classList.add('quizzes');
+        this.game.canvas.style.height = "auto";
+
         // Adiciona o fundo
         this.bgImage = this.add.image(0, 0, 'quarto').setOrigin(0);
 
