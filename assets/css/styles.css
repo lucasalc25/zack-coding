@@ -112,30 +112,3 @@ body, html {
   }
 }
 
-/* Orientação Paisagem */
-@media screen and (orientation: landscape) {
-  .home, .play {
-    width: 100%; /* Largura ocupando 100% da tela */
-    max-width: 800px;
-    height: 565px; /* Altura  */
-  }
-  .quizzes {
-    width: 100%; /* Largura ocupando 100% da tela */
-    max-width: 800px;
-    height: auto; /* Altura  */
-    overflow-y: auto;
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .column {
-    transform: scale(0.8);
-  }
-}
-
-
-@media screen and (min-width: 401px) {
-  .column {
-    transform: scale(0.9);
-  }
-}

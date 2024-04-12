@@ -3,9 +3,9 @@ var config = {
     type: Phaser.AUTO,
     width: 800, // Largura inicial
     height: 565, // Altura inicial
-    autoCenter: Phaser.Scale.CENTER_BOTH,
     scale: {
-        mode: Phaser.Scale.FIT
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
     },
     scene: [Home, Play, Quizzes, End],
 };
