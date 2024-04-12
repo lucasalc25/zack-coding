@@ -144,7 +144,7 @@ class Quizzes extends Phaser.Scene {
         }, 300);
 
         // Adiciona o titulo no painel
-        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px', align: 'center' }).setOrigin(0.5, 0).setWordWrapWidth(game.canvas.width-200); // Largura máxima da caixa de texto
+        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px', align: 'center' }).setOrigin(0.5, 0).setWordWrapWidth(game.canvas.width-50); // Largura máxima da caixa de texto
 
         setTimeout(() => {
             // Animaçao do titulo
@@ -216,7 +216,7 @@ class Quizzes extends Phaser.Scene {
                 } else {
                     referenceCard.insertAdjacentElement("beforeend", dragging);
                 }
-            });
+            }, { passive: false });
         });
 
         let dragging;
@@ -255,7 +255,7 @@ class Quizzes extends Phaser.Scene {
                     referenceCard.insertAdjacentElement("beforeend", dragging);
                 }
             }
-        });
+        }, { passive: false });
 
           // Botão para verificar a ordem das opções
           this.confirmBtn = this.add.text(this.game.canvas.width/2, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
