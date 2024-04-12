@@ -14,15 +14,6 @@ class Quizzes extends Phaser.Scene {
                 tips: ["Primeiro declaramos as variáveis"], 
                 code: [ "var", 
                         "inicio", 
-                        "fimalgoritmo",
-                        "var", 
-                        "inicio", 
-                        "fimalgoritmo",
-                        "var", 
-                        "inicio", 
-                        "fimalgoritmo",
-                        "var", 
-                        "inicio", 
                         "fimalgoritmo"]
             },
             {
@@ -153,13 +144,13 @@ class Quizzes extends Phaser.Scene {
         }, 300);
 
         // Adiciona o titulo no painel
-        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px', align: 'center' }).setOrigin(0.5, 0).setWordWrapWidth(game.canvas.width-60); // Largura máxima da caixa de texto
+        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px', align: 'center' }).setOrigin(0.5, 0).setWordWrapWidth(game.canvas.width-200); // Largura máxima da caixa de texto
 
         setTimeout(() => {
             // Animaçao do titulo
             this.tweens.add({
                 targets: this.textPhaseTitle, // O alvo da animação é o texto com o título
-                y: game.canvas.height/14, // Fator de escala vertical
+                y: 20, // Fator de escala vertical
                 duration: 300, // Duração da animação em milissegundos (0.5 segundo neste caso)
                 ease: 'Linear', // Tipo de easing (suavização) da animação
             });
@@ -226,6 +217,44 @@ class Quizzes extends Phaser.Scene {
                     referenceCard.insertAdjacentElement("beforeend", dragging);
                 }
             });
+        });
+
+        let dragging;
+
+        document.addEventListener("touchstart", (e) => {
+            dragging = e.target;
+        });
+        
+        document.addEventListener("touchend", () => {
+            dragging = null;
+        });
+        
+        document.addEventListener("touchmove", (e) => {
+            e.preventDefault(); // Evita o comportamento padrão do toque, que é rolar a página
+        
+            const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+            if (dragging && target.classList.contains("line")) {
+                // Impede que a animação aconteça ao realocar uma linha e que a coluna volte para o início
+                lines.forEach((line) => {
+                    line.style.transform = "translateX(0%)";
+                    line.classList.remove('animacao');
+                });
+        
+                const cards = Array.from(lines).filter((line) => line !== dragging);
+        
+                const referenceCard = cards.find((card) => {
+                    const box = card.getBoundingClientRect();
+                    const boxCenterY = box.top + box.height / 2;
+        
+                    return e.touches[0].clientY > box.top && e.touches[0].clientY < boxCenterY;
+                });
+        
+                if (referenceCard) {
+                    referenceCard.insertAdjacentElement("beforebegin", dragging);
+                } else {
+                    referenceCard.insertAdjacentElement("beforeend", dragging);
+                }
+            }
         });
 
           // Botão para verificar a ordem das opções
@@ -318,7 +347,7 @@ class Quizzes extends Phaser.Scene {
         const lastLine = document.querySelector('.column .line:last-child');
         // Obtém as coordenadas do último elemento da lista
         const LastLinePosition = lastLine.getBoundingClientRect();
-        const posY = LastLinePosition.bottom + 50; // Ajuste a posição vertical conforme necessário
+        const posY = LastLinePosition.bottom + 30; // Ajuste a posição vertical conforme necessário
 
         // Define a posição do elemento alvo com base nas coordenadas do último elemento da lista
         messageDiv.style.position = 'absolute';
@@ -352,7 +381,7 @@ class Quizzes extends Phaser.Scene {
         const lastLine = document.querySelector('.column .line:last-child');
         // Obtém as coordenadas do último elemento da lista
         const LastLinePosition = lastLine.getBoundingClientRect();
-        const posY = LastLinePosition.bottom + 50; // Ajuste a posição vertical conforme necessário
+        const posY = LastLinePosition.bottom + 30; // Ajuste a posição vertical conforme necessário
 
         // Define a posição do elemento alvo com base nas coordenadas do último elemento da lista
         messageDiv.style.position = 'absolute';

@@ -1,21 +1,23 @@
 body, html {
-  margin: 0;
+  margin: auto;
   padding: 0;
   overflow: hidden; /* Impede a barra de rolagem horizontal */
-  display: flex;
-  justify-content: center;
+  max-width: 800px;
+  height: auto;
 }
 
 .column {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 10px;
+  gap: .3rem;
+  padding: .3rem;
   background-color: transparent;
-  min-width: 300px;
+  width: 70%;
+  max-width: 350px;
+  min-width: 150px;
   border-radius: 5px;
   position: absolute; 
-  top: 50%; 
+  top: 47.5%; 
   left: 50%; 
   transform: translate(-50%, -50%);
   text-align: center;
@@ -23,9 +25,9 @@ body, html {
 
 .line {
   background-color: #eee;
-  padding: 10px;
+  padding: .3rem;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: .9rem;
   /* Defina a posição inicial fora da tela */
   transform: translateX(-100%);
 }
@@ -60,7 +62,7 @@ body, html {
   background-color: transparent;
   padding: 10px;
   opacity: 0;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: bold;
   width: 100%;
   text-align: center;
@@ -99,16 +101,4 @@ body, html {
   100% {font-size: 28px;}
 }
 
-/* Orientação Retrato */
-@media screen and (orientation: portrait) {
-  .home, .play {
-    width: 100%; /* Largura ocupando 100% da tela */
-    height: 565px; /* Altura  */
-  }
-  .quizzes {
-    width: 100%; /* Largura ocupando 100% da tela */
-    height: auto; /* Altura  */
-    overflow-y: auto;
-  }
-}
 
