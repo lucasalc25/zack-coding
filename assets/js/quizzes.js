@@ -216,7 +216,7 @@ class Quizzes extends Phaser.Scene {
                 } else {
                     referenceCard.insertAdjacentElement("beforeend", dragging);
                 }
-            }, { passive: false });
+            });
         });
 
         let dragging;
@@ -233,6 +233,7 @@ class Quizzes extends Phaser.Scene {
             e.preventDefault(); // Evita o comportamento padrão do toque, que é rolar a página
         
             const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+            
             if (dragging && target.classList.contains("line")) {
                 // Impede que a animação aconteça ao realocar uma linha e que a coluna volte para o início
                 lines.forEach((line) => {
@@ -255,7 +256,7 @@ class Quizzes extends Phaser.Scene {
                     referenceCard.insertAdjacentElement("beforeend", dragging);
                 }
             }
-        }, { passive: false });
+        });
 
           // Botão para verificar a ordem das opções
           this.confirmBtn = this.add.text(this.game.canvas.width/2, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
