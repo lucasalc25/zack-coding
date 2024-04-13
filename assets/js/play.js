@@ -31,11 +31,10 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        // Adicione uma classe CSS específica para a div correspondente a esta cena
-        this.game.canvas.parentElement.classList.add('play');
+        //this.scene.start('Quizzes');
 
         // Adiciona o fundo
-        this.bgImage = this.add.image(0, 0, 'quarto').setOrigin(0);
+        this.bgImage = this.add.image(-200, 0, 'quarto').setOrigin(0);
         // Adiciona o personagem
         this.character = this.add.image(-200, this.game.canvas.height/1.5, 'zack');
         // Adiciona a caixa de diálogo
@@ -149,10 +148,10 @@ class Play extends Phaser.Scene {
 
         setTimeout(() => {
             // Adiciona o texto da caixa de diálogo
-            this.dialogueText = this.add.text(this.game.canvas.width/2, this.game.canvas.height/1.3, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5, 0.5).setWordWrapWidth(700); // Largura máxima da caixa de texto
+            this.dialogueText = this.add.text(this.game.canvas.width/2, this.game.canvas.height/1.3, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5, 0.5).setWordWrapWidth(this.game.canvas.width*0.9); // Largura máxima da caixa de texto
 
-            this.showChoices();
-            // this.nextDialogue.call(this);
+            //this.showChoices();
+            this.nextDialogue.call(this);
 
         }, 500);
     }
@@ -212,7 +211,7 @@ class Play extends Phaser.Scene {
                 [this.beginnerOption, this.intermediaryOption, this.advancedOption].forEach(option => {
                     option.setText('');
                 });
-                this.typeText(this.dialogueText, `Então você é nível ${this.level}. Beleza!\nQue comecem os jogos!`, 0, () => {
+                this.typeText(this.dialogueText, `Você é nível ${this.level}?.\nOk, começaremos do básico.\nQue comecem os jogos!`, 0, () => {
                     // Espera pelo clique do jogador
                     this.input.once('pointerdown', () => {
                         this.endScene()

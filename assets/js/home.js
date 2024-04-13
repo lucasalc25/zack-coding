@@ -16,9 +16,6 @@ class Home extends Phaser.Scene {
     }
 
     create() {
-        // Adicione uma classe CSS específica para a div correspondente a esta cena
-        this.game.canvas.parentElement.classList.add('home');
-
         const menuMusic = this.sound.add('menuMusic', { loop: true });
         menuMusic.play();
 

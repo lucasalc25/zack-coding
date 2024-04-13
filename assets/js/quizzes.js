@@ -82,12 +82,10 @@ class Quizzes extends Phaser.Scene {
     }
 
     create() {
-        // Adiciona a classe quizzes
-        this.game.canvas.parentElement.classList.add('quizzes');
-        this.game.canvas.style.height = "auto";
-
         // Adiciona o fundo
-        this.bgImage = this.add.image(0, 0, 'quarto').setOrigin(0);
+        this.bgImage = this.add.image(-200, 0, 'quarto').setOrigin(0);
+
+        document.body.style.backgroundSize = 'cover';
 
         // Adiciona a caixa de diálogo
         this.dialogueBox = this.add.rectangle(this.game.canvas.width/2, this.game.canvas.height, 10, this.game.canvas.height, 0x000000, 0.7).setOrigin(0.5, 0.5);
@@ -144,7 +142,7 @@ class Quizzes extends Phaser.Scene {
         }, 300);
 
         // Adiciona o titulo no painel
-        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '16px', fill: '#ffffff', marginTop: '10px', align: 'center' }).setOrigin(0.5, 0).setWordWrapWidth(game.canvas.width-50); // Largura máxima da caixa de texto
+        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '18px', fill: '#ffffff', marginTop: '10px', align: 'center' }).setOrigin(0.5, 0).setWordWrapWidth(game.canvas.width-50); // Largura máxima da caixa de texto
 
         setTimeout(() => {
             // Animaçao do titulo
@@ -219,8 +217,9 @@ class Quizzes extends Phaser.Scene {
             });
         });
 
-        let dragging;
 
+        let dragging;
+    
         document.addEventListener("touchstart", (e) => {
             dragging = e.target;
         });
@@ -229,64 +228,81 @@ class Quizzes extends Phaser.Scene {
             dragging = null;
         });
         
-        document.addEventListener("touchmove", (e) => {
-            e.preventDefault(); // Evita o comportamento padrão do toque, que é rolar a página
-        
-            const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+        lines.forEach((item) => {
+            item.addEventListener("touchmove", (e) => {
+                e.preventDefault(); // Evita o comportamento padrão do toque, que é rolar a página
             
-            if (dragging && target.classList.contains("line")) {
-                // Impede que a animação aconteça ao realocar uma linha e que a coluna volte para o início
-                lines.forEach((line) => {
-                    line.style.transform = "translateX(0%)";
-                    line.classList.remove('animacao');
-                });
-        
-                const cards = Array.from(lines).filter((line) => line !== dragging);
-        
-                const referenceCard = cards.find((card) => {
-                    const box = card.getBoundingClientRect();
-                    const boxCenterY = box.top + box.height / 2;
-        
-                    return e.touches[0].clientY > box.top && e.touches[0].clientY < boxCenterY;
-                });
-        
-                if (referenceCard) {
-                    referenceCard.insertAdjacentElement("beforebegin", dragging);
-                } else {
-                    referenceCard.insertAdjacentElement("beforeend", dragging);
+                if (e.touches.length > 0 && dragging) {
+                    const touch = e.touches[0];
+
+                    item.style.transform = "translateX(0%)";
+                    item.classList.remove('animacao');
+    
+                    // Define a posição da div arrastada com base nas coordenadas do toque
+                    dragging.style.left = touch.clientX + 'px';
+                    dragging.style.top = touch.clientY + 'px';
+
+                    // Encontra todas as divs com classe 'line' exceto a que está sendo arrastada
+                    const otherLines = Array.from(document.querySelectorAll('.line')).filter(line => line !== dragging);
+                    const referenceLine = otherLines.find(line => {
+                        const { top, height } = line.getBoundingClientRect();
+                        // Calcula a metade da altura da div
+                        const midPoint = top + height / 2;
+                        // Verifica se o toque está acima ou abaixo do ponto médio da outra div
+                        return touch.clientY < midPoint;
+                    });
+
+                    // Insere a div sendo arrastada antes ou depois da div de referência, dependendo da posição do toque
+                    if (referenceLine) {
+                        const { top, bottom } = referenceLine.getBoundingClientRect();
+                        const midPoint = (top + bottom) / 2;
+
+                        if (touch.clientY < midPoint) {
+                            // Insere antes da referência se o toque estiver acima da metade
+                            referenceLine.insertAdjacentElement("beforebegin", dragging);
+                        } else {
+                            // Insere após a referência se o toque estiver abaixo da metade
+                            referenceLine.insertAdjacentElement("beforeend", dragging);
+                        }
+                    }
+    
                 }
-            }
-        });
+            });
+        })
 
           // Botão para verificar a ordem das opções
           this.confirmBtn = this.add.text(this.game.canvas.width/2, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
           this.confirmBtn.setInteractive();
           this.confirmBtn.on('pointerdown', () => {
-              // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
-              if (this.checkOrder()) {
-                  this.clearLines();
-                  this.showCorrect(this.game.canvas.height-120);
-                  this.correct.play();
-  
-                  // Itera sobre cada elemento filho e aplica uma cor de fundo
-                  for (var i = 0; i < lines.length-1; i++) {
-                      lines[i].style.backgroundColor = '#228b22'; // Defina a cor de fundo desejada aqui
-                  }
-                  this.phaseIndex++;
-                  this.phase = this.beginnerPhases[this.phaseIndex];
-                  setTimeout(() => {
-                      // Remove todos os elementos filhos e inicia a proxima cena
-                      while (column.firstChild) {
-                          column.removeChild(column.firstChild);
-                      }  
-                      this.textPhaseTitle.destroy();
-                      this.confirmBtn.destroy();
-                      this.showQuizScreen(this.phase);
-                  }, 3000);
-              } else {
-                  this.showWrong(this.game.canvas.height);
-                  this.wrong.play();
-              }
+            // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
+            if (this.checkOrder()) {
+                this.clearLines();
+                this.confirmBtn.disableInteractive();
+                this.showCorrect(this.game.canvas.height-120);
+                this.correct.play();
+
+                // Itera sobre cada elemento filho e aplica uma cor de fundo
+                for (var i = 0; i < lines.length-1; i++) {
+                    lines[i].style.backgroundColor = '#228b22'; // Defina a cor de fundo desejada aqui
+                }
+                
+                this.phaseIndex++;
+                this.phase = this.beginnerPhases[this.phaseIndex];
+                setTimeout(() => {
+                    // Remove todos os elementos filhos e inicia a proxima cena
+                    while (column.firstChild) {
+                        column.removeChild(column.firstChild);
+                    }  
+                    this.textPhaseTitle.destroy();
+                    this.confirmBtn.destroy();
+                    this.showQuizScreen(this.phase);
+                }, 3000);
+            } else {
+                this.confirmBtn.disableInteractive();
+                this.showWrong(this.game.canvas.height);
+                this.wrong.play();
+                this.confirmBtn.setInteractive();
+            }
               
           });
   
@@ -343,12 +359,10 @@ class Quizzes extends Phaser.Scene {
         messageDiv.className = "message";
         messageDiv.textContent = "Você acertou!";
 
-        
-        // Seleciona o último elemento da lista
-        const lastLine = document.querySelector('.column .line:last-child');
-        // Obtém as coordenadas do último elemento da lista
-        const LastLinePosition = lastLine.getBoundingClientRect();
-        const posY = LastLinePosition.bottom + 30; // Ajuste a posição vertical conforme necessário
+        // Adiciona a mensagem à tela
+        document.body.appendChild(messageDiv);
+
+        const posY = this.confirmBtn.y - 40;; // Ajuste a posição vertical conforme necessário
 
         // Define a posição do elemento alvo com base nas coordenadas do último elemento da lista
         messageDiv.style.position = 'absolute';
@@ -378,11 +392,7 @@ class Quizzes extends Phaser.Scene {
         // Adiciona a mensagem à tela
         document.body.appendChild(messageDiv);
 
-        // Seleciona o último elemento da lista
-        const lastLine = document.querySelector('.column .line:last-child');
-        // Obtém as coordenadas do último elemento da lista
-        const LastLinePosition = lastLine.getBoundingClientRect();
-        const posY = LastLinePosition.bottom + 30; // Ajuste a posição vertical conforme necessário
+        const posY = this.confirmBtn.y - 40; // Ajuste a posição vertical conforme necessário
 
         // Define a posição do elemento alvo com base nas coordenadas do último elemento da lista
         messageDiv.style.position = 'absolute';
