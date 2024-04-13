@@ -26,7 +26,7 @@ class Quizzes extends Phaser.Scene {
             },
             {
                 phase: 3, 
-                title: "Fase 3: Monte o algoritmo para ler um número inteiro e mostrá-lo na tela", tips: [""], 
+                title: "Fase 3: Ler um número inteiro e mostrá-lo na tela", tips: [""], 
                 code: [ "var", 
                         "num: inteiro", 
                         "inicio", 
@@ -36,7 +36,7 @@ class Quizzes extends Phaser.Scene {
             },
             {
                 phase: 4, 
-                title: "Fase 4: Monte o algoritmo para ler dois números e exibir a soma deles", tips: [""], 
+                title: "Fase 4: Ler dois números e exibir a soma deles", tips: [""], 
                 code: [ "var",
                         "num1, num2, soma: inteiro",
                         "inicio",
@@ -48,7 +48,7 @@ class Quizzes extends Phaser.Scene {
             },
             {
                 phase: 5, 
-                title: "Fase 5: Monte o algoritmo para ler um número inteiro e mostrar se ele é par ou ímpar", tips: [""], 
+                title: "Fase 5: Ler um número inteiro e mostrar se ele é par ou ímpar", tips: [""], 
                 code: [ "var",
                         "num: inteiro",
                         "inicio",
@@ -70,6 +70,7 @@ class Quizzes extends Phaser.Scene {
         this.lines;
         this.quizzCode = [];
         this.confirmBtn;
+        this.touchIcon;
         this.currentOrder = [];
         this.codeIndex = 0;
     }
@@ -85,13 +86,11 @@ class Quizzes extends Phaser.Scene {
         // Adiciona o fundo
         this.bgImage = this.add.image(-200, 0, 'quarto').setOrigin(0);
 
-        document.body.style.backgroundSize = 'cover';
-
         // Adiciona a caixa de diálogo
-        this.dialogueBox = this.add.rectangle(this.game.canvas.width/2, this.game.canvas.height, 10, this.game.canvas.height, 0x000000, 0.7).setOrigin(0.5, 0.5);
+        this.dialogueBox = this.add.rectangle(this.game.canvas.width/2, this.game.canvas.height, 10, this.game.canvas.height, 0x000000, 0.9).setOrigin(0.5, 0.5);
 
         this.playMusic = this.sound.add('playMusic', { loop: true });
-        this.playMusic.setVolume(0.1);
+
         this.correct = this.sound.add('correct');
         this.correct.setVolume(0.8);
         this.wrong = this.sound.add('wrong');
@@ -142,7 +141,7 @@ class Quizzes extends Phaser.Scene {
         }, 300);
 
         // Adiciona o titulo no painel
-        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '18px', fill: '#ffffff', marginTop: '10px', align: 'center' }).setOrigin(0.5, 0).setWordWrapWidth(game.canvas.width-50); // Largura máxima da caixa de texto
+        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '18px', fill: '#ffffff', marginTop: '10px', align: 'center' }).setOrigin(0.5, 0).setWordWrapWidth(this.game.canvas.width*0.9); // Largura máxima da caixa de texto
 
         setTimeout(() => {
             // Animaçao do titulo
@@ -270,10 +269,14 @@ class Quizzes extends Phaser.Scene {
             });
         })
 
-          // Botão para verificar a ordem das opções
-          this.confirmBtn = this.add.text(this.game.canvas.width/2, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
-          this.confirmBtn.setInteractive();
-          this.confirmBtn.on('pointerdown', () => {
+        // Botão para verificar a ordem das opções
+        this.confirmBtn = this.add.text(this.game.canvas.width/2, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
+
+        this.confirmBtn.setInteractive();
+        let attempts = 0;
+
+        this.confirmBtn.on('pointerdown', () => {
+            attempts++;
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
             if (this.checkOrder()) {
                 this.clearLines();
@@ -298,23 +301,27 @@ class Quizzes extends Phaser.Scene {
                     this.showQuizScreen(this.phase);
                 }, 3000);
             } else {
-                this.confirmBtn.disableInteractive();
-                this.showWrong(this.game.canvas.height);
-                this.wrong.play();
-                this.confirmBtn.setInteractive();
+                if(attempts < 4) {
+                    this.confirmBtn.disableInteractive();
+                    this.showWrong(this.game.canvas.height);
+                    this.wrong.play();
+                    this.confirmBtn.setInteractive();
+                } else {
+                    window.alert(`Dica: ${this.phaseTips}`);
+                }
             }
-              
-          });
-  
-          // Evento de hover
-          this.confirmBtn.on('pointerover', () => {
-              this.confirmBtn.setStyle({ fontSize: '20px', backgroundColor: '#0077FF' }); // Cor amarela ao passar o mouse
-          });
-  
-          // Evento de hout
-          this.confirmBtn.on('pointerout', () => {
-              this.confirmBtn.setStyle({ fontSize: '18px', backgroundColor: '#00BBFF' }); // Restaura a cor original ao retirar o mouse
-          });
+            
+        });
+
+        // Evento de hover
+        this.confirmBtn.on('pointerover', () => {
+            this.confirmBtn.setStyle({ fontSize: '20px', backgroundColor: '#0077FF' }); // Cor amarela ao passar o mouse
+        });
+
+        // Evento de hout
+        this.confirmBtn.on('pointerout', () => {
+            this.confirmBtn.setStyle({ fontSize: '18px', backgroundColor: '#00BBFF' }); // Restaura a cor original ao retirar o mouse
+        });
 
     }
 

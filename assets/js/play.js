@@ -25,16 +25,17 @@ class Play extends Phaser.Scene {
         this.load.image('quarto', './assets/img/quarto.png');
         this.load.image('zack', './assets/img/zack.png');
         this.load.audio('typing', './assets/sfx/typing.mp3');
-        this.load.audio('playMusic', './assets/sfx/elapse.mp3');
+        this.load.audio('playMusic', './assets/sfx/play.mp3');
         this.load.audio('hover', './assets/sfx/hover.mp3');
         this.load.audio('confirm', './assets/sfx/confirm.mp3');
     }
 
     create() {
-        //this.scene.start('Quizzes');
+        this.scene.start('Quizzes');
 
         // Adiciona o fundo
-        this.bgImage = this.add.image(-200, 0, 'quarto').setOrigin(0);
+        this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
+
         // Adiciona o personagem
         this.character = this.add.image(-200, this.game.canvas.height/1.5, 'zack');
         // Adiciona a caixa de diálogo
@@ -48,7 +49,6 @@ class Play extends Phaser.Scene {
         this.hover.setVolume(0.4);
 
         // Adiciona o audio
-        this.playMusic.setVolume(0.1);
         this.playMusic.play(); 
 
         this.showScreen();
@@ -194,11 +194,11 @@ class Play extends Phaser.Scene {
     
      // Função para mostrar as opçoes de escolha
      showChoices() {
-        this.textTitle = this.add.text(game.canvas.width*0.5, game.canvas.height*0.7, 'Clique no seu nível:', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
+        this.textTitle = this.add.text(game.canvas.width*0.5, game.canvas.height*0.7, 'Clique no seu nível:', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5).setWordWrapWidth(this.game.canvas.width*0.9);
         // Cria botões de escolha
-        this.beginnerOption = this.add.text(game.canvas.width*0.2, game.canvas.height*0.8, 'Iniciante', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
-        this.intermediaryOption = this.add.text(game.canvas.width*0.5, game.canvas.height*0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
-        this.advancedOption = this.add.text(game.canvas.width*0.8, game.canvas.height*0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
+        this.beginnerOption = this.add.text(game.canvas.width*0.2, game.canvas.height*0.8, 'Iniciante', { fontFamily: 'Arial', fontSize: '22px', fill: '#fff' }).setOrigin(0.5);
+        this.intermediaryOption = this.add.text(game.canvas.width*0.5, game.canvas.height*0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '22px', fill: '#fff' }).setOrigin(0.5);
+        this.advancedOption = this.add.text(game.canvas.width*0.8, game.canvas.height*0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '22px', fill: '#fff' }).setOrigin(0.5);
         
         // Configurando interações dos botões
         [this.beginnerOption, this.intermediaryOption, this.advancedOption].forEach(button => {
@@ -211,13 +211,11 @@ class Play extends Phaser.Scene {
                 [this.beginnerOption, this.intermediaryOption, this.advancedOption].forEach(option => {
                     option.setText('');
                 });
-                this.typeText(this.dialogueText, `Você é nível ${this.level}?.\nOk, começaremos do básico.\nQue comecem os jogos!`, 0, () => {
+                this.typeText(this.dialogueText, `Você é nível ${this.level}?\nOk, começaremos do básico.\nVamos lá!`, 0, () => {
                     // Espera pelo clique do jogador
                     this.input.once('pointerdown', () => {
                         this.endScene()
                         setTimeout(() => {
-                            // Remove a classe home
-                            this.game.canvas.parentElement.classList.remove('play');
                             this.scene.start('Quizzes');
                         }, 1200);
                     });

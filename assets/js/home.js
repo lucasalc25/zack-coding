@@ -8,7 +8,7 @@ class Home extends Phaser.Scene {
     }
 
     preload() {
-        this.load.audio('menuMusic', './assets/sfx/new future.mp3');
+        this.load.audio('menuMusic', './assets/sfx/menu.mp3');
         this.load.image('bgMenu', './assets/img/bgMenu.jpg');
         this.load.audio('hover', './assets/sfx/interface.mp3');
         this.load.audio('confirm', './assets/sfx/decide.mp3');
@@ -27,7 +27,7 @@ class Home extends Phaser.Scene {
         confirm.setVolume(0.1);
 
         // Adicionando opções do menu
-        this.playButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.35, 'Jogar', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
+        this.playButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.35, 'Iniciar', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
         this.settingsButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.5, 'Configurações', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
         this.quitButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.65, 'Sair', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
 
@@ -41,10 +41,7 @@ class Home extends Phaser.Scene {
                 confirm.play(); 
                 menuMusic.stop();
                 this.scene.stop('Home');
-                if(button.text == 'Jogar') {
-                    // Remove a classe home
-                    this.game.canvas.parentElement.classList.remove('home');
-
+                if(button.text == 'Iniciar') {
                     this.scene.start('Play');
                 }
                 if(button.text == 'Sair') {
@@ -70,7 +67,7 @@ class Home extends Phaser.Scene {
     }
 
     update() {
-        this.bgImage.tilePositionY += 0.3; // Ajuste este valor para controlar a velocidade do efeito parallax
+        this.bgImage.tilePositionY += 0.5; // Ajuste este valor para controlar a velocidade do efeito parallax
     }
 
     resize() {
