@@ -4,21 +4,20 @@ class Quizzes extends Phaser.Scene {
         this.bgImage;
         this.dialogueBoxAnimated;
         this.playMusic;
-        this.confirm;
         this.correct;
         this.wrong;
         this.beginnerPhases = [
             { 
                 phase: 1, 
                 title: "Fase 1: Monte a estrutura base de um algoritmo", 
-                tips: ["Primeiro declaramos as variáveis"], 
+                tips: ["Variáveis primeiro, algoritmo depois"], 
                 code: [ "var", 
                         "inicio", 
                         "fimalgoritmo"]
             },
             {
                 phase: 2, 
-                title: "Fase 2: Monte o algoritmo para declarar duas variáveis do tipo inteiro", tips: ["Nomeie as variáveis sem espaço, caractere especial e sem iniciar com número ou letra maiúscula"], 
+                title: "Fase 2: Monte o algoritmo para declarar duas variáveis do tipo inteiro", tips: ["Declarações são feitas no campo 'var'"], 
                 code: [ "var", 
                         "num1, num2: inteiro", 
                         "inicio", 
@@ -77,14 +76,14 @@ class Quizzes extends Phaser.Scene {
 
     preload() {
         this.load.audio('playMusic', './assets/sfx/elapse.mp3');
-        this.load.audio('confirm', './assets/sfx/confirm.mp3');
+        this.load.audio('select', './assets/sfx/select.mp3');
         this.load.audio('correct', './assets/sfx/correct.mp3');
         this.load.audio('wrong', './assets/sfx/wrong.mp3');
     }
 
     create() {
         // Adiciona o fundo
-        this.bgImage = this.add.image(-200, 0, 'quarto').setOrigin(0);
+        this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
 
         // Adiciona a caixa de diálogo
         this.dialogueBox = this.add.rectangle(this.game.canvas.width/2, this.game.canvas.height, 10, this.game.canvas.height, 0x000000, 0.9).setOrigin(0.5, 0.5);
@@ -301,13 +300,19 @@ class Quizzes extends Phaser.Scene {
                     this.showQuizScreen(this.phase);
                 }, 3000);
             } else {
-                if(attempts < 4) {
+                if(attempts < 3) {
                     this.confirmBtn.disableInteractive();
                     this.showWrong(this.game.canvas.height);
                     this.wrong.play();
                     this.confirmBtn.setInteractive();
                 } else {
-                    window.alert(`Dica: ${this.phaseTips}`);
+                    this.confirmBtn.disableInteractive();
+                    this.showWrong(this.game.canvas.height);
+                    this.wrong.play();
+                    setTimeout(() => {
+                        window.alert(`Dica: ${this.phaseTips}`);
+                    }, 1000);
+                    this.confirmBtn.setInteractive();
                 }
             }
             

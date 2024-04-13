@@ -11,7 +11,7 @@ class Home extends Phaser.Scene {
         this.load.audio('menuMusic', './assets/sfx/menu.mp3');
         this.load.image('bgMenu', './assets/img/bgMenu.jpg');
         this.load.audio('hover', './assets/sfx/interface.mp3');
-        this.load.audio('confirm', './assets/sfx/decide.mp3');
+        this.load.audio('select', './assets/sfx/select blaze.mp3');
         this.load.audio('typing', './assets/sfx/typing.mp3');
     }
 
@@ -23,8 +23,7 @@ class Home extends Phaser.Scene {
 
         const hover = this.sound.add('hover');
         hover.setVolume(0.4);
-        const confirm = this.sound.add('confirm');
-        confirm.setVolume(0.1);
+        const select = this.sound.add('select');
 
         // Adicionando opções do menu
         this.playButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.35, 'Iniciar', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
@@ -38,7 +37,8 @@ class Home extends Phaser.Scene {
                 this.playButton.disableInteractive();
                 this.settingsButton.disableInteractive();
                 this.quitButton.disableInteractive();
-                confirm.play(); 
+                
+                select.play(); 
                 menuMusic.stop();
                 this.scene.stop('Home');
                 if(button.text == 'Iniciar') {

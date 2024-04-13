@@ -12,7 +12,7 @@ class Play extends Phaser.Scene {
         this.currentDialogueIndex = 0;
         this.playMusic;
         this.hover;
-        this.confirm;
+        this.select;
         this.typing;
         this.textTitle;
         this.beginnerOption;
@@ -27,7 +27,7 @@ class Play extends Phaser.Scene {
         this.load.audio('typing', './assets/sfx/typing.mp3');
         this.load.audio('playMusic', './assets/sfx/play.mp3');
         this.load.audio('hover', './assets/sfx/hover.mp3');
-        this.load.audio('confirm', './assets/sfx/confirm.mp3');
+        this.load.audio('select', './assets/sfx/select.mp3');
     }
 
     create() {
@@ -44,8 +44,8 @@ class Play extends Phaser.Scene {
         this.typing =  this.sound.add('typing', { loop: true });
         this.playMusic = this.sound.add('playMusic', { loop: true });
         this.hover = this.sound.add('hover');
-        this.confirm =  this.sound.add('confirm');
-        this.confirm.setVolume(0.05);
+        this.select =  this.sound.add('select');
+        this.select.setVolume(0.05);
         this.hover.setVolume(0.4);
 
         // Adiciona o audio
@@ -206,7 +206,7 @@ class Play extends Phaser.Scene {
 
             button.on('pointerdown', () => {
                 this.level = button.text;
-                this.confirm.play();
+                this.select.play();
                 this.textTitle.setText('');
                 [this.beginnerOption, this.intermediaryOption, this.advancedOption].forEach(option => {
                     option.setText('');
