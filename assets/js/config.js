@@ -7,7 +7,7 @@ var config = {
         mode: Phaser.Scale.RESIZE,
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
-    scene: [Load, Home, Play, Quizzes],
+    scene: [Load1, Home, Load2, Play, Quizzes],
 };
 
 // Inicializa o jogo

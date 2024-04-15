@@ -25,7 +25,7 @@ class Quizzes extends Phaser.Scene {
             },
             {
                 phase: 3, 
-                title: "Fase 3: Ler um número inteiro e mostrá-lo na tela", tips: ["Praticamente o mesm ode antes, com o adicional de LER e depois MOSTRAR"], 
+                title: "Fase 3: Ler um número inteiro e mostrá-lo na tela", tips: ["Praticamente o mesmo de antes, porém também irá LER e depois MOSTRAR"], 
                 code: [ "var", 
                         "num: inteiro", 
                         "inicio", 
@@ -35,7 +35,7 @@ class Quizzes extends Phaser.Scene {
             },
             {
                 phase: 4, 
-                title: "Fase 4: Ler dois números e exibir a soma deles", tips: ["Não há como somar sem saber quais números e nem como mostrar o resultado sem antes calculá-lo"], 
+                title: "Fase 4: Ler dois números e exibir a soma deles", tips: ["Não há como somar valores que ainda não foram lidos e nem mostrar o resultado sem antes calculá-lo"], 
                 code: [ "var",
                         "num1, num2, soma: inteiro",
                         "inicio",
@@ -65,18 +65,14 @@ class Quizzes extends Phaser.Scene {
         this.phaseTitle;
         this.phaseTips;
         this.phaseCode;
-        this.column;
         this.lines;
         this.quizzCode = [];
         this.confirmBtn;
-        this.touchIcon;
         this.currentOrder = [];
         this.codeIndex = 0;
     }
 
     preload() {
-        this.load.audio('playMusic', './assets/sfx/elapse.mp3');
-        this.load.audio('select', './assets/sfx/select.mp3');
         this.load.audio('correct', './assets/sfx/correct.mp3');
         this.load.audio('wrong', './assets/sfx/wrong.mp3');
     }

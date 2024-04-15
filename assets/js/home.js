@@ -1,14 +1,11 @@
 class Home extends Phaser.Scene {
     constructor() {
-        super({ key: 'Home' });
+        super({ key: 'Home',  });
         this.playButton;
+        this.loadButton;
         this.settingsButton;
         this.quitButton;
         this.bgImage;
-    }
-
-    preload() {
-
     }
 
     create() {
@@ -23,15 +20,17 @@ class Home extends Phaser.Scene {
         select.setVolume(0.1);
 
         // Adicionando opções do menu
-        this.playButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.35, 'Iniciar', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
-        this.settingsButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.5, 'Configurações', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
-        this.quitButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.65, 'Sair', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5);
+        this.playButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.2, 'Iniciar', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5, 0);
+        this.loadButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.4, 'Carregar', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5, 0);
+        this.settingsButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.6, 'Configurações', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5, 0);
+        this.quitButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.8, 'Sair', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5, 0);
 
        // Configurando interações dos botões
-        [this.playButton, this.settingsButton, this.quitButton].forEach(button => {
+        [this.playButton, this.loadButton, this.settingsButton, this.quitButton].forEach(button => {
             button.setInteractive();
             button.on('pointerdown', () => {
                 this.playButton.disableInteractive();
+                this.loadButton.disableInteractive();
                 this.settingsButton.disableInteractive();
                 this.quitButton.disableInteractive();
                 
@@ -39,8 +38,7 @@ class Home extends Phaser.Scene {
                 menuMusic.stop();
                 this.scene.stop('Home');
                 if(button.text == 'Iniciar') {
-                    this.scene.launch('Load');
-                    this.scene.start('Play');
+                    this.scene.start('Load2');
                 }
                 if(button.text == 'Sair') {
                     this.scene.start('End');
@@ -75,15 +73,17 @@ class Home extends Phaser.Scene {
         if (orientation === Phaser.Scale.PORTRAIT) {
             // Ajustar elementos para orientação retrato
             this.bgImage.setDisplaySize(width, height);
-            this.playButton.setPosition(width/2, height*0.35);
-            this.settingsButton.setPosition(width/2, height*0.5)
-            this.quitButton.setPosition(width/2, height*0.65)
+            this.playButton.setPosition(width/2, height*0.2);
+            this.loadButton.setPosition(width/2, height*0.4);
+            this.settingsButton.setPosition(width/2, height*0.6);
+            this.quitButton.setPosition(width/2, height*0.8)
         } else if (orientation === Phaser.Scale.LANDSCAPE) {
             // Ajustar elementos para orientação paisagem
             this.bgImage.setDisplaySize(width, height);
-            this.playButton.setPosition(width/2, height*0.25);
-            this.settingsButton.setPosition(width/2, height*0.5)
-            this.quitButton.setPosition(width/2, height*0.75)
+            this.playButton.setPosition(width/2, height*0.2);
+            this.loadButton.setPosition(width/2, height*0.4);
+            this.settingsButton.setPosition(width/2, height*0.6)
+            this.quitButton.setPosition(width/2, height*0.8)
         }
     }
 }

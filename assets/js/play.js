@@ -15,23 +15,15 @@ class Play extends Phaser.Scene {
         this.select;
         this.typing;
         this.textTitle;
-        this.beginnerOption;
-        this.intermediaryOption;
-        this.advancedOption;
+        this.touchIcon;
+        this.beginner;
+        this.intermediary;
+        this.advanced;
         this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Topa montar uns códigos para eu poder estudar depois?", "Legal! Vou te explicar como vai funcionar...", "Os códigos vão estar em Portugol...", "Você vai colocar as linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as linhas, beleza?","Agora preciso saber qual o seu nível em programação:"]
     }
 
-    preload() {
-        this.load.image('quarto', './assets/img/quarto.png');
-        this.load.image('zack', './assets/img/zack.png');
-        this.load.audio('typing', './assets/sfx/typing.mp3');
-        this.load.audio('playMusic', './assets/sfx/play.mp3');
-        this.load.audio('hover', './assets/sfx/hover.mp3');
-        this.load.audio('select', './assets/sfx/select.mp3');
-    }
-
     create() {
-        //this.scene.start('Quizzes');
+        this.scene.start('Quizzes');
 
         // Adiciona o fundo
         this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
@@ -57,9 +49,6 @@ class Play extends Phaser.Scene {
             this.showCharacter();
         }, 1000); 
         
-        this.scale.on('resize', this.resize, this);
-
-        this.scale.on('orientationchange', this.resize, this);
     }
 
     update() {
@@ -166,7 +155,18 @@ class Play extends Phaser.Scene {
             this.typeText(this.dialogueText, currentDialogue, 0, () => {
                 // Espera pelo clique do jogador
                 this.typing.stop();
+                this.touchIcon = this.add.image(this.game.canvas.width * 0.95, this.game.canvas.height * 0.87, 'touch');
+                this.tweens.add({
+                    targets: this.touchIcon, // O alvo da animação é o icone de pressionar
+                    y: this.touchIcon.y - 3,
+                    y: this.touchIcon.y + 3,
+                    duration: 500, // Duração da animação em milissegundos (0.5 segundo neste caso)
+                    ease: 'Linear',
+                    yoyo: true,
+                    repeat: -1
+                });
                 this.input.once('pointerdown', () => {
+                    this.touchIcon.destroy();
                     this.currentDialogueIndex++;
                     this.nextDialogue();
                 });
@@ -196,25 +196,25 @@ class Play extends Phaser.Scene {
      showChoices() {
         this.textTitle = this.add.text(game.canvas.width*0.5, game.canvas.height*0.7, 'Clique no seu nível:', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5).setWordWrapWidth(this.game.canvas.width*0.9);
         // Cria botões de escolha
-        this.beginnerOption = this.add.text(game.canvas.width*0.2, game.canvas.height*0.8, 'Iniciante', { fontFamily: 'Arial', fontSize: '22px', fill: '#fff' }).setOrigin(0.5);
-        this.intermediaryOption = this.add.text(game.canvas.width*0.5, game.canvas.height*0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '22px', fill: '#fff' }).setOrigin(0.5);
-        this.advancedOption = this.add.text(game.canvas.width*0.8, game.canvas.height*0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '22px', fill: '#fff' }).setOrigin(0.5);
+        this.beginner = this.add.text(game.canvas.width*0.2, game.canvas.height*0.8, 'Iniciante', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', backgroundColor: '#00BBFF', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+        this.intermediary = this.add.text(game.canvas.width*0.5, game.canvas.height*0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', backgroundColor: '#00BBFF', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+        this.advanced = this.add.text(game.canvas.width*0.8, game.canvas.height*0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', backgroundColor: '#00BBFF', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
         
         // Configurando interações dos botões
-        [this.beginnerOption, this.intermediaryOption, this.advancedOption].forEach(button => {
+        [this.beginner, this.intermediary, this.advanced].forEach(button => {
             button.setInteractive();
 
             button.on('pointerdown', () => {
                 this.level = button.text;
                 this.select.play();
                 this.textTitle.setText('');
-                [this.beginnerOption, this.intermediaryOption, this.advancedOption].forEach(option => {
-                    option.setText('');
+                [this.beginner, this.intermediary, this.advanced].forEach(option => {
+                    option.destroy();
                 });
-                this.typeText(this.dialogueText, `Você é nível ${this.level}?\nOk, começaremos do básico.\nVamos lá!`, 0, () => {
+                this.typeText(this.dialogueText, `Você é nível ${this.level}? Ok, começaremos do básico. Vamos lá!`, 0, () => {
                     // Espera pelo clique do jogador
                     this.input.once('pointerdown', () => {
-                        this.endScene()
+                        this.endScene();
                         setTimeout(() => {
                             this.scene.launch('Load');
                             this.scene.start('Quizzes');
@@ -224,11 +224,11 @@ class Play extends Phaser.Scene {
             });
 
             button.on('pointerover', () => {
-                button.setStyle({ fontSize: '28px', fill: '#00BBFF' }); // Cor amarela ao passar o mouse
+                button.setStyle({ fontSize: '24px', backgroundColor: '#0147AD' }); // Cor amarela ao passar o mouse
                 this.hover.play();
             });
             button.on('pointerout', () => {
-                button.setStyle({ fontSize: '24px', fill: '#fff' }); // Restaura a cor original ao retirar o mouse
+                button.setStyle({ fontSize: '20px', backgroundColor: '#00BBFF' }); // Restaura a cor original ao retirar o mouse
             });
         });
     }
