@@ -9,15 +9,15 @@ class Quizzes extends Phaser.Scene {
         this.beginnerPhases = [
             { 
                 phase: 1, 
-                title: "Fase 1: Monte a estrutura base de um algoritmo", 
-                tips: ["Variáveis primeiro, algoritmo depois"], 
+                title: "Fase 1: Monte a estrutura base de um pseudocódigo", 
+                tips: ["Campo das variáveis primeiro, algoritmo depois"], 
                 code: [ "var", 
                         "inicio", 
                         "fimalgoritmo"]
             },
             {
                 phase: 2, 
-                title: "Fase 2: Monte o algoritmo para declarar duas variáveis do tipo inteiro", tips: ["Declarações são feitas no campo 'var'"], 
+                title: "Fase 2: Monte o código para declarar duas variáveis do tipo inteiro", tips: ["Declarações de variáveis são feitas no campo 'var'"], 
                 code: [ "var", 
                         "num1, num2: inteiro", 
                         "inicio", 
@@ -25,7 +25,7 @@ class Quizzes extends Phaser.Scene {
             },
             {
                 phase: 3, 
-                title: "Fase 3: Ler um número inteiro e mostrá-lo na tela", tips: [""], 
+                title: "Fase 3: Ler um número inteiro e mostrá-lo na tela", tips: ["Praticamente o mesm ode antes, com o adicional de LER e depois MOSTRAR"], 
                 code: [ "var", 
                         "num: inteiro", 
                         "inicio", 
@@ -35,7 +35,7 @@ class Quizzes extends Phaser.Scene {
             },
             {
                 phase: 4, 
-                title: "Fase 4: Ler dois números e exibir a soma deles", tips: [""], 
+                title: "Fase 4: Ler dois números e exibir a soma deles", tips: ["Não há como somar sem saber quais números e nem como mostrar o resultado sem antes calculá-lo"], 
                 code: [ "var",
                         "num1, num2, soma: inteiro",
                         "inicio",
@@ -47,7 +47,7 @@ class Quizzes extends Phaser.Scene {
             },
             {
                 phase: 5, 
-                title: "Fase 5: Ler um número inteiro e mostrar se ele é par ou ímpar", tips: [""], 
+                title: "Fase 5: Ler um número inteiro e mostrar se ele é par ou ímpar", tips: ["O operador '%' calcula o resto de uma divisão"], 
                 code: [ "var",
                         "num: inteiro",
                         "inicio",

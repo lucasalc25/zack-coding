@@ -18,7 +18,7 @@ class Play extends Phaser.Scene {
         this.beginnerOption;
         this.intermediaryOption;
         this.advancedOption;
-        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Bom, você já deve saber que sua missão é me ajudar, então vamos lá...", "Vou te explicar como vai funcionar.", "Você vai precisar colocar as linhas de código na ordem certa para resolver cada problema.", "Pra isso basta você clicar com o mouse na opção que quer mudar de lugar, e sem soltar o botão, arrastá-la até a posição que deseja", "Daí você solta o botão e a opção vai ser fixada, beleza?","Primeiro preciso saber qual o seu nível de programação"]
+        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Topa montar uns códigos para eu poder estudar depois?", "Legal! Vou te explicar como vai funcionar...", "Os códigos vão estar em Portugol...", "Você vai colocar as linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as linhas, beleza?","Agora preciso saber qual o seu nível em programação:"]
     }
 
     preload() {
@@ -31,7 +31,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start('Quizzes');
+        //this.scene.start('Quizzes');
 
         // Adiciona o fundo
         this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
@@ -41,7 +41,7 @@ class Play extends Phaser.Scene {
         // Adiciona a caixa de diálogo
         this.dialogueBox = this.add.rectangle(-this.game.canvas.width, this.game.canvas.height/1.3, this.game.canvas.width, this.game.canvas.height/100, 0x000000, 0.7).setOrigin(0.5, 0.5);
 
-        this.typing =  this.sound.add('typing', { loop: true });
+        this.typing =  this.sound.add('typing');
         this.playMusic = this.sound.add('playMusic', { loop: true });
         this.hover = this.sound.add('hover');
         this.select =  this.sound.add('select');
@@ -162,8 +162,10 @@ class Play extends Phaser.Scene {
         if (this.currentDialogueIndex < this.dialogues.length) {
             const currentDialogue = this.dialogues[this.currentDialogueIndex];
             // Exibe o próximo diálogo
+            this.typing.play();
             this.typeText(this.dialogueText, currentDialogue, 0, () => {
                 // Espera pelo clique do jogador
+                this.typing.stop();
                 this.input.once('pointerdown', () => {
                     this.currentDialogueIndex++;
                     this.nextDialogue();
@@ -178,7 +180,6 @@ class Play extends Phaser.Scene {
     // Função para exibir o texto de forma gradual
     typeText(textObject, text, index, callback) {
         if (index < text.length) {
-            this.typing.play();
             textObject.text += text[index];
             index++;
             setTimeout(() => {
@@ -186,7 +187,6 @@ class Play extends Phaser.Scene {
             }, 40); // Velocidade de digitação (em milissegundos)
         } else {
             if (typeof callback === 'function') {
-                this.typing.stop();
                 callback();
             }
         }
@@ -216,6 +216,7 @@ class Play extends Phaser.Scene {
                     this.input.once('pointerdown', () => {
                         this.endScene()
                         setTimeout(() => {
+                            this.scene.launch('Load');
                             this.scene.start('Quizzes');
                         }, 1200);
                     });
