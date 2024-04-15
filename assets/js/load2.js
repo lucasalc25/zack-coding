@@ -3,7 +3,8 @@ class Load2 extends Phaser.Scene {
         super({ key: 'Load2' });
     }
 
-    init() {
+    init(data) {
+        this.faseInicial = data.faseInicial || 0;
         this.width = this.game.canvas.width;
         this.height = this.game.canvas.height;
         this.loaded = false;
@@ -22,14 +23,20 @@ class Load2 extends Phaser.Scene {
         this.createLoadingBar();
     }
 
-    create() {   
+    create() {  
     }
 
     update() {
         if(this.loaded) {
-            this.scene.stop('Home');
-            this.scene.stop('Load2');
-            this.scene.start('Play');
+            if(this.faseInicial == 0) {
+                this.scene.stop('Home');
+                this.scene.stop('Load2');
+                this.scene.start('Play');
+            } else {
+                this.scene.stop('Home');
+                this.scene.stop('Load2');
+                this.scene.start('Quizzes', { faseInicial: this.faseInicial });
+            }
         }
     }
 

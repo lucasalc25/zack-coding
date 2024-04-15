@@ -19,11 +19,15 @@ class Play extends Phaser.Scene {
         this.beginner;
         this.intermediary;
         this.advanced;
-        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Topa montar uns códigos para eu poder estudar depois?", "Legal! Vou te explicar como vai funcionar...", "Os códigos vão estar em Portugol...", "Você vai colocar as linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as linhas, beleza?","Agora preciso saber qual o seu nível em programação:"]
+        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Topa montar uns códigos para eu poder estudar depois?", "Legal! Vou te explicar como vai funcionar...", "Os códigos vão estar em Portugol...", "Você vai colocar as linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as opções, beleza?","Agora preciso saber qual o seu nível em programação:"]
+    }
+
+    init(data) {
+        this.faseInicial = data.faseInicial || 0; // Define a fase inicial como 'Fase1' se não for fornecida
     }
 
     create() {
-        //this.scene.start('Quizzes');
+        this.scene.start('Quizzes');
 
         // Adiciona o fundo
         this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
@@ -196,9 +200,9 @@ class Play extends Phaser.Scene {
      showChoices() {
         this.textTitle = this.add.text(game.canvas.width*0.5, game.canvas.height*0.7, 'Clique no seu nível:', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5).setWordWrapWidth(this.game.canvas.width*0.9);
         // Cria botões de escolha
-        this.beginner = this.add.text(game.canvas.width*0.2, game.canvas.height*0.8, 'Iniciante', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', backgroundColor: '#00BBFF', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
-        this.intermediary = this.add.text(game.canvas.width*0.5, game.canvas.height*0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', backgroundColor: '#00BBFF', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
-        this.advanced = this.add.text(game.canvas.width*0.8, game.canvas.height*0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', backgroundColor: '#00BBFF', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+        this.beginner = this.add.text(game.canvas.width*0.2, game.canvas.height*0.8, 'Iniciante', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+        this.intermediary = this.add.text(game.canvas.width*0.5, game.canvas.height*0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+        this.advanced = this.add.text(game.canvas.width*0.8, game.canvas.height*0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
         
         // Configurando interações dos botões
         [this.beginner, this.intermediary, this.advanced].forEach(button => {
@@ -216,7 +220,6 @@ class Play extends Phaser.Scene {
                     this.input.once('pointerdown', () => {
                         this.endScene();
                         setTimeout(() => {
-                            this.scene.launch('Load');
                             this.scene.start('Quizzes');
                         }, 1200);
                     });
@@ -224,11 +227,11 @@ class Play extends Phaser.Scene {
             });
 
             button.on('pointerover', () => {
-                button.setStyle({ fontSize: '24px', backgroundColor: '#0147AD' }); // Cor amarela ao passar o mouse
+                button.setStyle({ fontSize: '24px', fill:'#0077FF' }); // Cor amarela ao passar o mouse
                 this.hover.play();
             });
             button.on('pointerout', () => {
-                button.setStyle({ fontSize: '20px', backgroundColor: '#00BBFF' }); // Restaura a cor original ao retirar o mouse
+                button.setStyle({ fontSize: '20px', fill:'#0077FF' }); // Restaura a cor original ao retirar o mouse
             });
         });
     }

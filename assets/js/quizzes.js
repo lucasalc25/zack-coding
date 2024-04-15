@@ -60,7 +60,10 @@ class Quizzes extends Phaser.Scene {
                         "fimalgoritmo"]
             },
         ]
-        this.phaseIndex = 0;
+    }
+
+    init(data) {
+        this.phaseIndex = data.faseInicial || 0; // Define a fase inicial como 'Fase1' se não for fornecida
         this.phase = this.beginnerPhases[this.phaseIndex];
         this.phaseTitle;
         this.phaseTips;
@@ -78,6 +81,7 @@ class Quizzes extends Phaser.Scene {
     }
 
     create() {
+        console.log(this.phaseIndex)
         // Adiciona o fundo
         this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
 
@@ -284,6 +288,7 @@ class Quizzes extends Phaser.Scene {
                     lines[i].style.backgroundColor = '#228b22'; // Defina a cor de fundo desejada aqui
                 }
                 
+                this.save(this.phaseIndex);
                 this.phaseIndex++;
                 this.phase = this.beginnerPhases[this.phaseIndex];
                 setTimeout(() => {
@@ -354,6 +359,18 @@ class Quizzes extends Phaser.Scene {
 
         return true;
     }
+
+    // Função para salvar o progresso do jogador
+    save(faseAtual) {
+    // Verifica se o localStorage é suportado pelo navegador
+    if (typeof(Storage) !== "undefined") {
+        // Salva a fase atual do jogador no localStorage
+        localStorage.setItem("faseAtual", faseAtual);
+        console.log("Progresso salvo! Fase atual: " + faseAtual);
+    } else {
+        console.error("LocalStorage não suportado pelo navegador!");
+    }
+}
 
     clearLines() {
         const lines = document.querySelectorAll(".message");

@@ -26,8 +26,9 @@ class Home extends Phaser.Scene {
         this.quitButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.8, 'Sair', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5, 0);
 
        // Configurando interações dos botões
-        [this.playButton, this.loadButton, this.settingsButton, this.quitButton].forEach(button => {
+        [this.playButton, this.loadButton, this.settingsButton, this.quitButton].forEach(button => {   
             button.setInteractive();
+
             button.on('pointerdown', () => {
                 this.playButton.disableInteractive();
                 this.loadButton.disableInteractive();
@@ -39,9 +40,10 @@ class Home extends Phaser.Scene {
                 this.scene.stop('Home');
                 if(button.text == 'Iniciar') {
                     this.scene.start('Load2');
-                }
-                if(button.text == 'Sair') {
-                    this.scene.start('End');
+                } else if(button.text == 'Carregar') {
+                    this.loadProgress();
+                } else if(button.text == 'Sair') {
+                    this.scene.stop('Home');
                 }
             });
             button.on('pointerover', () => {
@@ -52,12 +54,6 @@ class Home extends Phaser.Scene {
                 button.setStyle({ fontSize: '36px', fill: '#fff' }); // Restaura a cor original ao retirar o mouse
             });
         });
-        
-        this.scale.on('resize', this.resize, this);
-
-        this.scale.on('orientationchange', this.resize, this);
-
-        this.resize(this.scale.gameSize);
 
     }
 
@@ -65,25 +61,16 @@ class Home extends Phaser.Scene {
         this.bgImage.tilePositionY += 0.5; // Ajuste este valor para controlar a velocidade do efeito parallax
     }
 
-    resize() {
-        var orientation = this.scale.orientation;
-        var width = this.game.canvas.width;
-        var height = this.game.canvas.height;
+    // Função para carregar o progresso do jogador
+    loadProgress() {
+        let faseAtual = localStorage.getItem("faseAtual");
 
-        if (orientation === Phaser.Scale.PORTRAIT) {
-            // Ajustar elementos para orientação retrato
-            this.bgImage.setDisplaySize(width, height);
-            this.playButton.setPosition(width/2, height*0.2);
-            this.loadButton.setPosition(width/2, height*0.4);
-            this.settingsButton.setPosition(width/2, height*0.6);
-            this.quitButton.setPosition(width/2, height*0.8)
-        } else if (orientation === Phaser.Scale.LANDSCAPE) {
-            // Ajustar elementos para orientação paisagem
-            this.bgImage.setDisplaySize(width, height);
-            this.playButton.setPosition(width/2, height*0.2);
-            this.loadButton.setPosition(width/2, height*0.4);
-            this.settingsButton.setPosition(width/2, height*0.6)
-            this.quitButton.setPosition(width/2, height*0.8)
+        if (faseAtual > 0) {
+            faseAtual++;
+            console.log("Carregando fase: " + faseAtual);
+            this.scene.start('Load2', { faseInicial: faseAtual }); // Inicia a cena de carregamento com a fase salva
+        } else {
+            this.scene.start('Load2', { faseInicial: 0 });
         }
-    }
+}
 }
