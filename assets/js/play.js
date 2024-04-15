@@ -23,7 +23,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start('Quizzes');
+        //this.scene.start('Quizzes');
 
         // Adiciona o fundo
         this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
