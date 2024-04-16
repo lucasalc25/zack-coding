@@ -19,7 +19,7 @@ class Play extends Phaser.Scene {
         this.beginner;
         this.intermediary;
         this.advanced;
-        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Topa montar uns códigos para eu poder estudar por eles depois?", "Ótimo! Vou explicar como vai funcionar...", "Os códigos vão estar em Portugol...", "Você vai colocar as linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as opções, beleza?","Agora preciso saber qual o seu nível em programação:"]
+        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Estou aprendendo a programar, pode me ajudar a montar uns códigos para eu poder estudá-los depois?", "Ótimo! Vou explicar como vai funcionar...", "Os códigos vão estar em Portugol...", "Você vai colocar as linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as opções, beleza?","Agora preciso saber qual o seu nível em programação:"]
     }
 
     init(data) {
@@ -27,7 +27,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        //this.scene.start('Quizzes');
+        this.scene.start('Quizzes');
 
         // Adiciona o fundo
         this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
@@ -160,7 +160,7 @@ class Play extends Phaser.Scene {
             this.typeText(this.dialogueText, currentDialogue, 0, () => {
                 // Espera pelo clique do jogador
                 this.typing.stop();
-                this.touchIcon = this.add.image(this.game.canvas.width * 0.94, this.game.canvas.height * 0.87, 'touch');
+                this.touchIcon = this.add.image(this.game.canvas.width * 0.93, this.game.canvas.height * 0.88, 'touch');
                 this.tweens.add({
                     targets: this.touchIcon, // O alvo da animação é o icone de pressionar
                     y: this.touchIcon.y - 5,
@@ -221,7 +221,7 @@ class Play extends Phaser.Scene {
                     this.input.once('pointerdown', () => {
                         this.endScene();
                         setTimeout(() => {
-                            this.playMusic.stop();
+                            this.scene.stop('Play');
                             this.scene.start('Quizzes');
                         }, 1200);
                     });

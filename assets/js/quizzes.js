@@ -63,7 +63,7 @@ class Quizzes extends Phaser.Scene {
 
     init(data) {
         this.playMusic;
-        this.phaseIndex = data.faseInicial || 0; // Define a fase inicial como 'Fase1' se não for fornecida
+        this.phaseIndex = data.faseInicial || 0; // Define a fase inicial como 0 se não for fornecida
         this.phase = this.beginnerPhases[this.phaseIndex];
         this.phaseTitle;
         this.phaseTips;
@@ -77,6 +77,7 @@ class Quizzes extends Phaser.Scene {
         this.confirmText;
         this.yesButton;
         this.noButton;
+        this.saveText;
     }
 
     preload() {
@@ -100,6 +101,7 @@ class Quizzes extends Phaser.Scene {
         this.correct.setVolume(0.8);
         this.wrong = this.sound.add('wrong');
         this.wrong.setVolume(0.4);
+        
 
         this.showQuizScreen(this.phase);
                  
@@ -389,7 +391,34 @@ class Quizzes extends Phaser.Scene {
     if (typeof(Storage) !== "undefined") {
         // Salva a fase atual do jogador no localStorage
         localStorage.setItem("faseAtual", faseAtual);
-        console.log("Progresso salvo! Fase atual: " + faseAtual);
+        
+        this.saveText = this.add.text(this.game.canvas.width / 2, 100, 'Salvando progresso', { fontSize: '20px', fill: '#FFFFFF', align: 'center' }).setWordWrapWidth(this.game.canvas.width * 0.9).setOrigin(0.5);
+        
+        // Define a escala inicial do texto como zero
+        this.saveText.setScale(0);
+
+        // Cria um tween para animar a escala do texto de 0 para 1 em 500 milissegundos
+        this.tweens.add({
+            targets: this.saveText,
+            scaleX: 1,
+            scaleY: 1,
+            duration: 500,
+            ease: 'Linear',
+            onComplete: () => {
+                // Cria um segundo tween para esmaecer o texto após 2 segundos
+                this.tweens.add({
+                    targets: this.saveText,
+                    alpha: 0,
+                    duration: 1000,
+                    delay: 2000,  // Espera 2 segundos antes de começar o esmaecimento
+                    ease: 'Linear',
+                    onComplete: () => {
+                        // Remove o texto após o esmaecimento
+                        this.saveText.destroy();
+                    }
+                });
+            }
+        });
     } else {
         console.error("LocalStorage não suportado pelo navegador!");
     }
@@ -398,6 +427,9 @@ class Quizzes extends Phaser.Scene {
     clearLines() {
         const lines = document.querySelectorAll(".message");
         lines.forEach((line) => {
+            // Remover ouvintes de eventos anteriores
+            line.removeEventListener("dragover", dragOverHandler);
+            line.removeEventListener("touchmove", touchMoveHandler);
             document.body.removeChild(line);
         });
     }
@@ -468,27 +500,27 @@ class Quizzes extends Phaser.Scene {
         windowBackground.fillRect(-185, -75, this.game.canvas.width * 0.9, 150);
         this.confirmWindow.add(windowBackground);
         
-        this.confirmText = this.add.text(0, -30, 'Tem certeza que deseja retornar ao menu?', { fontSize: '20px', fill: '#000000', align: 'center' }).setWordWrapWidth(this.game.canvas.width * 0.9);
+        this.confirmText = this.add.text(0, -20, 'Tem certeza que deseja retornar ao menu?', { fontSize: '20px', fill: '#000000', align: 'center' }).setWordWrapWidth(this.game.canvas.width * 0.9);
         this.confirmText.setOrigin(0.5);
         this.confirmWindow.add(this.confirmText);
         
-        this.yesButton = this.add.text(-50, 20, 'Sim', { fontSize: '20px', fill: '#000000' });
+        this.yesButton = this.add.text(-50, 30, 'Sim', { fontSize: '20px', fill: '#000000' });
         this.yesButton.setOrigin(0.5);
         this.yesButton.setInteractive();
         this.yesButton.on('pointerdown', () => {
             // Ação ao clicar em "Sim"
-            this.playMusic.loop = false;
             this.playMusic.stop();
             this.noButton.disableInteractive();
             this.confirmWindow.setVisible(false); // Esconde a janela de confirmação
             this.overlay.setVisible(false); // Esconde o overlay
+            this.clearLines();
             this.scene.start('Load1');
         });
         this.confirmWindow.add(this.yesButton);
 
         const column = document.querySelector('.column');
         
-        this.noButton = this.add.text(50, 20, 'Não', { fontSize: '20px', fill: '#000000' });
+        this.noButton = this.add.text(50, 30, 'Não', { fontSize: '20px', fill: '#000000' });
         this.noButton.setOrigin(0.5);
         this.noButton.setInteractive();
         this.noButton.on('pointerdown', () => {
