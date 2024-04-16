@@ -19,7 +19,7 @@ class Play extends Phaser.Scene {
         this.beginner;
         this.intermediary;
         this.advanced;
-        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Topa montar uns códigos para eu poder estudar depois?", "Legal! Vou te explicar como vai funcionar...", "Os códigos vão estar em Portugol...", "Você vai colocar as linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as opções, beleza?","Agora preciso saber qual o seu nível em programação:"]
+        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Topa montar uns códigos para eu poder estudar por eles depois?", "Ótimo! Vou explicar como vai funcionar...", "Os códigos vão estar em Portugol...", "Você vai colocar as linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as opções, beleza?","Agora preciso saber qual o seu nível em programação:"]
     }
 
     init(data) {
@@ -41,6 +41,7 @@ class Play extends Phaser.Scene {
         this.playMusic = this.sound.add('playMusic', { loop: true });
         this.hover = this.sound.add('hover');
         this.select =  this.sound.add('select');
+        this.playMusic.setVolume(0.5);
         this.select.setVolume(0.05);
         this.hover.setVolume(0.4);
 
@@ -159,11 +160,11 @@ class Play extends Phaser.Scene {
             this.typeText(this.dialogueText, currentDialogue, 0, () => {
                 // Espera pelo clique do jogador
                 this.typing.stop();
-                this.touchIcon = this.add.image(this.game.canvas.width * 0.95, this.game.canvas.height * 0.87, 'touch');
+                this.touchIcon = this.add.image(this.game.canvas.width * 0.94, this.game.canvas.height * 0.87, 'touch');
                 this.tweens.add({
                     targets: this.touchIcon, // O alvo da animação é o icone de pressionar
-                    y: this.touchIcon.y - 3,
-                    y: this.touchIcon.y + 3,
+                    y: this.touchIcon.y - 5,
+                    y: this.touchIcon.y + 5,
                     duration: 500, // Duração da animação em milissegundos (0.5 segundo neste caso)
                     ease: 'Linear',
                     yoyo: true,
@@ -220,6 +221,7 @@ class Play extends Phaser.Scene {
                     this.input.once('pointerdown', () => {
                         this.endScene();
                         setTimeout(() => {
+                            this.playMusic.stop();
                             this.scene.start('Quizzes');
                         }, 1200);
                     });

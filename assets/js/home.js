@@ -20,14 +20,21 @@ class Home extends Phaser.Scene {
         select.setVolume(0.1);
 
         // Adicionando opções do menu
-        this.playButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.2, 'Iniciar', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5, 0);
-        this.loadButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.4, 'Carregar', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5, 0);
-        this.settingsButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.6, 'Configurações', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5, 0);
-        this.quitButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.8, 'Sair', { fontSize: '36px', fontWeight: 'bold', fill: '#fff' }).setOrigin(0.5, 0);
+        this.playButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.2, 'Iniciar', { fontSize: '36px', fill: '#fff' }).setOrigin(0.5, 0);
+        this.loadButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.4, 'Carregar', { fontSize: '36px', fill: '#fff' }).setOrigin(0.5, 0);
+        this.settingsButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.6, 'Configurações', { fontSize: '36px', fill: '#fff' }).setOrigin(0.5, 0);
+        this.quitButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.8, 'Sair', { fontSize: '36px', fill: '#fff' }).setOrigin(0.5, 0);
 
        // Configurando interações dos botões
         [this.playButton, this.loadButton, this.settingsButton, this.quitButton].forEach(button => {   
             button.setInteractive();
+
+            // Verifica se há progresso salvo
+            if (!this.checkProgress()) {
+                // Se não houver progresso salvo, desabilita o botão de carregar
+                this.loadButton.alpha = 0.6;
+                this.loadButton.disableInteractive();
+            }
 
             button.on('pointerdown', () => {
                 this.playButton.disableInteractive();
@@ -59,6 +66,12 @@ class Home extends Phaser.Scene {
 
     update() {
         this.bgImage.tilePositionY += 0.5; // Ajuste este valor para controlar a velocidade do efeito parallax
+    }
+
+    checkProgress() {
+        // Verifica se há progresso salvo e retorna verdadeiro se houver, falso caso contrário
+        let faseAtual = localStorage.getItem("faseAtual");
+        return faseAtual > 0;
     }
 
     // Função para carregar o progresso do jogador

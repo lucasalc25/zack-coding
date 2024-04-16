@@ -19,6 +19,9 @@ class Load2 extends Phaser.Scene {
         this.load.audio('select', './assets/sfx/select blaze.mp3');
         this.load.audio('typing', './assets/sfx/typing.mp3');;
         this.load.image('touch', './assets/img/touch.png');
+        this.load.audio('correct', './assets/sfx/correct.mp3');
+        this.load.audio('wrong', './assets/sfx/wrong.mp3');
+        this.load.image('menuIcon', './assets/img/menu-icon.jpg');
 
         this.createLoadingBar();
     }

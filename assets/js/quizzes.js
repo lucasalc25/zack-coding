@@ -3,7 +3,6 @@ class Quizzes extends Phaser.Scene {
         super({ key: 'Quizzes' });
         this.bgImage;
         this.dialogueBoxAnimated;
-        this.playMusic;
         this.correct;
         this.wrong;
         this.beginnerPhases = [
@@ -63,6 +62,7 @@ class Quizzes extends Phaser.Scene {
     }
 
     init(data) {
+        this.playMusic;
         this.phaseIndex = data.faseInicial || 0; // Define a fase inicial como 'Fase1' se não for fornecida
         this.phase = this.beginnerPhases[this.phaseIndex];
         this.phaseTitle;
@@ -73,15 +73,17 @@ class Quizzes extends Phaser.Scene {
         this.confirmBtn;
         this.currentOrder = [];
         this.codeIndex = 0;
+        this.confirmWindow;
+        this.confirmText;
+        this.yesButton;
+        this.noButton;
     }
 
     preload() {
-        this.load.audio('correct', './assets/sfx/correct.mp3');
-        this.load.audio('wrong', './assets/sfx/wrong.mp3');
+
     }
 
     create() {
-        console.log(this.phaseIndex)
         // Adiciona o fundo
         this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
 
@@ -89,6 +91,10 @@ class Quizzes extends Phaser.Scene {
         this.dialogueBox = this.add.rectangle(this.game.canvas.width/2, this.game.canvas.height, 10, this.game.canvas.height, 0x000000, 0.9).setOrigin(0.5, 0.5);
 
         this.playMusic = this.sound.add('playMusic', { loop: true });
+        this.playMusic.setVolume(0.5);
+        
+        // Adiciona o audio
+        this.playMusic.play(); 
 
         this.correct = this.sound.add('correct');
         this.correct.setVolume(0.8);
@@ -329,6 +335,23 @@ class Quizzes extends Phaser.Scene {
             this.confirmBtn.setStyle({ fontSize: '18px', backgroundColor: '#00BBFF' }); // Restaura a cor original ao retirar o mouse
         });
 
+        // Ícone do menu
+        let menuIcon = this.add.image(this.game.canvas.width - 50, this.game.canvas.height-55, 'menuIcon');
+        menuIcon.setInteractive();
+        menuIcon.on('pointerdown', () => {
+            // Quando o ícone do menu for clicado, mostra a janela de confirmação
+            this.confirmBtn.disableInteractive();
+            this.confirmWindow.setVisible(true).setDepth(1);
+            this.overlay.setVisible(true).setDepth(0);
+            column.style.zIndex = -1;
+        });
+
+        // Adicione a janela de confirmação (inicialmente oculta)
+        this.createConfirmationWindow();
+
+        // Cria um retângulo semi-transparente para cobrir toda a tela (inicialmente oculto)
+        this.createOverlay();
+
     }
 
     // Função para exibir o texto de forma gradual
@@ -436,6 +459,58 @@ class Quizzes extends Phaser.Scene {
         }, 3000); // Tempo em milissegundos antes de remover a mensagem
     }
 
+    createConfirmationWindow() {
+        // Cria uma janela de confirmação no centro da tela
+        this.confirmWindow = this.add.container(this.game.canvas.width / 2, this.game.canvas.height / 2);
+        
+        let windowBackground = this.add.graphics();
+        windowBackground.fillStyle(0xEEEEEE);
+        windowBackground.fillRect(-185, -75, this.game.canvas.width * 0.9, 150);
+        this.confirmWindow.add(windowBackground);
+        
+        this.confirmText = this.add.text(0, -30, 'Tem certeza que deseja retornar ao menu?', { fontSize: '20px', fill: '#000000', align: 'center' }).setWordWrapWidth(this.game.canvas.width * 0.9);
+        this.confirmText.setOrigin(0.5);
+        this.confirmWindow.add(this.confirmText);
+        
+        this.yesButton = this.add.text(-50, 20, 'Sim', { fontSize: '20px', fill: '#000000' });
+        this.yesButton.setOrigin(0.5);
+        this.yesButton.setInteractive();
+        this.yesButton.on('pointerdown', () => {
+            // Ação ao clicar em "Sim"
+            this.playMusic.loop = false;
+            this.playMusic.stop();
+            this.noButton.disableInteractive();
+            this.confirmWindow.setVisible(false); // Esconde a janela de confirmação
+            this.overlay.setVisible(false); // Esconde o overlay
+            this.scene.start('Load1');
+        });
+        this.confirmWindow.add(this.yesButton);
 
+        const column = document.querySelector('.column');
+        
+        this.noButton = this.add.text(50, 20, 'Não', { fontSize: '20px', fill: '#000000' });
+        this.noButton.setOrigin(0.5);
+        this.noButton.setInteractive();
+        this.noButton.on('pointerdown', () => {
+            // Ação ao clicar em "Não"
+            this.confirmWindow.setVisible(false).setDepth(0); // Esconde a janela de confirmação
+            this.overlay.setVisible(false).setDepth(0);
+            column.style.zIndex = 1;
+            this.confirmBtn.setInteractive();
+        });
+        this.confirmWindow.add(this.noButton);
+        
+        // Inicialmente, a janela de confirmação estará invisível
+        this.confirmWindow.setVisible(false);
+    }
+
+    createOverlay() {
+        // Cria um retângulo semi-transparente para cobrir toda a tela
+        this.overlay = this.add.graphics();
+        this.overlay.fillStyle(0x000000, 0.5); // Cor preta com 50% de opacidade
+        this.overlay.fillRect(0, 0, this.game.canvas.width, this.game.canvas.height);
+        this.overlay.setInteractive();
+        this.overlay.setVisible(false); // Inicialmente, o overlay estará invisível
+    }
 
 }
