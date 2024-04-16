@@ -20,7 +20,7 @@ class Home extends Phaser.Scene {
         select.setVolume(0.1);
 
         // Adicionando opções do menu
-        this.playButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.2, 'Iniciar', { fontSize: '36px', fill: '#fff' }).setOrigin(0.5, 0);
+        this.playButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.2, 'Novo Jogo', { fontSize: '36px', fill: '#fff' }).setOrigin(0.5, 0);
         this.loadButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.4, 'Carregar', { fontSize: '36px', fill: '#fff' }).setOrigin(0.5, 0);
         this.settingsButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.6, 'Configurações', { fontSize: '36px', fill: '#fff' }).setOrigin(0.5, 0);
         this.quitButton = this.add.text(this.game.canvas.width/2, this.game.canvas.height*0.8, 'Sair', { fontSize: '36px', fill: '#fff' }).setOrigin(0.5, 0);
@@ -45,8 +45,8 @@ class Home extends Phaser.Scene {
                 select.play(); 
                 menuMusic.stop();
                 this.scene.stop('Home');
-                if(button.text == 'Iniciar') {
-                    this.scene.start('Load2');
+                if(button.text == 'Novo Jogo') {
+                    this.scene.start('Load2', { faseInicial: 0 });
                 } else if(button.text == 'Carregar') {
                     this.loadProgress();
                 } else if(button.text == 'Sair') {

@@ -27,7 +27,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start('Quizzes');
+        //this.scene.start('Quizzes');
 
         // Adiciona o fundo
         this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
@@ -36,6 +36,7 @@ class Play extends Phaser.Scene {
         this.character = this.add.image(-200, this.game.canvas.height/1.5, 'zack');
         // Adiciona a caixa de diálogo
         this.dialogueBox = this.add.rectangle(-this.game.canvas.width, this.game.canvas.height/1.3, this.game.canvas.width, this.game.canvas.height/100, 0x000000, 0.7).setOrigin(0.5, 0.5);
+        this.currentDialogueIndex = 0;
 
         this.typing =  this.sound.add('typing');
         this.playMusic = this.sound.add('playMusic', { loop: true });
@@ -44,9 +45,6 @@ class Play extends Phaser.Scene {
         this.playMusic.setVolume(0.5);
         this.select.setVolume(0.05);
         this.hover.setVolume(0.4);
-
-        // Adiciona o audio
-        this.playMusic.play(); 
 
         this.showScreen();
 
@@ -216,7 +214,9 @@ class Play extends Phaser.Scene {
                 [this.beginner, this.intermediary, this.advanced].forEach(option => {
                     option.destroy();
                 });
+                this.typing.play();
                 this.typeText(this.dialogueText, `Você é nível ${this.level}? Ok, começaremos do básico. Vamos lá!`, 0, () => {
+                    this.typing.stop();
                     // Espera pelo clique do jogador
                     this.input.once('pointerdown', () => {
                         this.endScene();

@@ -286,7 +286,6 @@ class Quizzes extends Phaser.Scene {
             attempts++;
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
             if (this.checkOrder()) {
-                this.clearLines();
                 this.confirmBtn.disableInteractive();
                 this.showCorrect(this.game.canvas.height-120);
                 this.correct.play();
@@ -300,10 +299,7 @@ class Quizzes extends Phaser.Scene {
                 this.phaseIndex++;
                 this.phase = this.beginnerPhases[this.phaseIndex];
                 setTimeout(() => {
-                    // Remove todos os elementos filhos e inicia a proxima cena
-                    while (column.firstChild) {
-                        column.removeChild(column.firstChild);
-                    }  
+                    this.clearLines();
                     this.textPhaseTitle.destroy();
                     this.confirmBtn.destroy();
                     this.showQuizScreen(this.phase);
@@ -387,50 +383,68 @@ class Quizzes extends Phaser.Scene {
 
     // Função para salvar o progresso do jogador
     save(faseAtual) {
-    // Verifica se o localStorage é suportado pelo navegador
-    if (typeof(Storage) !== "undefined") {
-        // Salva a fase atual do jogador no localStorage
-        localStorage.setItem("faseAtual", faseAtual);
-        
-        this.saveText = this.add.text(this.game.canvas.width / 2, 100, 'Salvando progresso', { fontSize: '20px', fill: '#FFFFFF', align: 'center' }).setWordWrapWidth(this.game.canvas.width * 0.9).setOrigin(0.5);
-        
-        // Define a escala inicial do texto como zero
-        this.saveText.setScale(0);
+        // Verifica se o localStorage é suportado pelo navegador
+        if (typeof(Storage) !== "undefined") {
+            // Salva a fase atual do jogador no localStorage
+            localStorage.setItem("faseAtual", faseAtual);
+            
+            this.saveText = this.add.text(this.game.canvas.width / 2, 100, 'Salvando progresso', { fontSize: '20px', fill: '#FFFFFF', align: 'center' }).setWordWrapWidth(this.game.canvas.width * 0.9).setOrigin(0.5);
+            
+            // Define a escala inicial do texto como zero
+            this.saveText.setScale(0);
 
-        // Cria um tween para animar a escala do texto de 0 para 1 em 500 milissegundos
-        this.tweens.add({
-            targets: this.saveText,
-            scaleX: 1,
-            scaleY: 1,
-            duration: 500,
-            ease: 'Linear',
-            onComplete: () => {
-                // Cria um segundo tween para esmaecer o texto após 2 segundos
-                this.tweens.add({
-                    targets: this.saveText,
-                    alpha: 0,
-                    duration: 1000,
-                    delay: 2000,  // Espera 2 segundos antes de começar o esmaecimento
-                    ease: 'Linear',
-                    onComplete: () => {
-                        // Remove o texto após o esmaecimento
-                        this.saveText.destroy();
-                    }
-                });
-            }
-        });
-    } else {
-        console.error("LocalStorage não suportado pelo navegador!");
+            // Cria um tween para animar a escala do texto de 0 para 1 em 500 milissegundos
+            this.tweens.add({
+                targets: this.saveText,
+                scaleX: 1,
+                scaleY: 1,
+                duration: 500,
+                ease: 'Linear',
+                onComplete: () => {
+                    // Cria um segundo tween para esmaecer o texto após 2 segundos
+                    this.tweens.add({
+                        targets: this.saveText,
+                        alpha: 0,
+                        duration: 1000,
+                        delay: 2000,  // Espera 2 segundos antes de começar o esmaecimento
+                        ease: 'Linear',
+                        onComplete: () => {
+                            // Remove o texto após o esmaecimento
+                            this.saveText.destroy();
+                        }
+                    });
+                }
+            });
+        } else {
+            console.error("LocalStorage não suportado pelo navegador!");
+        }
     }
-}
+    
+    createLines() {
+        const column = document.createElement('div');
+        column.className = 'column';
+
+        // Criação de três divs filhas com classe "line" e atributo draggable definido como true
+        for (let i = 0; i < this.phaseCode.length + 1; i++) {
+            const lineDiv = document.createElement('div');
+            lineDiv.className = 'line animacao';
+            lineDiv.draggable = true;
+            // Defina o conteúdo do div como a string atual
+            lineDiv.textContent = this.quizzCode[i];
+            column.appendChild(lineDiv);
+            if (i == this.phaseCode.length) {
+                lineDiv.classList.remove("animacao");
+            }
+        };
+
+        // Adiciona a div pai ao corpo do documento
+        document.body.appendChild(column);
+    }
 
     clearLines() {
-        const lines = document.querySelectorAll(".message");
-        lines.forEach((line) => {
-            // Remover ouvintes de eventos anteriores
-            line.removeEventListener("dragover", dragOverHandler);
-            line.removeEventListener("touchmove", touchMoveHandler);
-            document.body.removeChild(line);
+        const column = document.querySelectorAll(".column");
+        column.forEach((column) => {
+            document.body.removeChild(column);
         });
     }
 
@@ -492,46 +506,52 @@ class Quizzes extends Phaser.Scene {
     }
 
     createConfirmationWindow() {
-        // Cria uma janela de confirmação no centro da tela
-        this.confirmWindow = this.add.container(this.game.canvas.width / 2, this.game.canvas.height / 2);
+        // Cria uma janela de confirmação centralizada
+        const confirmWindowWidth = this.game.canvas.width * 0.75;
+        const confirmWindowHeight = 150;
+        const confirmWindowX = (this.game.canvas.width - confirmWindowWidth) / 2;
+        const confirmWindowY = (this.game.canvas.height - confirmWindowHeight) / 2;
         
+        this.confirmWindow = this.add.container(confirmWindowX, confirmWindowY);
+
         let windowBackground = this.add.graphics();
         windowBackground.fillStyle(0xEEEEEE);
-        windowBackground.fillRect(-185, -75, this.game.canvas.width * 0.9, 150);
+        windowBackground.fillRect(0, 0, confirmWindowWidth, confirmWindowHeight);
         this.confirmWindow.add(windowBackground);
-        
-        this.confirmText = this.add.text(0, -20, 'Tem certeza que deseja retornar ao menu?', { fontSize: '20px', fill: '#000000', align: 'center' }).setWordWrapWidth(this.game.canvas.width * 0.9);
+
+        this.confirmText = this.add.text(confirmWindowWidth / 2, 50, 'Tem certeza que deseja retornar ao menu?', { fontSize: '20px', fill: '#000000', align: 'center' }).setWordWrapWidth(confirmWindowWidth * 0.9);
         this.confirmText.setOrigin(0.5);
         this.confirmWindow.add(this.confirmText);
-        
-        this.yesButton = this.add.text(-50, 30, 'Sim', { fontSize: '20px', fill: '#000000' });
+
+        this.yesButton = this.add.text(confirmWindowWidth / 3, 100, 'Sim', { fontSize: '20px', fill: '#000000' });
         this.yesButton.setOrigin(0.5);
         this.yesButton.setInteractive();
         this.yesButton.on('pointerdown', () => {
             // Ação ao clicar em "Sim"
             this.playMusic.stop();
             this.noButton.disableInteractive();
-            this.confirmWindow.setVisible(false); // Esconde a janela de confirmação
-            this.overlay.setVisible(false); // Esconde o overlay
             this.clearLines();
+            this.scene.stop('Quizzes');
             this.scene.start('Load1');
         });
         this.confirmWindow.add(this.yesButton);
 
-        const column = document.querySelector('.column');
-        
-        this.noButton = this.add.text(50, 30, 'Não', { fontSize: '20px', fill: '#000000' });
+        const column = document.querySelectorAll(".column");
+
+        this.noButton = this.add.text(confirmWindowWidth / 1.5, 100, 'Não', { fontSize: '20px', fill: '#000000' });
         this.noButton.setOrigin(0.5);
         this.noButton.setInteractive();
         this.noButton.on('pointerdown', () => {
             // Ação ao clicar em "Não"
             this.confirmWindow.setVisible(false).setDepth(0); // Esconde a janela de confirmação
             this.overlay.setVisible(false).setDepth(0);
-            column.style.zIndex = 1;
+            column.forEach(column => {
+                column.style.zIndex = 1;
+            });
             this.confirmBtn.setInteractive();
         });
         this.confirmWindow.add(this.noButton);
-        
+
         // Inicialmente, a janela de confirmação estará invisível
         this.confirmWindow.setVisible(false);
     }
