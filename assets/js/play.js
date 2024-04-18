@@ -19,15 +19,19 @@ class Play extends Phaser.Scene {
         this.beginner;
         this.intermediary;
         this.advanced;
-        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Estou aprendendo a programar, pode me ajudar a montar uns códigos para eu poder estudá-los depois?", "Ótimo! Vou explicar como vai funcionar...", "Os códigos vão estar em Portugol...", "Você vai colocar as linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as opções, beleza?","Agora preciso saber qual o seu nível em programação:"]
+        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Estou aprendendo a programar, pode me ajudar a montar uns códigos para eu poder estudá-los depois?", "Ótimo! Vou explicar como vai funcionar...", "Os códigos estarão na linguagem Portugol...", "Lembrando que você já deve ter alguma base em l", "Você vai colocar as linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as opções, beleza?","Agora preciso saber qual o seu nível em programação:"]
     }
 
     init(data) {
         this.faseInicial = data.faseInicial || 0; // Define a fase inicial como 'Fase1' se não for fornecida
     }
 
+    shutdown() {
+        this.playMusic.stop(); // Para o áudio ao sair da cena
+    }
+
     create() {
-        //this.scene.start('Quizzes');
+        this.scene.start('Quizzes');
 
         // Adiciona o fundo
         this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
@@ -45,6 +49,9 @@ class Play extends Phaser.Scene {
         this.playMusic.setVolume(0.5);
         this.select.setVolume(0.05);
         this.hover.setVolume(0.4);
+
+        // Adiciona o audio
+        this.playMusic.play(); 
 
         this.showScreen();
 

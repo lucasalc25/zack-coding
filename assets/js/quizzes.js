@@ -80,8 +80,8 @@ class Quizzes extends Phaser.Scene {
         this.saveText;
     }
 
-    preload() {
-
+    shutdown() {
+        this.playMusic.stop(); // Para o áudio ao sair da cena
     }
 
     create() {
@@ -92,10 +92,6 @@ class Quizzes extends Phaser.Scene {
         this.dialogueBox = this.add.rectangle(this.game.canvas.width/2, this.game.canvas.height, 10, this.game.canvas.height, 0x000000, 0.9).setOrigin(0.5, 0.5);
 
         this.playMusic = this.sound.add('playMusic', { loop: true });
-        this.playMusic.setVolume(0.5);
-        
-        // Adiciona o audio
-        this.playMusic.play(); 
 
         this.correct = this.sound.add('correct');
         this.correct.setVolume(0.8);
@@ -528,7 +524,7 @@ class Quizzes extends Phaser.Scene {
         this.yesButton.setInteractive();
         this.yesButton.on('pointerdown', () => {
             // Ação ao clicar em "Sim"
-            this.playMusic.stop();
+            this.playMusic.pause();
             this.noButton.disableInteractive();
             this.clearLines();
             this.scene.stop('Quizzes');
