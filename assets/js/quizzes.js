@@ -80,10 +80,6 @@ class Quizzes extends Phaser.Scene {
         this.saveText;
     }
 
-    shutdown() {
-        this.playMusic.stop(); // Para o áudio ao sair da cena
-    }
-
     create() {
         // Adiciona o fundo
         this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
@@ -92,19 +88,19 @@ class Quizzes extends Phaser.Scene {
         this.dialogueBox = this.add.rectangle(this.game.canvas.width/2, this.game.canvas.height, 10, this.game.canvas.height, 0x000000, 0.9).setOrigin(0.5, 0.5);
 
         this.playMusic = this.sound.add('playMusic', { loop: true });
-
         this.correct = this.sound.add('correct');
         this.correct.setVolume(0.8);
         this.wrong = this.sound.add('wrong');
         this.wrong.setVolume(0.4);
-        
+        this.playMusic.setVolume(0.5);
+        this.playMusic.play();
 
         this.showQuizScreen(this.phase);
                  
     }
 
-    update() {
-
+    shutdown() {
+        this.playMusic.stop(); // Para o áudio ao sair da cena
     }
 
     // Função para embaralhar uma lista
@@ -382,9 +378,10 @@ class Quizzes extends Phaser.Scene {
         // Verifica se o localStorage é suportado pelo navegador
         if (typeof(Storage) !== "undefined") {
             // Salva a fase atual do jogador no localStorage
+            faseAtual++;
             localStorage.setItem("faseAtual", faseAtual);
             
-            this.saveText = this.add.text(this.game.canvas.width / 2, 100, 'Salvando progresso', { fontSize: '20px', fill: '#FFFFFF', align: 'center' }).setWordWrapWidth(this.game.canvas.width * 0.9).setOrigin(0.5);
+            this.saveText = this.add.text(this.game.canvas.width / 2, 100, 'Salvando progresso...', { fontSize: '20px', fill: '#FFFFFF', align: 'center' }).setWordWrapWidth(this.game.canvas.width * 0.9).setOrigin(0.5);
             
             // Define a escala inicial do texto como zero
             this.saveText.setScale(0);
@@ -524,9 +521,9 @@ class Quizzes extends Phaser.Scene {
         this.yesButton.setInteractive();
         this.yesButton.on('pointerdown', () => {
             // Ação ao clicar em "Sim"
-            this.playMusic.pause();
             this.noButton.disableInteractive();
             this.clearLines();
+            this.playMusic.stop();
             this.scene.stop('Quizzes');
             this.scene.start('Load1');
         });

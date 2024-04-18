@@ -10,24 +10,19 @@ class Play extends Phaser.Scene {
         this.dialogueText; // Variável global para o texto do diálogo
         this.textToShow = ''; // Variável global para o texto a ser exibido
         this.currentDialogueIndex = 0;
-        this.playMusic;
         this.hover;
         this.select;
         this.typing;
         this.textTitle;
         this.touchIcon;
-        this.beginner;
+        this.basic;
         this.intermediary;
         this.advanced;
-        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Estou aprendendo a programar, pode me ajudar a montar uns códigos para eu poder estudá-los depois?", "Ótimo! Vou explicar como vai funcionar...", "Os códigos estarão na linguagem Portugol...", "Lembrando que você já deve ter alguma base em l", "Você vai colocar as linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as opções, beleza?","Agora preciso saber qual o seu nível em programação:"]
+        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Estou aprendendo a programar, pode me ajudar a montar uns códigos para eu poder estudá-los depois?", "Ótimo! Vou explicar como vai funcionar...", "Os códigos estarão na linguagem Portugol...", "Lembrando que você já deve ter alguma base em lógica de programação...", "Você deverá colocar linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as opções, beleza?","Agora preciso saber qual o seu nível em programação:"]
     }
 
     init(data) {
         this.faseInicial = data.faseInicial || 0; // Define a fase inicial como 'Fase1' se não for fornecida
-    }
-
-    shutdown() {
-        this.playMusic.stop(); // Para o áudio ao sair da cena
     }
 
     create() {
@@ -61,8 +56,8 @@ class Play extends Phaser.Scene {
         
     }
 
-    update() {
-
+    shutdown() {
+        this.playMusic.stop(); // Para o áudio ao sair da cena
     }
 
     showScreen() {
@@ -206,19 +201,19 @@ class Play extends Phaser.Scene {
      showChoices() {
         this.textTitle = this.add.text(game.canvas.width*0.5, game.canvas.height*0.7, 'Clique no seu nível:', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5).setWordWrapWidth(this.game.canvas.width*0.9);
         // Cria botões de escolha
-        this.beginner = this.add.text(game.canvas.width*0.2, game.canvas.height*0.8, 'Iniciante', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+        this.basic = this.add.text(game.canvas.width*0.2, game.canvas.height*0.8, 'Básico', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
         this.intermediary = this.add.text(game.canvas.width*0.5, game.canvas.height*0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
         this.advanced = this.add.text(game.canvas.width*0.8, game.canvas.height*0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
         
         // Configurando interações dos botões
-        [this.beginner, this.intermediary, this.advanced].forEach(button => {
+        [this.basic, this.intermediary, this.advanced].forEach(button => {
             button.setInteractive();
 
             button.on('pointerdown', () => {
                 this.level = button.text;
                 this.select.play();
                 this.textTitle.setText('');
-                [this.beginner, this.intermediary, this.advanced].forEach(option => {
+                [this.basic, this.intermediary, this.advanced].forEach(option => {
                     option.destroy();
                 });
                 this.typing.play();
@@ -228,6 +223,7 @@ class Play extends Phaser.Scene {
                     this.input.once('pointerdown', () => {
                         this.endScene();
                         setTimeout(() => {
+                            this.playMusic.stop();
                             this.scene.stop('Play');
                             this.scene.start('Quizzes');
                         }, 1200);
@@ -240,7 +236,7 @@ class Play extends Phaser.Scene {
                 this.hover.play();
             });
             button.on('pointerout', () => {
-                button.setStyle({ fontSize: '20px', fill:'#0077FF' }); // Restaura a cor original ao retirar o mouse
+                button.setStyle({ fontSize: '20px', fill:'#FFFFFF' }); // Restaura a cor original ao retirar o mouse
             });
         });
     }
