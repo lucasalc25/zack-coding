@@ -95,40 +95,95 @@ class Home extends Phaser.Scene {
     }
 
     createConfigWindow() {
-        // Cria uma janela de confirmação centralizada
-        const configWindowWidth = this.game.canvas.width * 0.6;
-        const configWindowHeight = this.game.canvas.height * 0.4;
-        const configWindowX = (this.game.canvas.width - configWindowWidth) / 2;
+        // Verifica se a largura da tela é menor que 400px
+        const screenWidth = this.game.canvas.width;
+        const isSmallScreen = screenWidth < 400;
+    
+        // Define a largura da janela de configuração
+        let configWindowWidth = isSmallScreen ? screenWidth * 0.9 : screenWidth * 0.5;
+    
+        // Cria a janela de configuração centralizada
+        const configWindowHeight = this.game.canvas.height * 0.75;
+        const configWindowX = (screenWidth - configWindowWidth) / 2;
         const configWindowY = (this.game.canvas.height - configWindowHeight) / 2;
-        
+    
         this.configWindow = this.add.container(configWindowX, configWindowY);
-
-        let windowBackground = this.add.graphics();
-        windowBackground.fillStyle(0xEEEEEE);
+    
+        // Desenha a borda
+        const graphics = this.add.graphics();
+        graphics.lineStyle(15, 0X00BBFF); // Define a espessura da linha e a cor
+        graphics.strokeRect(0, 0, configWindowWidth, configWindowHeight); // Desenha um retângulo de contorno
+    
+        // Adiciona a borda ao contêiner
+        this.configWindow.add(graphics);
+    
+        // Adiciona o fundo da janela
+        const windowBackground = this.add.graphics();
+        windowBackground.fillStyle(0x000000);
         windowBackground.fillRect(0, 0, configWindowWidth, configWindowHeight);
         this.configWindow.add(windowBackground);
+    
+        // Adicione um texto para o título
+        const title = this.add.text(configWindowWidth / 2, 30, 'Opções', { fontSize: '30px', fill: '#FFFFFF', fontWeight: 'bold' }).setOrigin(0.5, 0.5);
+        this.configWindow.add(title);
 
-        // Adicione um texto para indicar a função do slider
-        const volumeLabel = this.add.text(configWindowWidth / 3, 30, 'Música', { fontSize: '24px', fill: '#000000' });
+    
+        // Adicione um texto para o campo de configuração do volume
+        const volumeLabel = this.add.text(configWindowWidth / 2, 140, 'Música', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 10, lineJoin: 'round', align: 'center' }).setOrigin(0.5, 0.5);
         this.configWindow.add(volumeLabel);
-
-        // Adicione um texto para indicar a função do slider
-        const shineLabel = this.add.text(configWindowWidth / 11, 100, 'Efeitos Sonoros', { fontSize: '24px', fill: '#000000' });
-        this.configWindow.add(shineLabel);
-
-         // Adicione um texto para indicar a função do slider
-         const graphicsLabel = this.add.text(configWindowWidth / 3.5, 170, 'Gráficos', { fontSize: '24px', fill: '#000000' });
-         this.configWindow.add(graphicsLabel);
- 
+    
+        // Adicione um texto para o campo de configuração do brilho
+        const soundLabel = this.add.text(configWindowWidth / 2, 210, 'Efeitos Sonoros', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 10, align: 'center' }).setOrigin(0.5, 0.5);
+        this.configWindow.add(soundLabel);
+    
+        // Adicione um texto para o campo de configuração dos gráficos
+        const graphicsLabel = this.add.text(configWindowWidth / 2, 280, 'Gráficos', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 10, align: 'center' }).setOrigin(0.5, 0.5);
+        this.configWindow.add(graphicsLabel);
+    
+        // Adicione um texto para o campo de configuração dos gráficos
+        const supportLabel = this.add.text(configWindowWidth / 2, 350, 'Suporte', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 10, align: 'center' }).setOrigin(0.5, 0.5);
+        this.configWindow.add(supportLabel);
+    
         // Adicione um botão para voltar à cena principal
-        const backButton = this.add.text(configWindowWidth / 3, 300, 'Voltar', { fontSize: '24px', fill: '#000000' }).setInteractive();
+        const backButton = this.add.text(configWindowWidth / 2, 420, 'Voltar', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 10, align: 'center' }).setOrigin(0.5, 0.5).setInteractive();
         backButton.on('pointerdown', () => {
+            this.playButton.setInteractive();
+            this.loadButton.setInteractive();
+            this.settingsButton.setInteractive();
+            this.quitButton.setInteractive();
             // Ação ao clicar em "Não"
             this.configWindow.setVisible(false).setDepth(0); // Esconde a janela de confirmação
             this.overlay.setVisible(false).setDepth(0);
-         });
+        });
         this.configWindow.add(backButton);
+    
+        // Obtenha a largura do soundLabel
+        const labelWidth = soundLabel.width + 50;
 
+        // Calcule as coordenadas da linha inferior
+        const lineX = 60;
+        const lineY = 50; // A linha começa do ponto mais baixo do texto
+        const lineHeight = 1; // Espessura da linha
+    
+        // Desenhe a linha inferior
+        const line = this.add.graphics();
+        line.fillStyle(0xFFFFFF); // Cor da linha
+        line.fillRect(lineX, lineY, labelWidth, lineHeight);
+        this.configWindow.add(line);
+    
+        // Ajuste a largura dos outros elementos para a largura do soundLabel
+        volumeLabel.setFixedSize(labelWidth, volumeLabel.height);
+        soundLabel.setFixedSize(labelWidth, soundLabel.height);
+        graphicsLabel.setFixedSize(labelWidth, graphicsLabel.height);
+        supportLabel.setFixedSize(labelWidth, supportLabel.height);
+        backButton.setFixedSize(labelWidth, backButton.height);
+    
+        // Ajuste a posição dos elementos
+        volumeLabel.x = configWindowWidth / 2;
+        graphicsLabel.x = configWindowWidth / 2;
+        supportLabel.x = configWindowWidth / 2;
+        backButton.x = configWindowWidth / 2;
+    
         // Inicialmente, a janela de confirmação estará invisível
         this.configWindow.setVisible(false);
     }
