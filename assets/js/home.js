@@ -9,8 +9,8 @@ class Home extends Phaser.Scene {
     }
 
     create() {
-        const menuMusic = this.sound.add('menuMusic', { loop: true });
-        menuMusic.play();
+        this.menuMusic = this.sound.add('menuMusic', { loop: true });
+        this.menuMusic.play();
 
         this.bgImage = this.add.tileSprite(0, 0, this.game.canvas.width, this.game.canvas.height, 'bgMenu').setOrigin(0);
 
@@ -44,12 +44,12 @@ class Home extends Phaser.Scene {
 
                 if(button.text == 'Novo Jogo') {
                     select.play(); 
-                    menuMusic.stop();
+                    this.menuMusic.stop();
                     this.scene.stop('Home');
                     this.scene.start('Load2', { faseInicial: 0 });
                 } else if(button.text == 'Carregar') {
                     select.play(); 
-                    menuMusic.stop();
+                    this.menuMusic.stop();
                     this.scene.stop('Home');
                     this.loadProgress();
                 } else if(button.text == 'Configurações') {
@@ -97,15 +97,20 @@ class Home extends Phaser.Scene {
     createConfigWindow() {
         // Verifica se a largura da tela é menor que 400px
         const screenWidth = this.game.canvas.width;
-        const isSmallScreen = screenWidth < 400;
+        const screenHeight = this.game.canvas.height;
+        const isSmallWidth = screenWidth < 600;
+        const isSmallHeight = screenHeight < 700;
+    
     
         // Define a largura da janela de configuração
-        let configWindowWidth = isSmallScreen ? screenWidth * 0.9 : screenWidth * 0.5;
+        let configWindowWidth = isSmallWidth ? screenWidth * 0.85 : screenWidth * 0.45;
+        let configWindowHeight = isSmallHeight ? screenHeight * 0.75 : screenHeight * 0.65;
+        console.log(configWindowWidth);
+        console.log(configWindowHeight);
     
         // Cria a janela de configuração centralizada
-        const configWindowHeight = this.game.canvas.height * 0.75;
         const configWindowX = (screenWidth - configWindowWidth) / 2;
-        const configWindowY = (this.game.canvas.height - configWindowHeight) / 2;
+        const configWindowY = (screenHeight - configWindowHeight) / 2;
     
         this.configWindow = this.add.container(configWindowX, configWindowY);
     
@@ -124,45 +129,49 @@ class Home extends Phaser.Scene {
         this.configWindow.add(windowBackground);
     
         // Adicione um texto para o título
-        const title = this.add.text(configWindowWidth / 2, 30, 'Opções', { fontSize: '30px', fill: '#FFFFFF', fontWeight: 'bold' }).setOrigin(0.5, 0.5);
+        const title = this.add.text(configWindowWidth / 2, configWindowHeight * 0.07, 'OPÇÕES', { fontSize: '28px', fill: '#FFFFFF', fontWeight: 'bold' }).setOrigin(0.5, 0.5);
         this.configWindow.add(title);
 
     
         // Adicione um texto para o campo de configuração do volume
-        const volumeLabel = this.add.text(configWindowWidth / 2, 140, 'Música', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 10, lineJoin: 'round', align: 'center' }).setOrigin(0.5, 0.5);
-        this.configWindow.add(volumeLabel);
+        const musicConfig = this.add.text(configWindowWidth / 2, configWindowHeight * 0.25, 'Música', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 15, lineJoin: 'round', align: 'center' }).setOrigin(0.5, 0.5).setInteractive();
+        musicConfig.on('pointerdown', () => {
+            this.configWindow.setDepth(0);
+            this.overlay.setDepth(1);
+            this.musicConfig();
+        });
+        this.configWindow.add(musicConfig);
     
         // Adicione um texto para o campo de configuração do brilho
-        const soundLabel = this.add.text(configWindowWidth / 2, 210, 'Efeitos Sonoros', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 10, align: 'center' }).setOrigin(0.5, 0.5);
-        this.configWindow.add(soundLabel);
+        const soundConfig = this.add.text(configWindowWidth / 2, configWindowHeight * 0.4, 'Efeitos Sonoros', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 15, align: 'center' }).setOrigin(0.5, 0.5);
+        this.configWindow.add(soundConfig);
     
         // Adicione um texto para o campo de configuração dos gráficos
-        const graphicsLabel = this.add.text(configWindowWidth / 2, 280, 'Gráficos', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 10, align: 'center' }).setOrigin(0.5, 0.5);
-        this.configWindow.add(graphicsLabel);
+        const graphicConfig = this.add.text(configWindowWidth / 2, configWindowHeight * 0.55, 'Gráficos', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 15, align: 'center' }).setOrigin(0.5, 0.5);
+        this.configWindow.add(graphicConfig);
     
         // Adicione um texto para o campo de configuração dos gráficos
-        const supportLabel = this.add.text(configWindowWidth / 2, 350, 'Suporte', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 10, align: 'center' }).setOrigin(0.5, 0.5);
-        this.configWindow.add(supportLabel);
+        const supportButton = this.add.text(configWindowWidth / 2, configWindowHeight * 0.7, 'Suporte', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 15, align: 'center' }).setOrigin(0.5, 0.5);
+        this.configWindow.add(supportButton);
     
         // Adicione um botão para voltar à cena principal
-        const backButton = this.add.text(configWindowWidth / 2, 420, 'Voltar', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 10, align: 'center' }).setOrigin(0.5, 0.5).setInteractive();
+        const backButton = this.add.text(configWindowWidth / 2, configWindowHeight * 0.85, 'Voltar', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 15, align: 'center' }).setOrigin(0.5, 0.5).setInteractive();
         backButton.on('pointerdown', () => {
             this.playButton.setInteractive();
             this.loadButton.setInteractive();
             this.settingsButton.setInteractive();
             this.quitButton.setInteractive();
-            // Ação ao clicar em "Não"
-            this.configWindow.setVisible(false).setDepth(0); // Esconde a janela de confirmação
+            this.configWindow.setVisible(false).setDepth(0); // Esconde a janela de configuração
             this.overlay.setVisible(false).setDepth(0);
         });
         this.configWindow.add(backButton);
     
         // Obtenha a largura do soundLabel
-        const labelWidth = soundLabel.width + 50;
+        const labelWidth = soundConfig.width;
 
         // Calcule as coordenadas da linha inferior
-        const lineX = 60;
-        const lineY = 50; // A linha começa do ponto mais baixo do texto
+        const lineX = configWindowWidth / 2 - labelWidth / 2;
+        const lineY = title.y + 20; // A linha começa do ponto mais baixo do texto
         const lineHeight = 1; // Espessura da linha
     
         // Desenhe a linha inferior
@@ -172,16 +181,16 @@ class Home extends Phaser.Scene {
         this.configWindow.add(line);
     
         // Ajuste a largura dos outros elementos para a largura do soundLabel
-        volumeLabel.setFixedSize(labelWidth, volumeLabel.height);
-        soundLabel.setFixedSize(labelWidth, soundLabel.height);
-        graphicsLabel.setFixedSize(labelWidth, graphicsLabel.height);
-        supportLabel.setFixedSize(labelWidth, supportLabel.height);
+        musicConfig.setFixedSize(labelWidth, musicConfig.height);
+        soundConfig.setFixedSize(labelWidth, soundConfig.height);
+        graphicConfig.setFixedSize(labelWidth, graphicConfig.height);
+        supportButton.setFixedSize(labelWidth, supportButton.height);
         backButton.setFixedSize(labelWidth, backButton.height);
     
         // Ajuste a posição dos elementos
-        volumeLabel.x = configWindowWidth / 2;
-        graphicsLabel.x = configWindowWidth / 2;
-        supportLabel.x = configWindowWidth / 2;
+        musicConfig.x = configWindowWidth / 2;
+        graphicConfig.x = configWindowWidth / 2;
+        supportButton.x = configWindowWidth / 2;
         backButton.x = configWindowWidth / 2;
     
         // Inicialmente, a janela de confirmação estará invisível
@@ -195,5 +204,98 @@ class Home extends Phaser.Scene {
         this.overlay.fillRect(0, 0, this.game.canvas.width, this.game.canvas.height);
         this.overlay.setDepth(0); // Defina uma profundidade menor para que fique abaixo dos outros elementos
         this.overlay.setVisible(false); // Inicialmente, o overlay estará invisível
+    }
+
+    musicConfig() {
+        // Verifica se a largura da tela é menor que 400px
+        const screenWidth = this.game.canvas.width;
+        const screenHeight = this.game.canvas.height;
+        const isSmallWidth = screenWidth < 600;
+        const isSmallHeight = screenHeight < 700;
+    
+    
+        // Define a largura da janela de configuração
+        let configWindowWidth = isSmallWidth ? screenWidth * 0.85 : screenWidth * 0.45;
+        let configWindowHeight = isSmallHeight ? screenHeight * 0.5 : screenHeight * 0.5;
+    
+        // Cria a janela de configuração centralizada
+        const configWindowX = (screenWidth - configWindowWidth) / 2;
+        const configWindowY = (screenHeight - configWindowHeight) / 2;
+    
+        this.musicSettingsWindow = this.add.container(configWindowX, configWindowY).setDepth(2);
+
+        // Desenha a borda
+        const graphics = this.add.graphics();
+        graphics.lineStyle(15, 0X00BBFF); // Define a espessura da linha e a cor
+        graphics.strokeRect(0, 0, configWindowWidth, configWindowHeight); // Desenha um retângulo de contorno
+
+        // Adiciona a borda ao contêiner
+        this.musicSettingsWindow.add(graphics);
+
+        // Adiciona o fundo da janela
+        const windowBackground = this.add.graphics();
+        windowBackground.fillStyle(0x000000);
+        windowBackground.fillRect(0, 0, configWindowWidth, configWindowHeight);
+        this.musicSettingsWindow.add(windowBackground);
+
+        // Adicione um texto para o título
+        const title = this.add.text(configWindowWidth / 2, 30, 'Música', { fontSize: '30px', fill: '#FFFFFF', fontWeight: 'bold' }).setOrigin(0.5, 0.5);
+        this.musicSettingsWindow.add(title);
+
+        // Adicione um texto para ativar/desativar música
+        const toggleMusicText = this.add.text(configWindowWidth / 2, 90, 'Ativar/Desativar:', { fontSize: '24px', fill: '#FFFFFF', fontWeight: 'bold' }).setOrigin(0.5, 0.5);
+        this.musicSettingsWindow.add(toggleMusicText);
+
+        let isMusicOn = true;
+        // Adicione um botão de alternância para ativar/desativar música
+        const toggleMusicCheckbox = this.add.image(configWindowWidth / 2, 140, 'musicOn').setOrigin(0.5, 0.5).setInteractive();
+        toggleMusicCheckbox.on('pointerdown', () => {
+            // Alterna entre ligar e desligar a música
+            if(isMusicOn) {
+                toggleMusicCheckbox.setTexture('musicOff');
+                this.menuMusic.stop();
+            } else {
+                toggleMusicCheckbox.setTexture('musicOn');
+                this.menuMusic.play();
+            }
+            isMusicOn = !isMusicOn;
+        });
+        this.musicSettingsWindow.add(toggleMusicCheckbox);
+
+        // Adicione um texto para o controle de volume
+        const volumeText = this.add.text(configWindowWidth / 2, 190, 'Volume', { fontSize: '24px', fill: '#FFFFFF', fontWeight: 'bold' }).setOrigin(0.5, 0.5);
+        this.musicSettingsWindow.add(volumeText);
+
+        // Adicione um slider para ajustar o volume
+        const volumeSlider = this.add.dom(configWindowWidth / 2, 210).createFromCache('volumeSlider');
+        volumeSlider.addListener('change');
+        this.musicSettingsWindow.add(volumeSlider);
+
+        // Quando o valor do slider mudar, ajuste o volume da música
+        volumeSlider.on('change', (event) => {
+            const value = parseInt(event.target.value) / 100;
+            // Ajuste o volume da música aqui
+            console.log('Novo volume:', value);
+        });
+
+        // Adicione um botão para fechar a janela
+        const closeButton = this.add.text(configWindowWidth / 2, 290, 'Fechar', { fontSize: '24px', fill: '#FFFFFF', fontWeight: 'bold' }).setOrigin(0.5, 0.5).setInteractive();
+        closeButton.on('pointerdown', () => {
+            this.musicSettingsWindow.setVisible(false).setDepth(0);
+            this.overlay.setVisible(false).setDepth(0);
+        });
+        this.musicSettingsWindow.add(closeButton);
+    }
+
+    soundConfig() {
+        
+    }
+
+    graphicConfig() {
+        
+    }
+
+    showSupport() {
+        
     }
 }
