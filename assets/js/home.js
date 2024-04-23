@@ -8,14 +8,20 @@ class Home extends Phaser.Scene {
         this.bgImage;
         this.configWindow;
         this.overlay;
-        this.musicSettingsWindow;
-        this.toggleMusicCheckbox;
-        this.volumeText;
-        this.volumeSlider;
-        this.isDragging = false;
+        this.volumeMusicText;
+        this.volumeMusicSlider;
+        this.volumeEffectsText;
+        this.volumeEffectsSlider;
+        this.supportButton;
+        this.backButton;
+        this.configWindow;
+        this.isDraggingMusic = false;
+        this.isDraggingEffects = false;
     }
 
     create() {
+        // Inicializa o soundManager
+        this.registry.soundManager = new Phaser.Sound.HTML5AudioSoundManager(this.game);
         this.registry.set('musicOn', true);
 
         this.menuMusic = this.sound.add('menuMusic', { loop: true });
@@ -102,109 +108,27 @@ class Home extends Phaser.Scene {
     }
 
     createConfigWindow() {
-        // Verifica se a largura da tela é menor que 400px
-        const screenWidth = this.game.canvas.width;
-        const screenHeight = this.game.canvas.height;
-        const isSmallWidth = screenWidth < 600;
-        const isSmallHeight = screenHeight < 700;
+         // Cria os sliders de volume, mas os mantém ocultos até clicar em "Configurações"
+         this.createVolumeSliders();
 
-        // Define a largura da janela de configuração
-        let configWindowWidth = isSmallWidth ? screenWidth * 0.85 : screenWidth * 0.45;
-        let configWindowHeight = isSmallHeight ? screenHeight * 0.75 : screenHeight * 0.65;
+         // Botão de Suporte
+         this.supportButton = this.add.text(this.game.canvas.width / 2, 400, 'Suporte', { fontSize: '24px', fill: '#fff' });
+         this.supportButton.setInteractive();
+         this.supportButton.on('pointerdown', () => {
+             this.openSupportPage();
+         });
 
-        // Cria a janela de configuração centralizada
-        const configWindowX = (screenWidth - configWindowWidth) / 2;
-        const configWindowY = (screenHeight - configWindowHeight) / 2;
-
-        this.configWindow = this.add.container(configWindowX, configWindowY);
-
-        // Desenha a borda
-        const graphics = this.add.graphics();
-        graphics.lineStyle(15, 0X00BBFF); // Define a espessura da linha e a cor
-        graphics.strokeRect(0, 0, configWindowWidth, configWindowHeight); // Desenha um retângulo de contorno
-        this.configWindow.add(graphics);
-
-        // Adiciona o fundo da janela
-        const windowBackground = this.add.graphics();
-        windowBackground.fillStyle(0x000000);
-        windowBackground.fillRect(0, 0, configWindowWidth, configWindowHeight);
-        this.configWindow.add(windowBackground);
-
-        // Adicione um texto para o título
-        const title = this.add.text(configWindowWidth / 2, configWindowHeight * 0.07, 'OPÇÕES', { fontSize: '28px', fill: '#FFFFFF', fontWeight: 'bold' }).setOrigin(0.5, 0.5);
-        this.configWindow.add(title);
-
-        // Adicione um texto para o campo de configuração do volume
-        const musicConfig = this.add.text(configWindowWidth / 2, configWindowHeight * 0.25, 'Música', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 15, lineJoin: 'round', align: 'center' }).setOrigin(0.5, 0.5).setInteractive();
-        musicConfig.on('pointerdown', () => {
-            this.configWindow.setDepth(0); // Esconde a janela de configuração
-            this.overlay.setVisible(true).setDepth(1);
-            this.showMusicSettings();
+        // Botão de Voltar
+        this.backButton = this.add.text(this.game.canvas.width / 2, 450, 'Voltar', { fontSize: '24px', fill: '#fff' });
+        this.backButton.setInteractive();
+        this.backButton.on('pointerdown', () => {
+            this.hideConfigWindow();
         });
-        this.configWindow.add(musicConfig);
 
-        // Adicione um texto para o campo de configuração do brilho
-        const soundConfig = this.add.text(configWindowWidth / 2, configWindowHeight * 0.4, 'Efeitos Sonoros', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 15, align: 'center' }).setOrigin(0.5, 0.5);
-        this.configWindow.add(soundConfig);
-
-        // Adicione um texto para o campo de configuração dos gráficos
-        const graphicConfig = this.add.text(configWindowWidth / 2, configWindowHeight * 0.55, 'Gráficos', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 15, align: 'center' }).setOrigin(0.5, 0.5);
-        this.configWindow.add(graphicConfig);
-
-        // Adicione um texto para o campo de configuração dos gráficos
-        const supportButton = this.add.text(configWindowWidth / 2, configWindowHeight * 0.7, 'Suporte', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 15, align: 'center' }).setOrigin(0.5, 0.5);
-        this.configWindow.add(supportButton);
-
-        // Adicione um botão para voltar à cena principal
-        const backButton = this.add.text(configWindowWidth / 2, configWindowHeight * 0.85, 'Voltar', { fontSize: '24px', fill: '#000000', fontWeight: 'bold', backgroundColor: '#FFFFFF', padding: 15, align: 'center' }).setOrigin(0.5, 0.5).setInteractive();
-        backButton.on('pointerdown', () => {
-            this.playButton.setInteractive();
-            this.loadButton.setInteractive();
-            this.settingsButton.setInteractive();
-            this.quitButton.setInteractive();
-            this.configWindow.setVisible(false).setDepth(0); // Esconde a janela de configuração
-            this.overlay.setVisible(false).setDepth(0);
-        });
-        this.configWindow.add(backButton);
-
-        // Obtenha a largura do soundLabel
-        const labelWidth = soundConfig.width;
-
-        // Calcule as coordenadas da linha inferior
-        const lineX = configWindowWidth / 2 - labelWidth / 2;
-        const lineY = title.y + 20; // A linha começa do ponto mais baixo do texto
-        const lineHeight = 1; // Espessura da linha
-
-        // Desenhe a linha inferior
-        const line = this.add.graphics();
-        line.fillStyle(0xFFFFFF); // Cor da linha
-        line.fillRect(lineX, lineY, labelWidth, lineHeight);
-        this.configWindow.add(line);
-
-        // Ajuste a largura dos outros elementos para a largura do soundLabel
-        musicConfig.setFixedSize(labelWidth, musicConfig.height);
-        soundConfig.setFixedSize(labelWidth, soundConfig.height);
-        graphicConfig.setFixedSize(labelWidth, graphicConfig.height);
-        supportButton.setFixedSize(labelWidth, supportButton.height);
-        backButton.setFixedSize(labelWidth, backButton.height);
-
-        // Ajuste a posição dos elementos
-        musicConfig.x = configWindowWidth / 2;
-        graphicConfig.x = configWindowWidth / 2;
-        supportButton.x = configWindowWidth / 2;
-        backButton.x = configWindowWidth / 2;
-
-        // Inicialmente, a janela de confirmação estará invisível
-        this.configWindow.setVisible(false);
-    }
-
-    createOverlay() {
-        // Cria um retângulo semi-transparente para cobrir toda a tela
-        this.overlay = this.add.graphics();
-        this.overlay.fillStyle(0x000000, 0.5); // Cor preta com 50% de opacidade
-        this.overlay.fillRect(0, 0, this.game.canvas.width, this.game.canvas.height);
-        this.overlay.setDepth(0); // Defina uma profundidade menor para que fique abaixo dos outros elementos
-        this.overlay.setVisible(false); // Inicialmente, o overlay estará invisível
+        // Configurações iniciais dos sliders
+        this.updateMusicVolume(1);
+        this.updateEffectsVolume(1);
+        this.hideConfigWindow();
     }
 
     createOverlay() {
@@ -226,93 +150,99 @@ class Home extends Phaser.Scene {
         }
     }
 
-    showMusicSettings() {
-        // Verifica se a largura da tela é menor que 400px
-        const screenWidth = this.game.canvas.width;
-        const screenHeight = this.game.canvas.height;
-        const isSmallWidth = screenWidth < 600;
-        const isSmallHeight = screenHeight < 700;
+    createVolumeSliders() {
+        // Cria o texto e o slider para o volume da música
+        this.volumeMusicSlider = this.add.text(this.game.canvas.width / 2, 250, '|', { fontSize: '24px', fill: '#fff' });
+        this.volumeMusicSlider.setInteractive();
 
-        // Define a largura da janela de configuração
-        let configWindowWidth = isSmallWidth ? screenWidth * 0.85 : screenWidth * 0.45;
-        let configWindowHeight = isSmallHeight ? screenHeight * 0.5 : screenHeight * 0.5;
+        // Cria o texto e o slider para o volume dos efeitos sonoros
+        this.volumeEffectsSlider = this.add.text(this.game.canvas.width / 2, 350, '|', { fontSize: '24px', fill: '#fff' });
+        this.volumeEffectsSlider.setInteractive();
 
-        // Cria a janela de configuração centralizada
-        const configWindowX = (screenWidth - configWindowWidth) / 2;
-        const configWindowY = (screenHeight - configWindowHeight) / 2;
+        // Adiciona os eventos para os sliders de volume
+        this.volumeMusicSlider.on('pointerdown', this.startDragMusic, this);
+        this.volumeEffectsSlider.on('pointerdown', this.startDragEffects, this);
+        this.input.on('pointermove', this.onDragMusic, this);
+        this.input.on('pointermove', this.onDragEffects, this);
+        this.input.on('pointerup', this.endDrag, this);
 
-        if (this.musicSettingsWindow) {
-            this.musicSettingsWindow.destroy(); // Destrua a janela anterior, se existir
-        }
-
-        this.musicSettingsWindow = this.add.container(configWindowX, configWindowY).setDepth(2);
-
-        // Desenha a borda
-        const graphics = this.add.graphics();
-        graphics.lineStyle(15, 0X00BBFF); // Define a espessura da linha e a cor
-        graphics.strokeRect(0, 0, configWindowWidth, configWindowHeight); // Desenha um retângulo de contorno
-
-        // Adiciona a borda ao contêiner
-        this.musicSettingsWindow.add(graphics);
-
-        // Adiciona o fundo da janela
-        const windowBackground = this.add.graphics();
-        windowBackground.fillStyle(0x000000);
-        windowBackground.fillRect(0, 0, configWindowWidth, configWindowHeight);
-        this.musicSettingsWindow.add(windowBackground);
-
-        // Adicione um texto para o título
-        const title = this.add.text(configWindowWidth / 2, configWindowHeight * 0.1, 'Música', { fontSize: '30px', fill: '#FFFFFF', fontWeight: 'bold' }).setOrigin(0.5, 0.5);
-        this.musicSettingsWindow.add(title);
-
-        // Adicione um texto para ativar/desativar música
-        const toggleMusicText = this.add.text(configWindowWidth / 2, configWindowHeight * 0.3, 'Ativar/Desativar:', { fontSize: '24px', fill: '#FFFFFF', fontWeight: 'bold' }).setOrigin(0.5, 0.5);
-        this.musicSettingsWindow.add(toggleMusicText);
-
-        // Adicione um botão de alternância para ativar/desativar música
-        // Verifica o estado da música
-        if (this.registry.get('musicOn')) {
-            this.toggleMusicCheckbox = this.add.image(configWindowWidth / 2, configWindowHeight * 0.4, 'musicOn').setOrigin(0.5, 0.5).setInteractive();
-        } else {
-            this.toggleMusicCheckbox = this.add.image(configWindowWidth / 2, configWindowHeight * 0.4, 'musicOff').setOrigin(0.5, 0.5).setInteractive();
-        }
-
-        this.toggleMusicCheckbox.on('pointerdown', () => {
-            const musicOn = !this.registry.get('musicOn'); // Inverte o estado atual
-            this.registry.set('musicOn', musicOn); // Define o novo estado
-
-            // Atualize a aparência do botão ou ações visuais
-            if (musicOn) {
-                this.toggleMusicCheckbox.setTexture('musicOn');
-                this.menuMusic.play();
-            } else {
-                this.toggleMusicCheckbox.setTexture('musicOff');
-                this.menuMusic.stop();
-            }
-        });
-        this.musicSettingsWindow.add(this.toggleMusicCheckbox);
-
-        // Adicione um texto para o controle de volume
-        const volumeText = this.add.text(configWindowWidth / 2, configWindowHeight * 0.55, 'Volume', { fontSize: '24px', fill: '#FFFFFF', fontWeight: 'bold' }).setOrigin(0.5, 0.5);
-        this.musicSettingsWindow.add(volumeText);
-
-        // Adicione um slider para ajustar o volume
-        const volumeSlider = this.add.dom(configWindowWidth / 2, configWindowHeight * 0.7).createFromCache('volumeSlider');
-        volumeSlider.addListener('change');
-        this.musicSettingsWindow.add(volumeSlider);
-
-        // Quando o valor do slider mudar, ajuste o volume da música
-        volumeSlider.on('change', (event) => {
-            const value = parseInt(event.target.value) / 100;
-            this.menuMusic.setVolume(value); // Ajuste o volume da música
-        });
-
-        // Adicione um botão para fechar a janela
-        const closeButton = this.add.text(configWindowWidth / 2, configWindowHeight * 0.9, 'Fechar', { fontSize: '24px', fill: '#FFFFFF', fontWeight: 'bold' }).setOrigin(0.5, 0.5).setInteractive();
-        closeButton.on('pointerdown', () => {
-            this.musicSettingsWindow.setVisible(false).setDepth(1);
-            this.overlay.setVisible(false).setDepth(0);
-        });
-        this.musicSettingsWindow.add(closeButton);
+        // Oculta os sliders até serem exibidos junto com a janela de configuração
+        this.volumeMusicSlider.setVisible(false);
+        this.volumeEffectsSlider.setVisible(false);
     }
+
+    showConfigWindow() {
+        // Cria a imagem da janela de configuração e a exibe
+        this.configWindow = this.add.container(this.game.canvas.width / 2, this.game.canvas.height / 2);
+        
+        // Adiciona os elementos à janela de configuração
+        this.configWindow.add([
+            this.add.image(0, 0, 'configWindow').setOrigin(0.5),
+            this.volumeMusicSlider,
+            this.volumeEffectsSlider,
+            this.supportButton,
+            this.backButton
+        ]);
+
+        // Exibe os sliders de volume junto com a janela de configuração
+        this.volumeMusicSlider.setVisible(true).setDepth(2);
+        this.volumeEffectsSlider.setVisible(true).setDepth(2);
+    }
+
+    hideConfigWindow() {
+        // Remove a janela de configuração e oculta os sliders
+        if (this.configWindow) {
+            this.configWindow.destroy();
+        }
+        this.volumeMusicSlider.setVisible(false);
+        this.volumeEffectsSlider.setVisible(false);
+    }
+
+    startDragMusic(pointer) {
+        this.isDraggingMusic = true;
+        this.onDragMusic(pointer);
+    }
+
+    startDragEffects(pointer) {
+        this.isDraggingEffects = true;
+        this.onDragEffects(pointer);
+    }
+
+    onDragMusic(pointer) {
+        if (this.isDraggingMusic) {
+            let volume = (pointer.x - this.volumeMusicSlider.x) / this.volumeMusicSlider.width;
+            volume = Phaser.Math.Clamp(volume, 0, 1);
+            this.updateMusicVolume(volume);
+        }
+    }
+
+    onDragEffects(pointer) {
+        if (this.isDraggingEffects) {
+            let volume = (pointer.x - this.volumeEffectsSlider.x) / this.volumeEffectsSlider.width;
+            volume = Phaser.Math.Clamp(volume, 0, 1);
+            this.updateEffectsVolume(volume);
+        }
+    }
+
+    endDrag() {
+        this.isDraggingMusic = false;
+        this.isDraggingEffects = false;
+    }
+
+    updateMusicVolume(volume) {
+        // Atualiza o volume da música
+        this.registry.set('musicVolume', volume);
+        this.registry.soundManager.volume = volume;
+    }
+
+    updateEffectsVolume(volume) {
+
+        // Atualiza o volume dos efeitos sonoros
+        this.registry.set('effectsVolume', volume);
+    }
+
+    openSupportPage() {
+        // Implemente a lógica para abrir a página de suporte
+    }
+
 }
