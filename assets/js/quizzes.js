@@ -6,57 +6,57 @@ class Quizzes extends Phaser.Scene {
         this.correct;
         this.wrong;
         this.beginnerPhases = [
-            { 
-                phase: 1, 
-                title: "Fase 1: Monte a estrutura base de um pseudocódigo", 
-                tips: ["Campo das variáveis primeiro, algoritmo depois"], 
-                code: [ "var", 
-                        "inicio", 
-                        "fimalgoritmo"]
+            {
+                phase: 1,
+                title: "Fase 1: Monte a estrutura base de um pseudocódigo",
+                tips: ["Campo das variáveis primeiro, algoritmo depois"],
+                code: ["var",
+                    "inicio",
+                    "fimalgoritmo"]
             },
             {
-                phase: 2, 
-                title: "Fase 2: Monte o código para declarar duas variáveis do tipo inteiro", tips: ["Declarações de variáveis são feitas no campo 'var'"], 
-                code: [ "var", 
-                        "num1, num2: inteiro", 
-                        "inicio", 
-                        "fimalgoritmo"]
+                phase: 2,
+                title: "Fase 2: Monte o código para declarar duas variáveis do tipo inteiro", tips: ["Declarações de variáveis são feitas no campo 'var'"],
+                code: ["var",
+                    "num1, num2: inteiro",
+                    "inicio",
+                    "fimalgoritmo"]
             },
             {
-                phase: 3, 
-                title: "Fase 3: Ler um número inteiro e mostrá-lo na tela", tips: ["Praticamente o mesmo de antes, porém também irá LER e depois MOSTRAR"], 
-                code: [ "var", 
-                        "num: inteiro", 
-                        "inicio", 
-                        "leia(num)", 
-                        "escreva(num)", 
-                        "fimalgoritmo"]
+                phase: 3,
+                title: "Fase 3: Ler um número inteiro e mostrá-lo na tela", tips: ["Praticamente o mesmo de antes, porém também irá LER e depois MOSTRAR"],
+                code: ["var",
+                    "num: inteiro",
+                    "inicio",
+                    "leia(num)",
+                    "escreva(num)",
+                    "fimalgoritmo"]
             },
             {
-                phase: 4, 
-                title: "Fase 4: Ler dois números e exibir a soma deles", tips: ["Não há como somar valores que ainda não foram lidos e nem mostrar o resultado sem antes calculá-lo"], 
-                code: [ "var",
-                        "num1, num2, soma: inteiro",
-                        "inicio",
-                        "leia(num1)",
-                        "leia(num2)",
-                        "soma <- num1 + num2",
-                        "escreva('A soma dos números é: ', soma)",
-                        "fimalgoritmo"]
+                phase: 4,
+                title: "Fase 4: Ler dois números e exibir a soma deles", tips: ["Não há como somar valores que ainda não foram lidos e nem mostrar o resultado sem antes calculá-lo"],
+                code: ["var",
+                    "num1, num2, soma: inteiro",
+                    "inicio",
+                    "leia(num1)",
+                    "leia(num2)",
+                    "soma <- num1 + num2",
+                    "escreva('A soma dos números é: ', soma)",
+                    "fimalgoritmo"]
             },
             {
-                phase: 5, 
-                title: "Fase 5: Ler um número inteiro e mostrar se ele é par ou ímpar", tips: ["O operador '%' calcula o resto de uma divisão"], 
-                code: [ "var",
-                        "num: inteiro",
-                        "inicio",
-                        "leia(num)",
-                        "se num % 2 = 0 entao",
-                        "escreva(num, ' é par.')",
-                        "senao",
-                        "escreva(num, ' é ímpar.')",
-                        "fimse",
-                        "fimalgoritmo"]
+                phase: 5,
+                title: "Fase 5: Ler um número inteiro e mostrar se ele é par ou ímpar", tips: ["O operador '%' calcula o resto de uma divisão"],
+                code: ["var",
+                    "num: inteiro",
+                    "inicio",
+                    "leia(num)",
+                    "se num % 2 = 0 entao",
+                    "escreva(num, ' é par.')",
+                    "senao",
+                    "escreva(num, ' é ímpar.')",
+                    "fimse",
+                    "fimalgoritmo"]
             },
         ]
     }
@@ -82,21 +82,25 @@ class Quizzes extends Phaser.Scene {
 
     create() {
         // Adiciona o fundo
-        this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
+        this.bgImage = this.add.image(this.game.canvas.width - 800, 0, 'quarto').setOrigin(0);
 
         // Adiciona a caixa de diálogo
-        this.dialogueBox = this.add.rectangle(this.game.canvas.width/2, this.game.canvas.height, 10, this.game.canvas.height, 0x000000, 0.9).setOrigin(0.5, 0.5);
+        this.dialogueBox = this.add.rectangle(this.game.canvas.width / 2, this.game.canvas.height, 10, this.game.canvas.height, 0x000000, 0.9).setOrigin(0.5, 0.5);
 
-        this.playMusic = this.sound.add('playMusic', { loop: true });
+        // Verifica o estado da música
+        if (this.registry.get('musicOn')) {
+            this.playMusic = this.sound.add('playMusic', { loop: true });
+            this.playMusic.setVolume(0.5);
+            this.playMusic.play();
+        }
+
         this.correct = this.sound.add('correct');
         this.correct.setVolume(0.8);
         this.wrong = this.sound.add('wrong');
         this.wrong.setVolume(0.4);
-        this.playMusic.setVolume(0.5);
-        this.playMusic.play();
 
         this.showQuizScreen(this.phase);
-                 
+
     }
 
     shutdown() {
@@ -117,11 +121,11 @@ class Quizzes extends Phaser.Scene {
         this.phaseTitle = this.phase.title;
         this.phaseTips = this.phase.tips;
         this.phaseCode = this.phase.code;
-    
+
         // Mostrando parte da dialogueBox
         this.tweens.add({
             targets: this.dialogueBox,
-            y: this.game.canvas.height/2,
+            y: this.game.canvas.height / 2,
             duration: 200, // Duração da animação em milissegundos (0.5 segundo neste caso)
             ease: 'Linear'
         });
@@ -140,7 +144,7 @@ class Quizzes extends Phaser.Scene {
         }, 300);
 
         // Adiciona o titulo no painel
-        this.textPhaseTitle = this.add.text(game.canvas.width/2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '18px', fill: '#ffffff', marginTop: '10px', align: 'center' }).setOrigin(0.5, 0).setWordWrapWidth(this.game.canvas.width*0.9); // Largura máxima da caixa de texto
+        this.textPhaseTitle = this.add.text(game.canvas.width / 2, -100, this.phaseTitle, { fontFamily: 'Arial', fontSize: '18px', fill: '#ffffff', marginTop: '10px', align: 'center' }).setOrigin(0.5, 0).setWordWrapWidth(this.game.canvas.width * 0.9); // Largura máxima da caixa de texto
 
         setTimeout(() => {
             // Animaçao do titulo
@@ -159,21 +163,21 @@ class Quizzes extends Phaser.Scene {
         column.className = 'column';
 
         // Criação de três divs filhas com classe "line" e atributo draggable definido como true
-        for (let i = 0; i < this.phaseCode.length+1; i++) {
+        for (let i = 0; i < this.phaseCode.length + 1; i++) {
             const lineDiv = document.createElement('div');
             lineDiv.className = 'line animacao';
             lineDiv.draggable = true;
             // Defina o conteúdo do div como a string atual
             lineDiv.textContent = this.quizzCode[i];
             column.appendChild(lineDiv);
-            if(i == this.phaseCode.length) {
+            if (i == this.phaseCode.length) {
                 lineDiv.classList.remove("animacao");
             }
         };
 
         // Adiciona a div pai ao corpo do documento
         document.body.appendChild(column);
-        
+
         const lines = document.querySelectorAll(".line");
 
         document.addEventListener("dragstart", (e) => {
@@ -197,7 +201,7 @@ class Quizzes extends Phaser.Scene {
 
                 const dragging = document.querySelector(".dragging");
                 const cards = column.querySelectorAll(".line:not(.dragging)");
-        
+
                 // Encontra o elemento de referência baseado na posição do cursor
                 const referenceCard = Array.from(cards).find((card) => {
                     const box = card.getBoundingClientRect();
@@ -217,25 +221,25 @@ class Quizzes extends Phaser.Scene {
 
 
         let dragging;
-    
+
         document.addEventListener("touchstart", (e) => {
             dragging = e.target;
         });
-        
+
         document.addEventListener("touchend", () => {
             dragging = null;
         });
-        
+
         lines.forEach((item) => {
             item.addEventListener("touchmove", (e) => {
                 e.preventDefault(); // Evita o comportamento padrão do toque, que é rolar a página
-            
+
                 if (e.touches.length > 0 && dragging) {
                     const touch = e.touches[0];
 
                     item.style.transform = "translateX(0%)";
                     item.classList.remove('animacao');
-    
+
                     // Define a posição da div arrastada com base nas coordenadas do toque
                     dragging.style.left = touch.clientX + 'px';
                     dragging.style.top = touch.clientY + 'px';
@@ -263,13 +267,13 @@ class Quizzes extends Phaser.Scene {
                             referenceLine.insertAdjacentElement("beforeend", dragging);
                         }
                     }
-    
+
                 }
             });
         })
 
         // Botão para verificar a ordem das opções
-        this.confirmBtn = this.add.text(this.game.canvas.width/2, this.game.canvas.height-80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
+        this.confirmBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height - 80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
 
         this.confirmBtn.setInteractive();
         let attempts = 0;
@@ -279,14 +283,14 @@ class Quizzes extends Phaser.Scene {
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
             if (this.checkOrder()) {
                 this.confirmBtn.disableInteractive();
-                this.showCorrect(this.game.canvas.height-120);
+                this.showCorrect(this.game.canvas.height - 120);
                 this.correct.play();
 
                 // Itera sobre cada elemento filho e aplica uma cor de fundo
-                for (var i = 0; i < lines.length-1; i++) {
+                for (var i = 0; i < lines.length - 1; i++) {
                     lines[i].style.backgroundColor = '#228b22'; // Defina a cor de fundo desejada aqui
                 }
-                
+
                 this.save(this.phaseIndex);
                 this.phaseIndex++;
                 this.phase = this.beginnerPhases[this.phaseIndex];
@@ -297,7 +301,7 @@ class Quizzes extends Phaser.Scene {
                     this.showQuizScreen(this.phase);
                 }, 3000);
             } else {
-                if(attempts < 3) {
+                if (attempts < 3) {
                     this.confirmBtn.disableInteractive();
                     this.showWrong(this.game.canvas.height);
                     this.wrong.play();
@@ -312,7 +316,7 @@ class Quizzes extends Phaser.Scene {
                     this.confirmBtn.setInteractive();
                 }
             }
-            
+
         });
 
         // Evento de hover
@@ -326,7 +330,7 @@ class Quizzes extends Phaser.Scene {
         });
 
         // Ícone do menu
-        let menuIcon = this.add.image(this.game.canvas.width - 50, this.game.canvas.height-55, 'menuIcon');
+        let menuIcon = this.add.image(this.game.canvas.width - 50, this.game.canvas.height - 55, 'menuIcon');
         menuIcon.setInteractive();
         menuIcon.on('pointerdown', () => {
             // Quando o ícone do menu for clicado, mostra a janela de confirmação
@@ -364,7 +368,7 @@ class Quizzes extends Phaser.Scene {
         const lineDivs = document.querySelectorAll(".line");
 
         // Verifica se a ordem dos textos nas divs é a mesma que o array inicial
-        for (let i = 0; i < lineDivs.length-1; i++) {  
+        for (let i = 0; i < lineDivs.length - 1; i++) {
             if (lineDivs[i].textContent !== this.phaseCode[i]) {
                 return false;
             }
@@ -376,13 +380,13 @@ class Quizzes extends Phaser.Scene {
     // Função para salvar o progresso do jogador
     save(faseAtual) {
         // Verifica se o localStorage é suportado pelo navegador
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             // Salva a fase atual do jogador no localStorage
             faseAtual++;
             localStorage.setItem("faseAtual", faseAtual);
-            
+
             this.saveText = this.add.text(this.game.canvas.width / 2, 100, 'Salvando progresso...', { fontSize: '20px', fill: '#FFFFFF', align: 'center' }).setWordWrapWidth(this.game.canvas.width * 0.9).setOrigin(0.5);
-            
+
             // Define a escala inicial do texto como zero
             this.saveText.setScale(0);
 
@@ -412,7 +416,7 @@ class Quizzes extends Phaser.Scene {
             console.error("LocalStorage não suportado pelo navegador!");
         }
     }
-    
+
     createLines() {
         const column = document.createElement('div');
         column.className = 'column';
@@ -504,7 +508,7 @@ class Quizzes extends Phaser.Scene {
         const confirmWindowHeight = 150;
         const confirmWindowX = (this.game.canvas.width - confirmWindowWidth) / 2;
         const confirmWindowY = (this.game.canvas.height - confirmWindowHeight) / 2;
-        
+
         this.confirmWindow = this.add.container(confirmWindowX, confirmWindowY);
 
         let windowBackground = this.add.graphics();

@@ -18,7 +18,7 @@ class Play extends Phaser.Scene {
         this.basic;
         this.intermediary;
         this.advanced;
-        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Estou aprendendo a programar, pode me ajudar a montar uns códigos para eu poder estudá-los depois?", "Ótimo! Vou explicar como vai funcionar...", "Os códigos estarão na linguagem Portugol...", "Lembrando que você já deve ter alguma base em lógica de programação...", "Você deverá colocar linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as opções, beleza?","Agora preciso saber qual o seu nível em programação:"]
+        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Estou aprendendo a programar, pode me ajudar a montar uns códigos para eu poder estudá-los depois?", "Ótimo! Vou explicar como vai funcionar...", "Os códigos estarão na linguagem Portugol...", "Lembrando que você já deve ter alguma base em lógica de programação...", "Você deverá colocar linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as opções, beleza?", "Agora preciso saber qual o seu nível em programação:"]
     }
 
     init(data) {
@@ -26,34 +26,37 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start('Quizzes');
+        //this.scene.start('Quizzes');
 
         // Adiciona o fundo
-        this.bgImage = this.add.image(this.game.canvas.width-800, 0, 'quarto').setOrigin(0);
+        this.bgImage = this.add.image(this.game.canvas.width - 800, 0, 'quarto').setOrigin(0);
 
         // Adiciona o personagem
-        this.character = this.add.image(-200, this.game.canvas.height/1.5, 'zack');
+        this.character = this.add.image(-200, this.game.canvas.height / 1.5, 'zack');
         // Adiciona a caixa de diálogo
-        this.dialogueBox = this.add.rectangle(-this.game.canvas.width, this.game.canvas.height/1.3, this.game.canvas.width, this.game.canvas.height/100, 0x000000, 0.7).setOrigin(0.5, 0.5);
+        this.dialogueBox = this.add.rectangle(-this.game.canvas.width, this.game.canvas.height / 1.3, this.game.canvas.width, this.game.canvas.height / 100, 0x000000, 0.7).setOrigin(0.5, 0.5);
         this.currentDialogueIndex = 0;
 
-        this.typing =  this.sound.add('typing');
-        this.playMusic = this.sound.add('playMusic', { loop: true });
+        // Verifica o estado da música
+        if (this.registry.get('musicOn')) {
+            console.log("Música ativa");
+            this.playMusic = this.sound.add('playMusic', { loop: true });
+            this.playMusic.setVolume(0.5);
+            this.playMusic.play();
+        }
+
+        this.typing = this.sound.add('typing');
         this.hover = this.sound.add('hover');
-        this.select =  this.sound.add('select');
-        this.playMusic.setVolume(0.5);
+        this.select = this.sound.add('select');
         this.select.setVolume(0.05);
         this.hover.setVolume(0.4);
-
-        // Adiciona o audio
-        this.playMusic.play(); 
 
         this.showScreen();
 
         setTimeout(() => {
             this.showCharacter();
-        }, 1000); 
-        
+        }, 1000);
+
     }
 
     shutdown() {
@@ -62,7 +65,7 @@ class Play extends Phaser.Scene {
 
     showScreen() {
         // Adicionando um retângulo preto que cobre a tela inteira
-        const blackOverlay = this.add.rectangle(this.game.canvas.width/2, this.game.canvas.height/2, this.game.canvas.width, this.game.canvas.height, 0x000000);
+        const blackOverlay = this.add.rectangle(this.game.canvas.width / 2, this.game.canvas.height / 2, this.game.canvas.width, this.game.canvas.height, 0x000000);
 
         this.tweens.add({
             targets: blackOverlay,
@@ -71,7 +74,7 @@ class Play extends Phaser.Scene {
             onComplete: () => {
                 blackOverlay.destroy();
             }
-        });  
+        });
     }
 
     endScene() {
@@ -101,20 +104,20 @@ class Play extends Phaser.Scene {
                     });
                 }
             });
-       }, 300) 
+        }, 300)
     }
 
     showCharacter() {
         this.tweens.add({
             targets: this.character, // O alvo da animação é a imagem do personagem
-            x: this.game.canvas.width/2, // Coordenada X final para onde o personagem se moverá
+            x: this.game.canvas.width / 2, // Coordenada X final para onde o personagem se moverá
             duration: 400, // Duração da animação em milissegundos (0.5 segundo neste caso)
             ease: 'Linear', // Tipo de easing (suavização) da animação
             yoyo: false, // Define se a animação deve se repetir reversamente (vai e volta)
             onComplete: () => {
                 this.characterAnimated = true;
-                this.startDialog(); 
-            }       
+                this.startDialog();
+            }
         });
     }
 
@@ -122,7 +125,7 @@ class Play extends Phaser.Scene {
         // Mostrando parte da dialogueBox
         this.tweens.add({
             targets: this.dialogueBox,
-            x: this.game.canvas.width/2,
+            x: this.game.canvas.width / 2,
             duration: 100, // Duração da animação em milissegundos (0.5 segundo neste caso)
             ease: 'Linear'
         });
@@ -142,7 +145,7 @@ class Play extends Phaser.Scene {
 
         setTimeout(() => {
             // Adiciona o texto da caixa de diálogo
-            this.dialogueText = this.add.text(this.game.canvas.width/2, this.game.canvas.height/1.3, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5, 0.5).setWordWrapWidth(this.game.canvas.width*0.9); // Largura máxima da caixa de texto
+            this.dialogueText = this.add.text(this.game.canvas.width / 2, this.game.canvas.height / 1.3, '', { fontFamily: 'Arial', fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5, 0.5).setWordWrapWidth(this.game.canvas.width * 0.9); // Largura máxima da caixa de texto
 
             //this.showChoices();
             this.nextDialogue.call(this);
@@ -176,7 +179,7 @@ class Play extends Phaser.Scene {
                     this.nextDialogue();
                 });
             });
-        } else if (this.currentDialogueIndex == this.dialogues.length){
+        } else if (this.currentDialogueIndex == this.dialogues.length) {
             // Avança para a próxima cena
             this.showChoices();
         }
@@ -196,15 +199,15 @@ class Play extends Phaser.Scene {
             }
         }
     }
-    
-     // Função para mostrar as opçoes de escolha
-     showChoices() {
-        this.textTitle = this.add.text(game.canvas.width*0.5, game.canvas.height*0.7, 'Clique no seu nível:', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5).setWordWrapWidth(this.game.canvas.width*0.9);
+
+    // Função para mostrar as opçoes de escolha
+    showChoices() {
+        this.textTitle = this.add.text(game.canvas.width * 0.5, game.canvas.height * 0.7, 'Clique no seu nível:', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5).setWordWrapWidth(this.game.canvas.width * 0.9);
         // Cria botões de escolha
-        this.basic = this.add.text(game.canvas.width*0.2, game.canvas.height*0.8, 'Básico', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
-        this.intermediary = this.add.text(game.canvas.width*0.5, game.canvas.height*0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
-        this.advanced = this.add.text(game.canvas.width*0.8, game.canvas.height*0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
-        
+        this.basic = this.add.text(game.canvas.width * 0.2, game.canvas.height * 0.8, 'Básico', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+        this.intermediary = this.add.text(game.canvas.width * 0.5, game.canvas.height * 0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+        this.advanced = this.add.text(game.canvas.width * 0.8, game.canvas.height * 0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+
         // Configurando interações dos botões
         [this.basic, this.intermediary, this.advanced].forEach(button => {
             button.setInteractive();
@@ -223,7 +226,9 @@ class Play extends Phaser.Scene {
                     this.input.once('pointerdown', () => {
                         this.endScene();
                         setTimeout(() => {
-                            this.playMusic.stop();
+                            if (this.registry.get('musicOn')) {
+                                this.playMusic.stop();
+                            }
                             this.scene.stop('Play');
                             this.scene.start('Quizzes');
                         }, 1200);
@@ -232,11 +237,11 @@ class Play extends Phaser.Scene {
             });
 
             button.on('pointerover', () => {
-                button.setStyle({ fontSize: '24px', fill:'#0077FF' }); // Cor amarela ao passar o mouse
+                button.setStyle({ fontSize: '24px', fill: '#0077FF' }); // Cor amarela ao passar o mouse
                 this.hover.play();
             });
             button.on('pointerout', () => {
-                button.setStyle({ fontSize: '20px', fill:'#FFFFFF' }); // Restaura a cor original ao retirar o mouse
+                button.setStyle({ fontSize: '20px', fill: '#FFFFFF' }); // Restaura a cor original ao retirar o mouse
             });
         });
     }

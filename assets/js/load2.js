@@ -13,7 +13,7 @@ class Load2 extends Phaser.Scene {
     preload() {
         this.load.image('quarto', './assets/img/quarto.png');
         this.load.image('zack', './assets/img/zack.png');
-        this.load.audio('playMusic', './assets/sfx/play.mp3')
+        this.load.audio('playMusic', './assets/sfx/play.mp3');
         this.load.audio('hover', './assets/sfx/interface.mp3');
         this.load.audio('select', './assets/sfx/select blaze.mp3');
         this.load.audio('typing', './assets/sfx/typing.mp3');;
@@ -23,14 +23,15 @@ class Load2 extends Phaser.Scene {
         this.load.image('menuIcon', './assets/img/menu-icon.jpg');
 
         this.createLoadingBar();
+
     }
 
-    create() {  
+    create() {
     }
 
     update() {
-        if(this.loaded) {
-            if(this.faseInicial == 0) {
+        if (this.loaded) {
+            if (this.faseInicial == 0) {
                 this.scene.stop('Home');
                 this.scene.stop('Load2');
                 this.scene.start('Play');

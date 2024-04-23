@@ -20,12 +20,12 @@ class Load1 extends Phaser.Scene {
         this.createLoadingBar();
     }
 
-    create() {   
+    create() {
 
     }
 
     update() {
-        if(this.loaded) {
+        if (this.loaded) {
             this.scene.stop('Load1');
             this.scene.start('Home');
         }
