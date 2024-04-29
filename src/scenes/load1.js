@@ -17,7 +17,7 @@ class Load1 extends Phaser.Scene {
             sceneKey: 'rexUI'
         });
         this.load.audio('menuMusic', './assets/sfx/menu.mp3');
-        this.load.image('bgMenu', './assets/img/bgMenu.jpg');
+        this.load.image('bgMenu', './assets/img/bgMenu.png');
         this.load.image('configWindow', './assets/img/configWindow.png');
         this.load.image('musicOn', './assets/img/music-on.png');
         this.load.image('musicOff', './assets/img/music-off.png');
