@@ -28,8 +28,49 @@ class Home extends Phaser.Scene {
         this.menuMusic = this.sound.add('menuMusic', { loop: true });
         this.menuMusic.play();
 
-        this.bgImage = this.add.image(this.game.canvas.width / 2, this.game.canvas.height / 2, 'bgMenu').setOrigin(0.5, 0.5);
-        this.bgImage.setSize(this.game.canvas.width, this.game.canvas.height);
+        this.bgImage = this.add.tileSprite(0, 0, this.game.canvas.width, this.game.canvas.height, 'bgMenu').setOrigin(0);
+
+        // Cria a imagem da janela de configuração e a exibe
+        this.configWindow = this.add.container(this.game.canvas.width / 2, this.game.canvas.height / 2);
+
+        // Adiciona os elementos à janela de configuração
+        this.configWindow.add([
+            this.add.image(0, 0, 'configWindow').setOrigin(0.5),
+            this.volumeLabel = this.add.text(0, -125 , 'Música', { fontFamily: 'Cooper Black', fontSize: '28px', fill: '#fff' }).setOrigin(0.5, 0),
+            this.rexUI.add.slider({
+                x: 0,
+                y: 0,
+                width: 300,
+                height: 25,
+                orientation: 'x',
+    
+                track: this.rexUI.add.roundRectangle(0, 0, 0, 0, 6, COLOR_DARK),
+                thumb: this.rexUI.add.roundRectangle(0, 0, 0, 0, 10, 0xFFFFFF),
+    
+                valuechangeCallback: (value) => {
+                    this.menuMusic.setVolume(value);
+                    this.playMusic.setVolume(value);
+                },
+                space: {
+                    top: 4,
+                    bottom: 4
+                },
+                input: 'drag', // 'drag'|'click'
+            }).layout(),
+
+        ]);
+
+        this.configWindow.setVisible(false);
+
+
+        // Cria um retângulo semi-transparente para cobrir toda a tela
+        this.overlay = this.add.graphics();
+        this.overlay.fillStyle(0x000000, 0.5); // Cor preta com 50% de opacidade
+        this.overlay.fillRect(0, 0, this.game.canvas.width, this.game.canvas.height);
+        this.overlay.setVisible(false); // Inicialmente, o overlay estará invisível
+
+        this.resizeBackground.bind(this)(this.bgImage);
+        window.addEventListener('resize', this.resizeBackground.bind(this, this.bgImage));
 
         const hover = this.sound.add('hover');
         hover.setVolume(0.4);
@@ -84,12 +125,18 @@ class Home extends Phaser.Scene {
             });
         });
 
-        this.hideConfigWindow();
-        this.createOverlay();
     }
 
     update() {
-      
+        this.bgImage.tilePositionY += 0.4; // Ajuste este valor para controlar a velocidade do efeito parallax
+    }
+
+    resizeBackground(bg) {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+    
+        bg.width = width;
+        bg.height = height;
     }
 
     checkProgress() {
@@ -109,38 +156,10 @@ class Home extends Phaser.Scene {
         }
     }
 
-    createOverlay() {
-        // Cria um retângulo semi-transparente para cobrir toda a tela
-        this.overlay = this.add.graphics();
-        this.overlay.fillStyle(0x000000, 0.5); // Cor preta com 50% de opacidade
-        this.overlay.fillRect(0, 0, this.game.canvas.width, this.game.canvas.height);
-        this.overlay.setDepth(0); // Defina uma profundidade menor para que fique abaixo dos outros elementos
-        this.overlay.setVisible(false); // Inicialmente, o overlay estará invisível
-    }
-
     showConfigWindow() {
-        if (this.configWindow) {
-            this.configWindow.setVisible(true);
-            this.overlay.setVisible(true);
-        }
-    }
-
-    showConfigWindow() {
-        // Cria a imagem da janela de configuração e a exibe
-        this.configWindow = this.add.container(this.game.canvas.width / 2, this.game.canvas.height / 2);
-        
-        // Adiciona os elementos à janela de configuração
-        this.configWindow.add([
-            this.add.image(0, 0, 'configWindow').setOrigin(0.5),
-        ]);
-    }
-
-    hideConfigWindow() {
-        // Remove a janela de configuração e oculta os sliders
-        if (this.configWindow) {
-            this.configWindow.setVisible(false);
-            this.overlay.setVisible(false);
-        }
+        this.configWindow.setVisible(true);
+        this.overlay.setVisible(true);
+        this.configWindow.setDepth(1);
     }
 
 }

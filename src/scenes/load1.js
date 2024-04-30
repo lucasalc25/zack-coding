@@ -16,14 +16,15 @@ class Load1 extends Phaser.Scene {
             url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
             sceneKey: 'rexUI'
         });
-        this.load.audio('menuMusic', './assets/sfx/menu.mp3');
-        this.load.image('bgMenu', './assets/img/bgMenu.png');
+        this.load.audio('menuMusic', './assets/sfx/menu calm.mp3');
+        this.load.image('bgMenu', './assets/img/bgMenu.jpg');
         this.load.image('configWindow', './assets/img/configWindow.png');
         this.load.image('musicOn', './assets/img/music-on.png');
         this.load.image('musicOff', './assets/img/music-off.png');
         this.load.audio('hover', './assets/sfx/interface.mp3');
         this.load.audio('select', './assets/sfx/select blaze.mp3');
         this.load.audio('typing', './assets/sfx/typing.mp3');
+        this.load.audio('playMusic', './assets/sfx/play.mp3');
         this.createLoadingBar();
     }
 

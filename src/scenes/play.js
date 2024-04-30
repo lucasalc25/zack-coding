@@ -32,7 +32,7 @@ class Play extends Phaser.Scene {
         this.bgImage = this.add.image(this.game.canvas.width - 800, 0, 'quarto').setOrigin(0);
 
         // Adiciona o personagem
-        this.character = this.add.image(-200, this.game.canvas.height / 1.5, 'zack');
+        this.character = this.add.image(-200, this.game.canvas.height / 1.3, 'zack');
         // Adiciona a caixa de diálogo
         this.dialogueBox = this.add.rectangle(-this.game.canvas.width, this.game.canvas.height / 1.3, this.game.canvas.width, this.game.canvas.height / 100, 0x000000, 0.7).setOrigin(0.5, 0.5);
         this.currentDialogueIndex = 0;
