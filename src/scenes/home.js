@@ -33,32 +33,30 @@ class Home extends Phaser.Scene {
         // Cria a imagem da janela de configuração e a exibe
         this.configWindow = this.add.container(this.game.canvas.width / 2, this.game.canvas.height / 2);
 
+        this.img = this.add.rexRoundRectangle(400, 300, 0, 0, 10, 0xffffff);
+
+        this.img.slider = this.plugins.get('rexsliderplugin').add(this.img, {
+            endPoints: [{
+                    x: this.img.x - 200,
+                    y: this.img.y
+                },
+                {
+                    x: this.img.x + 200,
+                    y: this.img.y
+                }
+            ],
+            value: 0.25
+        });
+    
+
         // Adiciona os elementos à janela de configuração
         this.configWindow.add([
             this.add.image(0, 0, 'configWindow').setOrigin(0.5),
             this.volumeLabel = this.add.text(0, -125 , 'Música', { fontFamily: 'Cooper Black', fontSize: '28px', fill: '#fff' }).setOrigin(0.5, 0),
-            this.rexUI.add.slider({
-                x: 0,
-                y: 0,
-                width: 300,
-                height: 25,
-                orientation: 'x',
-    
-                track: this.rexUI.add.roundRectangle(0, 0, 0, 0, 6, COLOR_DARK),
-                thumb: this.rexUI.add.roundRectangle(0, 0, 0, 0, 10, 0xFFFFFF),
-    
-                valuechangeCallback: (value) => {
-                    this.menuMusic.setVolume(value);
-                    this.playMusic.setVolume(value);
-                },
-                space: {
-                    top: 4,
-                    bottom: 4
-                },
-                input: 'drag', // 'drag'|'click'
-            }).layout(),
-
+            this.img 
         ]);
+
+
 
         this.configWindow.setVisible(false);
 
@@ -160,6 +158,10 @@ class Home extends Phaser.Scene {
         this.configWindow.setVisible(true);
         this.overlay.setVisible(true);
         this.configWindow.setDepth(1);
+        this.img.setVisible(true);
+        this.add.graphics()
+        .lineStyle(3, 0x55ff55, 1)
+        .strokePoints(this.img.slider.endPoints) 
     }
 
 }

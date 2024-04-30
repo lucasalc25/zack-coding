@@ -11,11 +11,7 @@ class Load1 extends Phaser.Scene {
 
     preload() {
         this.load.plugin('rexroundrectangleplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexroundrectangleplugin.min.js', true);
-        this.load.scenePlugin({
-            key: 'rexuiplugin',
-            url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
-            sceneKey: 'rexUI'
-        });
+        this.load.plugin('rexsliderplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsliderplugin.min.js', true);
         this.load.audio('menuMusic', './assets/sfx/menu calm.mp3');
         this.load.image('bgMenu', './assets/img/bgMenu.jpg');
         this.load.image('configWindow', './assets/img/configWindow.png');
