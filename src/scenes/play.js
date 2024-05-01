@@ -39,17 +39,18 @@ class Play extends Phaser.Scene {
 
         // Verifica o estado da música
         if (this.registry.get('musicOn')) {
-            console.log("Música ativa");
             this.playMusic = this.sound.add('playMusic', { loop: true });
-            this.playMusic.setVolume(0.5);
+            this.playMusic.setVolume(localStorage.getItem("musicVolume"));
             this.playMusic.play();
         }
 
         this.typing = this.sound.add('typing');
         this.hover = this.sound.add('hover');
         this.select = this.sound.add('select');
-        this.select.setVolume(0.05);
-        this.hover.setVolume(0.4);
+        this.typing.setVolume(localStorage.getItem("soundVolume"));
+        this.hover.setVolume(localStorage.getItem("soundVolume"));
+        this.select.setVolume(localStorage.getItem("soundVolume") * 0.4);
+
 
         this.showScreen();
 
@@ -57,6 +58,9 @@ class Play extends Phaser.Scene {
             this.showCharacter();
         }, 1000);
 
+    }
+
+    update() {
     }
 
     shutdown() {
@@ -226,7 +230,7 @@ class Play extends Phaser.Scene {
                     this.input.once('pointerdown', () => {
                         this.endScene();
                         setTimeout(() => {
-                            if (this.registry.get('musicOn')) {
+                            if(this.registry.get('musicOn')) {
                                 this.playMusic.stop();
                             }
                             this.scene.stop('Play');

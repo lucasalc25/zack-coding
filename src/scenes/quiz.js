@@ -103,10 +103,6 @@ class Quiz extends Phaser.Scene {
 
     }
 
-    shutdown() {
-        this.playMusic.stop(); // Para o áudio ao sair da cena
-    }
-
     // Função para embaralhar uma lista
     shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -273,7 +269,7 @@ class Quiz extends Phaser.Scene {
         })
 
         // Botão para verificar a ordem das opções
-        this.confirmBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height - 80, 'Confirmar', { fontFamily: 'Arial', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
+        this.confirmBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height - 80, 'Confirmar', { fontFamily: 'Cooper Black', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
 
         this.confirmBtn.setInteractive();
         let attempts = 0;
@@ -527,7 +523,9 @@ class Quiz extends Phaser.Scene {
             // Ação ao clicar em "Sim"
             this.noButton.disableInteractive();
             this.clearLines();
-            this.playMusic.stop();
+            if(this.registry.get('musicOn')) {
+                this.playMusic.stop();
+            }
             this.scene.stop('Quiz');
             this.scene.start('Load1');
         });
