@@ -90,14 +90,14 @@ class Quiz extends Phaser.Scene {
         // Verifica o estado da música
         if (this.registry.get('musicOn')) {
             this.playMusic = this.sound.add('playMusic', { loop: true });
-            this.playMusic.setVolume(0.5);
+            this.playMusic.setVolume(localStorage.getItem("musicVolume"));
             this.playMusic.play();
         }
 
         this.correct = this.sound.add('correct');
-        this.correct.setVolume(0.8);
+        this.correct.setVolume(localStorage.getItem("soundVolume"));
         this.wrong = this.sound.add('wrong');
-        this.wrong.setVolume(0.4);
+        this.wrong.setVolume(localStorage.getItem("soundVolume"));
 
         this.showQuizScreen(this.phase);
 
@@ -297,7 +297,7 @@ class Quiz extends Phaser.Scene {
                     this.showQuizScreen(this.phase);
                 }, 3000);
             } else {
-                if (attempts < 3) {
+                if (attempts < 2) {
                     this.confirmBtn.disableInteractive();
                     this.showWrong(this.game.canvas.height);
                     this.wrong.play();
@@ -307,7 +307,7 @@ class Quiz extends Phaser.Scene {
                     this.showWrong(this.game.canvas.height);
                     this.wrong.play();
                     setTimeout(() => {
-                        window.alert(`Dica: ${this.phaseTips}`);
+                        window.alert(`Última tentativa! Dica: ${this.phaseTips}`);
                     }, 1000);
                     this.confirmBtn.setInteractive();
                 }

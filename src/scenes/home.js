@@ -197,11 +197,11 @@ class Home extends Phaser.Scene {
             value: this.soundVolume
         });
 
-        this.supportBtn = this.add.text(0, 90, 'Suporte', {fontFamily: 'Cooper Black', fontSize: '24px', backgroundColor: '#ED3D85', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
+        this.supportBtn = this.add.image(0, 90, 'supportBtn').setOrigin(0.5, 0);
         
         this.supportBtn.disableInteractive();
 
-        this.backBtn = this.add.text(0, 190, 'Voltar', {fontFamily: 'Cooper Black', fontSize: '24px', backgroundColor: '#ED3D85', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
+        this.backBtn = this.add.image(0, 187, 'backBtn').setOrigin(0.5, 0);
         
         this.backBtn.disableInteractive();
 
@@ -249,7 +249,9 @@ class Home extends Phaser.Scene {
         this.overlay.setVisible(true);
         this.musicSlider.setVisible(true);
         this.supportBtn.setInteractive();
+        this.supportBtn.setFrame(0);
         this.backBtn.setInteractive();
+        this.backBtn.setFrame(0);
 
         this.backBtn.on('pointerdown', () => {
             this.saveConfig(this.musicSlider.slider.value, this.soundSlider.slider.value);
@@ -257,22 +259,22 @@ class Home extends Phaser.Scene {
             this.checkProgress();
         });
         this.backBtn.on('pointerover', () => {
-            this.backBtn.setStyle({ fontSize: '26px', backgroundColor: '#c62869' });
+            this.backBtn.setFrame(1);
             this.hover.play();
         });
         this.backBtn.on('pointerout', () => {
-            this.backBtn.setStyle({ fontSize: '24px', backgroundColor: '#ED3D85' });
+            this.backBtn.setFrame(0);
         });
 
         this.supportBtn.on('pointerdown', () => {
-            
+            window.alert(`Janela de suporte!`);
         });
         this.supportBtn.on('pointerover', () => {
-            this.supportBtn.setStyle({ fontSize: '26px', backgroundColor: '#c62869' });
+            this.supportBtn.setFrame(1);
             this.hover.play();
         });
         this.supportBtn.on('pointerout', () => {
-            this.supportBtn.setStyle({ fontSize: '24px', backgroundColor: '#ED3D85' });
+            this.supportBtn.setFrame(0);
         });
     }
 

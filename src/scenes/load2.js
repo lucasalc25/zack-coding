@@ -33,7 +33,7 @@ class Load2 extends Phaser.Scene {
             if (this.faseInicial == 0) {
                 this.scene.stop('Home');
                 this.scene.stop('Load2');
-                this.scene.start('Play');
+                this.scene.start('Quiz');
             } else {
                 this.scene.stop('Home');
                 this.scene.stop('Load2');
