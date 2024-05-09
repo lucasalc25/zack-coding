@@ -573,23 +573,21 @@ class BeginnerQuiz extends Phaser.Scene {
     gameOver() {
         setTimeout(() => {
             window.alert('Você perdeu! Clique no botão para recomeçar o jogo...');
+            this.clearLines();
+
+            localStorage.setItem("faseAtual", 0);
+    
+            // Encerre a cena atual e retorne ao menu principal
+            this.scene.stop();
+            if(localStorage.getItem("nivel") === 'Básico') this.scene.start('BeginnerQuiz', { faseInicial: this.faseInicial });
+            // if(this.nivel === 'Intermediário') this.scene.start('IntermediaryQuiz', { faseInicial: this.faseInicial });
+            // if(this.nivel === 'Avançado') this.scene.start('AdvancedQuiz', { faseInicial: this.faseInicial });
         }, 500);
 
         // Pare a música de fundo ou quaisquer sons que estejam tocando
         if(this.registry.get('musicOn')) {
             this.playMusic.stop();
         }
-
-        this.clearLines();
-
-        localStorage.setItem("faseAtual", 0);
-
-        // Encerre a cena atual e retorne ao menu principal
-        this.scene.stop();
-        
-        if(localStorage.getItem("nivel") === 'Básico') this.scene.start('BeginnerQuiz', { faseInicial: this.faseInicial });
-        // if(this.nivel === 'Intermediário') this.scene.start('IntermediaryQuiz', { faseInicial: this.faseInicial });
-        // if(this.nivel === 'Avançado') this.scene.start('AdvancedQuiz', { faseInicial: this.faseInicial });
     }
 
 }
