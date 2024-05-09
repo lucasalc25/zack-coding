@@ -68,7 +68,7 @@ class Home extends Phaser.Scene {
                 } else if (button.text == 'Carregar') {
                     this.select.play();
                     this.menuMusic.stop();
-                    this.scene.stop('Home');
+                    this.scene.stop();
                     this.loadProgress();
                 } else if (button.text == 'Configurações') {
                     this.playBtn.disableInteractive();
@@ -142,7 +142,7 @@ class Home extends Phaser.Scene {
         let faseAtual = localStorage.getItem("faseAtual");
         
         // Verifica se há progresso salvo
-        if (!faseAtual) {
+        if (faseAtual == 0 || !faseAtual) {
             // Se não houver, desabilita o botão de carregar
             this.loadBtn.alpha = 0.5;
             this.loadBtn.disableInteractive();
@@ -151,10 +151,10 @@ class Home extends Phaser.Scene {
 
     // Função para carregar o progresso do jogador
     loadProgress() {
-        let faseAtual = localStorage.getItem("faseAtual");
+        let faseSalva = localStorage.getItem("faseAtual");
 
-        if (faseAtual > 0) {
-            this.scene.start('Load2', { faseInicial: faseAtual }); // Inicia a cena de carregamento com a fase salva
+        if (faseSalva > 0) {
+            this.scene.start('Load2', { faseInicial: faseSalva }); // Inicia a cena de carregamento com a fase salva
         } else {
             this.scene.start('Load2', { faseInicial: 0 });
         }

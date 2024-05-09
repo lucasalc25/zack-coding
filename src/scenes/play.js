@@ -4,7 +4,7 @@ class Play extends Phaser.Scene {
         this.bgImage;
         this.character;
         this.characterAnimated = false;
-        this.level;
+        this.nivel;
         this.dialogueBox;
         this.dialogueBoxAnimated = false;
         this.dialogueText; // Variável global para o texto do diálogo
@@ -30,7 +30,8 @@ class Play extends Phaser.Scene {
         this.bgImage = this.add.image(this.game.canvas.width - 800, 0, 'quarto').setOrigin(0);
 
         // Adiciona o personagem
-        this.character = this.add.image(-200, this.game.canvas.height / 1.4, 'zack');
+        this.character = this.add.image(-200, this.game.canvas.height / 1.4, 'zack1');
+
         // Adiciona a caixa de diálogo
         this.dialogueBox = this.add.rectangle(-this.game.canvas.width, this.game.canvas.height / 1.3, this.game.canvas.width, this.game.canvas.height / 100, 0x000000, 0.7).setOrigin(0.5, 0.5);
         this.currentDialogueIndex = 0;
@@ -161,9 +162,20 @@ class Play extends Phaser.Scene {
         if (this.currentDialogueIndex < this.dialogues.length) {
             const currentDialogue = this.dialogues[this.currentDialogueIndex];
             // Exibe o próximo diálogo
+            const speakTween = this.tweens.add({ // Animação de fala
+                targets: this.character,
+                texture: 'zack2',
+                duration: 100, // Duração de cada fase da animação
+                repeat: -1,
+                onStop: () => {
+                    this.character.setTexture('zack1');
+                }
+            });
+            speakTween.resume();
             this.typing.play();
             this.typeText(this.dialogueText, currentDialogue, 0, () => {
                 // Espera pelo clique do jogador
+                speakTween.stop();
                 this.typing.stop();
                 this.touchIcon = this.add.image(this.game.canvas.width * 0.93, this.game.canvas.height * 0.88, 'touch');
                 this.tweens.add({
@@ -206,24 +218,41 @@ class Play extends Phaser.Scene {
     showChoices() {
         this.textTitle = this.add.text(game.canvas.width * 0.5, game.canvas.height * 0.7, 'Clique no seu nível:', { fontFamily: 'Arial', fontSize: '24px', fill: '#fff' }).setOrigin(0.5).setWordWrapWidth(this.game.canvas.width * 0.9);
         // Cria botões de escolha
-        this.basic = this.add.text(game.canvas.width * 0.2, game.canvas.height * 0.8, 'Básico', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
-        this.intermediary = this.add.text(game.canvas.width * 0.5, game.canvas.height * 0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
-        this.advanced = this.add.text(game.canvas.width * 0.8, game.canvas.height * 0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+        this.basic = this.add.text(game.canvas.width * 0.2, game.canvas.height * 0.8, 'Básico', { fontFamily: 'Arial', fontSize: '20px', fill: '#fff', padding: 15, fontWeight: 'bold' }).setOrigin(0.5);
+        this.intermediary = this.add.text(game.canvas.width * 0.5, game.canvas.height * 0.8, 'Intermediário', { fontFamily: 'Arial', fontSize: '20px', fill: '#666', padding: 15, fontWeight: 'bold' }).setOrigin(0.5);
+        this.advanced = this.add.text(game.canvas.width * 0.8, game.canvas.height * 0.8, 'Avançado', { fontFamily: 'Arial', fontSize: '20px', fill: '#666', padding: 15, fontWeight: 'bold' }).setOrigin(0.5);
+
+        this.basic.setInteractive();
 
         // Configurando interações dos botões
         [this.basic, this.intermediary, this.advanced].forEach(button => {
-            button.setInteractive();
 
             button.on('pointerdown', () => {
-                this.level = button.text;
+                this.nivel = button.text;
+                localStorage.setItem("nivel", this.nivel);
                 this.select.play();
                 this.textTitle.setText('');
                 [this.basic, this.intermediary, this.advanced].forEach(option => {
                     option.destroy();
                 });
                 this.typing.play();
-                this.typeText(this.dialogueText, `Você é nível ${this.level}? Ok, começaremos do básico. Vamos lá!`, 0, () => {
+
+                const speakTween = this.tweens.add({ // Animação de fala
+                    targets: this.character,
+                    texture: 'zack2',
+                    duration: 100, // Duração de cada fase da animação
+                    repeat: -1,
+                    onStop: () => {
+                        console.log("onStop");
+                        this.character.setTexture('zack1');
+                    }
+                });
+                speakTween.resume();
+
+                this.typeText(this.dialogueText, `Ok, começaremos do ${localStorage.getItem("nivel")} então. Vamos lá!`, 0, () => {
                     this.typing.stop();
+                    speakTween.stop();
+                
                     // Espera pelo clique do jogador
                     this.input.once('pointerdown', () => {
                         this.endScene();
@@ -232,7 +261,9 @@ class Play extends Phaser.Scene {
                                 this.playMusic.stop();
                             }
                             this.scene.stop('Play');
-                            this.scene.start('Quiz');
+                            if(localStorage.getItem("nivel") === 'Básico') this.scene.start('BeginnerQuiz');
+                            // if(localStorage.getItem("nivel") === 'Intermediário') this.scene.start('BeginnerQuiz');
+                            // if(localStorage.getItem("nivel") === 'Avançado') this.scene.start('BeginnerQuiz');
                         }, 1200);
                     });
                 });

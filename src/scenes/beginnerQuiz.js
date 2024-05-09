@@ -1,11 +1,11 @@
-class Quiz extends Phaser.Scene {
+class BeginnerQuiz extends Phaser.Scene {
     constructor() {
-        super({ key: 'Quiz' });
+        super({ key: 'BeginnerQuiz' });
         this.bgImage;
         this.dialogueBoxAnimated;
         this.correct;
         this.wrong;
-        this.beginnerPhases = [
+        this.phases = [
             {
                 phase: 1,
                 title: "Fase 1: Monte a estrutura base de um pseudocódigo",
@@ -64,7 +64,7 @@ class Quiz extends Phaser.Scene {
     init(data) {
         this.playMusic;
         this.phaseIndex = data.faseInicial || 0; // Define a fase inicial como 0 se não for fornecida
-        this.phase = this.beginnerPhases[this.phaseIndex];
+        this.phase = this.phases[this.phaseIndex];
         this.phaseTitle;
         this.phaseTips;
         this.phaseCode;
@@ -98,6 +98,13 @@ class Quiz extends Phaser.Scene {
         this.correct.setVolume(localStorage.getItem("soundVolume"));
         this.wrong = this.sound.add('wrong');
         this.wrong.setVolume(localStorage.getItem("soundVolume"));
+
+        // Cria um retângulo semi-transparente para cobrir toda a tela
+        this.overlay = this.add.graphics();
+        this.overlay.fillStyle(0x000000, 0.5); // Cor preta com 50% de opacidade
+        this.overlay.fillRect(0, 0, this.game.canvas.width, this.game.canvas.height);
+        this.overlay.setDepth(1);
+        this.overlay.setVisible(false); // Inicialmente, o overlay estará invisível
 
         this.showQuizScreen(this.phase);
 
@@ -272,10 +279,17 @@ class Quiz extends Phaser.Scene {
         this.confirmBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height - 80, 'Confirmar', { fontFamily: 'Cooper Black', fontSize: '18px', fill: '#fff', backgroundColor: '#00BBFF', borderRadius: 10, padding: 15, color: '#fff', fontWeight: 'bold' }).setOrigin(0.5, 0);
 
         this.confirmBtn.setInteractive();
-        let attempts = 0;
+
+        let attempts = localStorage.getItem("tentativas");
+
+        if(!attempts) {
+            attempts = 0;
+            localStorage.setItem("tentativas", 0);
+        }
 
         this.confirmBtn.on('pointerdown', () => {
             attempts++;
+
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
             if (this.checkOrder()) {
                 this.confirmBtn.disableInteractive();
@@ -289,7 +303,8 @@ class Quiz extends Phaser.Scene {
 
                 this.save(this.phaseIndex);
                 this.phaseIndex++;
-                this.phase = this.beginnerPhases[this.phaseIndex];
+                this.phase = this.phases[this.phaseIndex];
+                localStorage.setItem("tentativas", 0);
                 setTimeout(() => {
                     this.clearLines();
                     this.textPhaseTitle.destroy();
@@ -297,22 +312,29 @@ class Quiz extends Phaser.Scene {
                     this.showQuizScreen(this.phase);
                 }, 3000);
             } else {
-                if (attempts < 2) {
+                if (attempts == 1) {
                     this.confirmBtn.disableInteractive();
                     this.showWrong(this.game.canvas.height);
                     this.wrong.play();
                     this.confirmBtn.setInteractive();
-                } else {
+                } 
+                if (attempts == 2){
                     this.confirmBtn.disableInteractive();
                     this.showWrong(this.game.canvas.height);
                     this.wrong.play();
                     setTimeout(() => {
                         window.alert(`Última tentativa! Dica: ${this.phaseTips}`);
-                    }, 1000);
+                    }, 500);
                     this.confirmBtn.setInteractive();
                 }
-            }
+                if (attempts === 3) {
+                    localStorage.setItem("tentativas", 0);
+                    this.gameOver();
+                    
+                }
 
+                localStorage.setItem("tentativas", attempts);
+            }
         });
 
         // Evento de hover
@@ -331,16 +353,13 @@ class Quiz extends Phaser.Scene {
         menuIcon.on('pointerdown', () => {
             // Quando o ícone do menu for clicado, mostra a janela de confirmação
             this.confirmBtn.disableInteractive();
-            this.confirmWindow.setVisible(true).setDepth(1);
-            this.overlay.setVisible(true).setDepth(0);
+            this.confirmWindow.setVisible(true);
+            this.overlay.setVisible(true);
             column.style.zIndex = -1;
         });
 
         // Adicione a janela de confirmação (inicialmente oculta)
         this.createConfirmationWindow();
-
-        // Cria um retângulo semi-transparente para cobrir toda a tela (inicialmente oculto)
-        this.createOverlay();
 
     }
 
@@ -548,16 +567,29 @@ class Quiz extends Phaser.Scene {
         this.confirmWindow.add(this.noButton);
 
         // Inicialmente, a janela de confirmação estará invisível
-        this.confirmWindow.setVisible(false);
+        this.confirmWindow.setVisible(false).setDepth(2);
     }
 
-    createOverlay() {
-        // Cria um retângulo semi-transparente para cobrir toda a tela
-        this.overlay = this.add.graphics();
-        this.overlay.fillStyle(0x000000, 0.5); // Cor preta com 50% de opacidade
-        this.overlay.fillRect(0, 0, this.game.canvas.width, this.game.canvas.height);
-        this.overlay.setInteractive();
-        this.overlay.setVisible(false); // Inicialmente, o overlay estará invisível
+    gameOver() {
+        setTimeout(() => {
+            window.alert('Você perdeu! Clique no botão para recomeçar o jogo...');
+        }, 500);
+
+        // Pare a música de fundo ou quaisquer sons que estejam tocando
+        if(this.registry.get('musicOn')) {
+            this.playMusic.stop();
+        }
+
+        this.clearLines();
+
+        localStorage.setItem("faseAtual", 0);
+
+        // Encerre a cena atual e retorne ao menu principal
+        this.scene.stop();
+        
+        if(localStorage.getItem("nivel") === 'Básico') this.scene.start('BeginnerQuiz', { faseInicial: this.faseInicial });
+        // if(this.nivel === 'Intermediário') this.scene.start('IntermediaryQuiz', { faseInicial: this.faseInicial });
+        // if(this.nivel === 'Avançado') this.scene.start('AdvancedQuiz', { faseInicial: this.faseInicial });
     }
 
 }

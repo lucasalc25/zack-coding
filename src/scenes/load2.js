@@ -12,15 +12,20 @@ class Load2 extends Phaser.Scene {
 
     preload() {
         this.load.image('quarto', './assets/img/quarto.png');
-        this.load.image('zack', './assets/img/zack.png');
-        this.load.audio('hover', './assets/sfx/interface.mp3');
-        this.load.audio('select', './assets/sfx/select blaze.mp3');
-        this.load.audio('typing', './assets/sfx/typing.mp3');;
-        this.load.image('touch', './assets/img/touch.png');
         this.load.audio('correct', './assets/sfx/correct.mp3');
         this.load.audio('wrong', './assets/sfx/wrong.mp3');
         this.load.image('menuIcon', './assets/img/menu-icon.jpg');
+        this.load.audio('hover', './assets/sfx/interface.mp3');
+        this.load.audio('select', './assets/sfx/decide.mp3');
 
+
+        if (this.faseInicial == 0) {
+            this.load.image('zack1', './assets/img/zack1.png');
+            this.load.image('zack2', './assets/img/zack2.png');
+            this.load.audio('typing', './assets/sfx/typing.mp3');
+            this.load.image('touch', './assets/img/touch.png');
+        }
+         
         this.createLoadingBar();
 
     }
@@ -30,14 +35,15 @@ class Load2 extends Phaser.Scene {
 
     update() {
         if (this.loaded) {
-            if (this.faseInicial == 0) {
-                this.scene.stop('Home');
-                this.scene.stop('Load2');
-                this.scene.start('Quiz');
+            this.scene.stop('Load2');
+            let nivel = localStorage.getItem("nivel");
+
+            if(nivel) {
+                if(nivel === 'Básico') this.scene.start('BeginnerQuiz', { faseInicial: this.faseInicial });
+                // if(this.nivel === 'Intermediário') this.scene.start('IntermediaryQuiz', { faseInicial: this.faseInicial });
+                // if(this.nivel === 'Avançado') this.scene.start('AdvancedQuiz', { faseInicial: this.faseInicial });
             } else {
-                this.scene.stop('Home');
-                this.scene.stop('Load2');
-                this.scene.start('Quiz', { faseInicial: this.faseInicial });
+                this.scene.start('Play');
             }
         }
     }
