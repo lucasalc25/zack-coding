@@ -114,6 +114,8 @@ class BeginnerQuiz extends Phaser.Scene {
         this.musicOn = this.registry.get("musicOn")
 
         if(this.musicOn == false) {
+            this.playMusic = this.sound.add('playMusic', { loop: true });
+            this.playMusic.setVolume(localStorage.getItem("musicVolume"));
             this.playMusic.play();
         }
     }
