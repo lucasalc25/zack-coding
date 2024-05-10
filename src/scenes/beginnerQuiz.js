@@ -111,7 +111,9 @@ class BeginnerQuiz extends Phaser.Scene {
     }
 
     update() {
-        if(this.playMusic.isPlaying == false) {
+        this.musicOn = this.registry.get("musicOn")
+
+        if(this.musicOn == false) {
             this.playMusic.play();
         }
     }
@@ -330,7 +332,7 @@ class BeginnerQuiz extends Phaser.Scene {
                     this.wrong.play();
                     setTimeout(() => {
                         window.alert(`Última tentativa! Dica: ${this.phaseTips}`);
-                        
+                        this.registry.set("musicOn", false);
                     }, 500);
                     this.confirmBtn.setInteractive();
                 }
