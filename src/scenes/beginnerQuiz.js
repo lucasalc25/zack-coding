@@ -110,6 +110,12 @@ class BeginnerQuiz extends Phaser.Scene {
 
     }
 
+    update() {
+        if(this.playMusic.isPlaying == false) {
+            this.playMusic.play();
+        }
+    }
+
     // Função para embaralhar uma lista
     shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -324,6 +330,7 @@ class BeginnerQuiz extends Phaser.Scene {
                     this.wrong.play();
                     setTimeout(() => {
                         window.alert(`Última tentativa! Dica: ${this.phaseTips}`);
+                        
                     }, 500);
                     this.confirmBtn.setInteractive();
                 }
@@ -540,11 +547,13 @@ class BeginnerQuiz extends Phaser.Scene {
         this.yesButton.setInteractive();
         this.yesButton.on('pointerdown', () => {
             // Ação ao clicar em "Sim"
+            this.yesButton.disableInteractive();
             this.noButton.disableInteractive();
             this.clearLines();
             if(this.registry.get('musicOn')) {
                 this.playMusic.stop();
             }
+            localStorage.setItem("tentativas", 0);
             this.scene.stop('Quiz');
             this.scene.start('Load1');
         });
@@ -557,6 +566,8 @@ class BeginnerQuiz extends Phaser.Scene {
         this.noButton.setInteractive();
         this.noButton.on('pointerdown', () => {
             // Ação ao clicar em "Não"
+            this.yesButton.disableInteractive();
+            this.noButton.disableInteractive();
             this.confirmWindow.setVisible(false).setDepth(0); // Esconde a janela de confirmação
             this.overlay.setVisible(false).setDepth(0);
             column.forEach(column => {
@@ -576,6 +587,7 @@ class BeginnerQuiz extends Phaser.Scene {
             this.clearLines();
 
             localStorage.setItem("faseAtual", 0);
+            localStorage.setItem("tentativas", 0);
     
             // Encerre a cena atual e retorne ao menu principal
             this.scene.stop();
