@@ -57,11 +57,12 @@ class Load1 extends Phaser.Scene {
 
 
         const loadingText = this.make.text({
-            x: this.width / 2 + 15,
+            x: this.width / 2,
             y: this.height / 2 - 20,
             text: 'Carregando...',
             style: {
-                font: '20px monospace',
+                fontFamily: 'Anton',
+                fontSize: '24px',
                 fill: '#01B2DE'
             }
         });
@@ -72,7 +73,8 @@ class Load1 extends Phaser.Scene {
             y: this.height / 2 + 15,
             text: '0%',
             style: {
-                font: '18px monospace',
+                fontFamily: 'Anton',
+                fontSize: '18px',
                 fill: '#FFFFFF',
 
             }

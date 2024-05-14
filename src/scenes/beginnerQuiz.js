@@ -316,7 +316,7 @@ class BeginnerQuiz extends Phaser.Scene {
         // Botão para verificar a ordem das opções
         this.confirmBtn = this.add.rexRoundRectangle(this.game.canvas.width / 2, this.game.canvas.height - 40, 130, 50, 5, 0x0077FF).setOrigin(0.5);
 
-        this.confirmBtnText = this.add.text(this.game.canvas.width / 2, this.game.canvas.height - 40, 'Confirmar', { fontFamily: 'Cooper Black', fontSize: '18px', fill: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
+        this.confirmBtnText = this.add.text(this.game.canvas.width / 2, this.game.canvas.height - 40, 'Confirmar', { fontFamily: 'Poetsen One', fontSize: '18px', fill: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
 
         this.confirmBtn.setInteractive();
 
@@ -386,9 +386,9 @@ class BeginnerQuiz extends Phaser.Scene {
         });
 
         // Ícone do menu
-        const backIcon = this.add.image(panelX + 40, this.game.canvas.height - 40, 'backIcon').setOrigin(0.5);
-        backIcon.setInteractive();
-        backIcon.on('pointerdown', () => {
+        this.backIcon = this.add.image(panelX + 40, this.game.canvas.height - 40, 'backIcon').setOrigin(0.5);
+        this.backIcon.setInteractive();
+        this.backIcon.on('pointerdown', () => {
             // Quando o ícone do menu for clicado, mostra a janela de confirmação
             this.confirmBtn.disableInteractive();
             this.confirmWindow.setVisible(true).setDepth(2);
@@ -513,7 +513,7 @@ class BeginnerQuiz extends Phaser.Scene {
         // Adiciona a mensagem à tela
         document.body.appendChild(messageDiv);
 
-        const posY = this.confirmBtn.y - 50; // Ajuste a posição vertical conforme necessário
+        const posY = this.confirmBtn.y - 60; // Ajuste a posição vertical conforme necessário
 
         // Define a posição do elemento alvo com base nas coordenadas do último elemento da lista
         messageDiv.style.position = 'absolute';
@@ -544,7 +544,7 @@ class BeginnerQuiz extends Phaser.Scene {
         // Adiciona a mensagem à tela
         document.body.appendChild(messageDiv);
 
-        const posY = this.confirmBtn.y - 50; // Ajuste a posição vertical conforme necessário
+        const posY = this.confirmBtn.y - 60; // Ajuste a posição vertical conforme necessário
 
         // Define a posição do elemento alvo com base nas coordenadas do último elemento da lista
         messageDiv.style.position = 'absolute';
@@ -578,15 +578,15 @@ class BeginnerQuiz extends Phaser.Scene {
         const windowBackground = this.add.rexRoundRectangle(confirmWindowX, confirmWindowY, confirmWindowWidth * 0.9, confirmWindowHeight, 20, 0x001B68).setOrigin(0.5);
         this.confirmWindow.add(windowBackground);
 
-        this.confirmText = this.add.text(confirmWindowX, confirmWindowY - 35, 'Tem certeza que deseja retornar ao menu?', { fontFamily: 'Cooper Black', fontSize: '20px', fill: '#FFFFFF', align: 'center' }).setWordWrapWidth(confirmWindowWidth * 0.9).setOrigin(0.5);
+        this.confirmText = this.add.text(confirmWindowX, confirmWindowY - 35, 'Tem certeza que deseja retornar ao menu?', { fontFamily: 'Poetsen One', fontSize: '20px', fill: '#FFFFFF', align: 'center' }).setWordWrapWidth(confirmWindowWidth * 0.9).setOrigin(0.5);
         this.confirmWindow.add(this.confirmText);
 
         this.confirmYesBtn = this.add.rexRoundRectangle(confirmWindowX / 1.4, confirmWindowY + 25, 75, 40, 10, 0xED3D85).setOrigin(0.5)
-        this.confirmYesText = this.add.text(confirmWindowX / 1.4, confirmWindowY + 25, 'Sim', { fontFamily: 'Cooper Black',fontSize: '20px', fill: '#FFFFFF', padding: 15 }).setOrigin(0.5).setDepth(3);
+        this.confirmYesText = this.add.text(confirmWindowX / 1.4, confirmWindowY + 25, 'Sim', { fontFamily: 'Poetsen One',fontSize: '20px', fill: '#FFFFFF', padding: 15 }).setOrigin(0.5).setDepth(3);
 
 
         this.confirmNoBtn = this.add.rexRoundRectangle(confirmWindowX / 0.75, confirmWindowY + 25, 75, 40, 10, 0xED3D85).setOrigin(0.5)
-        this.confirmNoText = this.add.text(confirmWindowX / 0.75, confirmWindowY + 25, 'Não', { fontFamily: 'Cooper Black', fontSize: '20px', fill: '#FFFFFF', padding: 15 }).setOrigin(0.5).setDepth(3);
+        this.confirmNoText = this.add.text(confirmWindowX / 0.75, confirmWindowY + 25, 'Não', { fontFamily: 'Poetsen One', fontSize: '20px', fill: '#FFFFFF', padding: 15 }).setOrigin(0.5).setDepth(3);
         
 
         [this.confirmYesBtn, this.confirmNoBtn].forEach(button => {
@@ -658,6 +658,8 @@ class BeginnerQuiz extends Phaser.Scene {
         this.overlay.setVisible(true);
         this.overlay.fillStyle(0x000000, 1); // Cor preta com 50% de opacidade
         this.clearCode()
+        this.backIcon.disableInteractive();
+        this.confirmBtn.disableInteractive();
 
         this.playMusic.stop();
         this.gameOverSound.play();
@@ -666,15 +668,15 @@ class BeginnerQuiz extends Phaser.Scene {
         
         // Cria a animação da palavra "Game Over"
         const gameOverTitle = this.add.text(0, 0, '', {
-            fontFamily: 'Cooper Black',
+            fontFamily: 'Poetsen One',
             fontSize: gameOverFont,
             color: '#ff0000',
             wordWrap: { width: 400 }
         }).setOrigin(0.5);
 
-        this.restartBtn = this.add.text(this.game.canvas.width / 2, (this.game.canvas.height / 2) + 30, 'REINICIAR', { fontFamily: 'Cooper Black', fontSize: '22px', fill: '#ff0000', padding: 10 }).setOrigin(0.5).setDepth(2).setVisible(false);
+        this.restartBtn = this.add.text(this.game.canvas.width / 2, (this.game.canvas.height / 2) + 30, 'REINICIAR', { fontFamily: 'Poetsen One', fontSize: '22px', fill: '#ff0000', padding: 10 }).setOrigin(0.5).setDepth(2).setVisible(false);
 
-        this.quitBtn = this.add.text(this.game.canvas.width / 2, (this.game.canvas.height / 2) + 90, 'SAIR', { fontFamily: 'Cooper Black', fontSize: '22px', fill: '#ff0000', padding: 10 }).setOrigin(0.5).setDepth(2).setVisible(false);
+        this.quitBtn = this.add.text(this.game.canvas.width / 2, (this.game.canvas.height / 2) + 90, 'SAIR', { fontFamily: 'Poetsen One', fontSize: '22px', fill: '#ff0000', padding: 10 }).setOrigin(0.5).setDepth(2).setVisible(false);
 
         // Configura a animação para que cada letra apareça sequencialmente
         const gameOver = 'VOCÊ PERDEU!';

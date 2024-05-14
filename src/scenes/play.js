@@ -18,7 +18,7 @@ class Play extends Phaser.Scene {
         this.basic;
         this.intermediary;
         this.advanced;
-        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Estou aprendendo a programar, pode me ajudar a montar uns códigos para eu poder estudá-los depois?", "Ótimo! Vou explicar como vai funcionar...", "Os códigos estarão na linguagem Portugol...", "Lembrando que você já deve ter alguma base em lógica de programação...", "Você deverá colocar linhas de código na ordem certa para resolver cada problema...", "Basta clicar e arrastar as opções, beleza?", "Agora preciso saber qual o seu nível em programação:"]
+        this.dialogues = ["E aí! Beleza? Sou o Zack...", "Que bom que apareceu! Estou procurando alguém pra estudar programação comigo...", "Você só precisa montar uns códigos, topa?", "Beleza! Vou explicar como vai funcionar...", "Os códigos estarão na linguagem Portugol, uma linguagem própria pra estudo básico...", "Lembrando que você já deve ter alguma noção do que são algoritmos...", "Mas chega de enrolação...", "Você terá que colocar as linhas de código na ordem certa pra resolver cada problema...", "Basta clicar e arrastar as opções, beleza?", "Ao início de cada fase você vai receber uma dica...", "Mas como nem tudo são flores, você terá 3 tentativas...", "Se errar todas é game over hein!", "Agora preciso saber qual o seu nível em programação:"]
     }
 
     init(data) {

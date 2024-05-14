@@ -28,6 +28,7 @@ body, html {
   padding: .3rem;
   border-radius: 5px;
   font-size: .9rem;
+  font-weight: bold;
   /* Defina a posição inicial fora da tela */
   transform: translateX(-100%);
 }
@@ -61,7 +62,7 @@ body, html {
   background-color: transparent;
   padding: 10px;
   opacity: 0;
-  font-family: 'Cooper Black';
+  font-family: "Poetsen One", sans-serif;
   font-weight: bold;
   font-size: 3.5vb;
   width: 100%;
