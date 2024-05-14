@@ -261,7 +261,7 @@ class Play extends Phaser.Scene {
                                 this.playMusic.stop();
                             }
                             this.scene.stop('Play');
-                            if(localStorage.getItem("nivel") === 'Básico') this.scene.start('BeginnerQuiz');
+                            if(this.nivel === 'Básico') this.scene.start('BeginnerQuiz');
                             // if(localStorage.getItem("nivel") === 'Intermediário') this.scene.start('BeginnerQuiz');
                             // if(localStorage.getItem("nivel") === 'Avançado') this.scene.start('BeginnerQuiz');
                         }, 1200);

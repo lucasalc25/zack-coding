@@ -18,6 +18,8 @@ class Home extends Phaser.Scene {
     }
 
     create() {
+        this.showScreen();
+
         this.bgImage = this.add.tileSprite(0, 0, this.game.canvas.width, this.game.canvas.height, 'bgMenu').setOrigin(0).setDepth(1);
 
         this.resizeBackground.bind(this)(this.bgImage);
@@ -46,11 +48,14 @@ class Home extends Phaser.Scene {
         this.overlay.setDepth(3);
         this.overlay.setVisible(false); // Inicialmente, o overlay estará invisível
 
+
+        this.menuFont = (1.73 * this.game.canvas.width)/100 + 28;
+
         // Adicionando opções do menu
-        this.playBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.2, 'Novo Jogo', { fontFamily: 'Cooper Black', fontSize: '34px', fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
-        this.loadBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.4, 'Carregar', { fontFamily: 'Cooper Black', fontSize: '34px', fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
-        this.settingsBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.6, 'Configurações', { fontFamily: 'Cooper Black', fontSize: '36px', fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
-        this.quitBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.8, 'Sair', { fontFamily: 'Cooper Black', fontSize: '34px', fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
+        this.playBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.2, 'Novo Jogo', { fontFamily: 'Cooper Black', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
+        this.loadBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.4, 'Carregar', { fontFamily: 'Cooper Black', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
+        this.settingsBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.6, 'Configurações', { fontFamily: 'Cooper Black', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
+        this.quitBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.8, 'Sair', { fontFamily: 'Cooper Black', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
 
         // Configurando interações dos botões
         [this.playBtn, this.loadBtn, this.settingsBtn, this.quitBtn].forEach(button => {
@@ -81,11 +86,11 @@ class Home extends Phaser.Scene {
                 }
             });
             button.on('pointerover', () => {
-                button.setStyle({ fontSize: '40px', fill: '#27F1FF' }); // Cor amarela ao passar o mouse
+                button.setStyle({ fontSize: this.menuFont + 2, fill: '#27F1FF' }); // Cor amarela ao passar o mouse
                 this.hover.play();
             });
             button.on('pointerout', () => {
-                button.setStyle({ fontSize: '34px', fill: '#fff' }); // Restaura a cor original ao retirar o mouse
+                button.setStyle({ fontSize: this.menuFont, fill: '#ddd' }); // Restaura a cor original ao retirar o mouse
             });
         });
 
@@ -104,29 +109,56 @@ class Home extends Phaser.Scene {
         let musicFillWidth = sliderWidth * this.musicSlider.slider.value; // Largura do preenchimento slider de musica
         let soundFillWidth = sliderWidth * this.soundSlider.slider.value; // Largura do preenchimento slider de sons
 
-        this.musicFillRect.clear(); // Limpa o retângulo de preenchimento
-        this.musicFillRect.lineStyle(12, 0xED3D85, 1); // Define o estilo de linha e cor do preenchimento
-        this.musicFillRect.strokePoints([{
-                x: -125,
-                y: this.musicSlider.y
-            },
-            {
-                x: -125 + musicFillWidth, // Atualiza a posição x do ponto final do preenchimento
-                y: this.musicSlider.y
-            }
-        ]);
+        if(this.game.canvas.width < 400) {
+            this.musicFillRect.clear(); // Limpa o retângulo de preenchimento
+            this.musicFillRect.lineStyle(10, 0xED3D85, 1); // Define o estilo de linha e cor do preenchimento
+            this.musicFillRect.strokePoints([{
+                    x: -125,
+                    y: this.musicSlider.y
+                },
+                {
+                    x: -125 + musicFillWidth, // Atualiza a posição x do ponto final do preenchimento
+                    y: this.musicSlider.y
+                }
+            ]);
 
-        this.soundFillRect.clear();
-        this.soundFillRect.lineStyle(12, 0xED3D85, 1); 
-        this.soundFillRect.strokePoints([{
-                x: -125,
-                y: this.soundSlider.y
-            },
-            {
-                x: -125 + soundFillWidth,
-                y: this.soundSlider.y
-            }
-        ]);
+            this.soundFillRect.clear();
+            this.soundFillRect.lineStyle(10, 0xED3D85, 1); 
+            this.soundFillRect.strokePoints([{
+                    x: -125,
+                    y: this.soundSlider.y
+                },
+                {
+                    x: -125 + soundFillWidth,
+                    y: this.soundSlider.y
+                }
+            ]);
+        } else {
+            this.musicFillRect.clear(); // Limpa o retângulo de preenchimento
+            this.musicFillRect.lineStyle(15, 0xED3D85, 1); // Define o estilo de linha e cor do preenchimento
+            this.musicFillRect.strokePoints([{
+                    x: -125,
+                    y: this.musicSlider.y
+                },
+                {
+                    x: -125 + musicFillWidth, // Atualiza a posição x do ponto final do preenchimento
+                    y: this.musicSlider.y
+                }
+            ]);
+
+            this.soundFillRect.clear();
+            this.soundFillRect.lineStyle(15, 0xED3D85, 1); 
+            this.soundFillRect.strokePoints([{
+                    x: -125,
+                    y: this.soundSlider.y
+                },
+                {
+                    x: -125 + soundFillWidth,
+                    y: this.soundSlider.y
+                }
+            ]);
+        }
+        
     }
 
     resizeBackground(bg) {
@@ -135,6 +167,20 @@ class Home extends Phaser.Scene {
     
         bg.width = width;
         bg.height = height;
+    }
+
+    showScreen() {
+        // Adicionando um retângulo preto que cobre a tela inteira
+        const blackOverlay = this.add.rectangle(this.game.canvas.width / 2, this.game.canvas.height / 2, this.game.canvas.width, this.game.canvas.height, 0x000000);
+
+        this.tweens.add({
+            targets: blackOverlay,
+            alpha: 0, // Transparece o retangulo que cobre a tela
+            duration: 1000, // Tempo da animação em milissegundos (2 segundos)
+            onComplete: () => {
+                blackOverlay.destroy();
+            }
+        });
     }
 
     checkProgress() {
@@ -161,97 +207,198 @@ class Home extends Phaser.Scene {
     }
 
     createConfigWindow() {
+        var labelFont = (1.73 * this.game.canvas.width)/100 + 16;
+
         // Cria a imagem da janela de configuração
-        this.configWindow = this.add.container(this.game.canvas.width / 2, this.game.canvas.height / 2);
+        this.configWindow = this.add.container(this.game.canvas.width / 2, this.game.canvas.height / 2).setAlpha(0);
 
-        // Cria a imagem do slider de configuração da musica
-        this.musicSlider = this.add.rexRoundRectangle(0, -65, 10, 10, 10, 0xED3D85);
-        
-        // Define os pontos de começo e fim do slider
-        this.musicSlider.slider = this.plugins.get('rexsliderplugin').add(this.musicSlider, {
-            endPoints: [{
-                    x: this.musicSlider.x - 125,
-                    y: this.musicSlider.y
-                },
-                {
-                    x: this.musicSlider.x + 125,
-                    y: this.musicSlider.y
-                }
-            ],
-            value: this.musicVolume
-        });
+        if(this.game.canvas.width < 400) {
 
-        // Cria a imagem do slider de configuração de sons
-        this.soundSlider = this.add.rexRoundRectangle(0, 35, 0, 0, 10, 0xED3D85).setDepth(2);
-        
-        this.soundSlider.slider = this.plugins.get('rexsliderplugin').add(this.soundSlider, {
-            endPoints: [{
-                    x: this.soundSlider.x - 125,
-                    y: this.soundSlider.y
-                },
-                {
-                    x: this.soundSlider.x + 125,
-                    y: this.soundSlider.y
-                }
-            ],
-            value: this.soundVolume
-        });
+            this.bgWindow = this.add.image(0, 0, 'configWindow');
+            this.bgWindow.setDisplaySize(this.bgWindow.width * 0.9, this.bgWindow.height * 0.9);
 
-        this.supportBtn = this.add.image(0, 90, 'supportBtn').setOrigin(0.5, 0);
-        
-        this.supportBtn.disableInteractive();
+            this.musicLabel = this.add.text(0, -100, 'Música', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5);
+            this.musicSlider = this.add.rexRoundRectangle(0, -60, 10, 10, 10, 0xED3D85);
 
-        this.backBtn = this.add.image(0, 187, 'backBtn').setOrigin(0.5, 0);
-        
-        this.backBtn.disableInteractive();
+            // Define os pontos de começo e fim do slider
+            this.musicSlider.slider = this.plugins.get('rexsliderplugin').add(this.musicSlider, {
+                endPoints: [{
+                        x: this.musicSlider.x - 125,
+                        y: this.musicSlider.y
+                    },
+                    {
+                        x: this.musicSlider.x + 125,
+                        y: this.musicSlider.y
+                    }
+                ],
+                value: this.musicVolume
+            });
 
-        // Retângulo para preencher a área à esquerda do retângulo deslizante de música
-        this.musicFillRect = this.add.graphics().lineStyle(12, 0xED3D85, 1).strokePoints([{
+            // Retângulo para preencher a área à esquerda do retângulo deslizante de música
+            this.musicFillRect = this.add.graphics().lineStyle(10, 0xED3D85, 1).strokePoints([{
                 x: -125,
                 y: this.musicSlider.y
             },
             {
                 x: this.musicSlider.x,
                 y: this.musicSlider.y
-        }]);
+            }]);
 
-        // Retângulo para preencher a área à esquerda do retângulo deslizante de sons
-        this.soundFillRect = this.add.graphics().lineStyle(12, 0xED3D85, 1).strokePoints([{
-            x: -125,
-            y: this.soundSlider.y
-        },
-        {
-            x: this.soundSlider.x,
-            y: this.soundSlider.y
-    }]);
+            this.soundLabel = this.add.text(0, -20 , 'Sons', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5),
+            this.soundSlider = this.add.rexRoundRectangle(0, 20, 10, 10, 10, 0xED3D85);
 
-        // Adiciona os elementos à janela de configuração
-        this.configWindow.add([
-            this.add.image(0, 0, 'configWindow').setOrigin(0.5),
-            this.volumeLabel = this.add.text(0, -125 , 'Música', { fontFamily: 'Cooper Black', fontSize: '28px', fill: '#fff' }).setOrigin(0.5, 0),
-            this.add.graphics().lineStyle(12, 0x27F1FF, 1).strokePoints(this.musicSlider.slider.endPoints),
-            this.musicFillRect,
-            this.musicSlider, 
-            this.soundLabel = this.add.text(0, -25 , 'Sons', { fontFamily: 'Cooper Black', fontSize: '28px', fill: '#fff' }).setOrigin(0.5, 0),
-            this.add.graphics().lineStyle(12, 0x27F1FF, 1).strokePoints(this.soundSlider.slider.endPoints),
-            this.soundFillRect,
-            this.soundSlider,
-            this.supportBtn,
-            this.backBtn 
-        ]);
+            this.soundSlider.slider = this.plugins.get('rexsliderplugin').add(this.soundSlider, {
+                endPoints: [{
+                        x: this.soundSlider.x - 125,
+                        y: this.soundSlider.y
+                    },
+                    {
+                        x: this.soundSlider.x + 125,
+                        y: this.soundSlider.y
+                    }
+                ],
+                value: this.soundVolume
+            });
 
-        this.configWindow.setVisible(false);
+            // Retângulo para preencher a área à esquerda do retângulo deslizante de sons
+            this.soundFillRect = this.add.graphics().lineStyle(10, 0xED3D85, 1).strokePoints([{
+                x: -125,
+                y: this.soundSlider.y
+            },
+            {
+                x: this.soundSlider.x,
+                y: this.soundSlider.y
+            }]);
+
+            this.supportBtn = this.add.image(0, 95, 'supportBtn1').setOrigin(0.5);
+            this.supportBtn.disableInteractive();
+    
+            this.backBtn = this.add.image(0, 188, 'backBtn1').setOrigin(0.5);
+            this.backBtn.disableInteractive();
+    
+            // Adiciona os elementos à janela de configuração
+            this.configWindow.add([
+                this.bgWindow,
+                this.musicLabel,
+                this.add.graphics().lineStyle(10, 0x27F1FF, 1).strokePoints(this.musicSlider.slider.endPoints),
+                this.musicFillRect,
+                this.musicSlider, 
+                this.soundLabel,
+                this.add.graphics().lineStyle(10, 0x27F1FF, 1).strokePoints(this.soundSlider.slider.endPoints),
+                this.soundFillRect,
+                this.soundSlider,
+                this.supportBtn,
+                this.backBtn 
+            ]);
+
+            this.configWindow.setVisible(false);
+
+        } else {
+            this.bgWindow = this.add.image(0, 0, 'configWindow');
+            this.bgWindow.setDisplaySize(this.bgWindow.width * 1.2, this.bgWindow.height * 1.3);
+            
+            this.musicLabel = this.add.text(0, -120 , 'Música', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5);
+            this.musicSlider = this.add.rexRoundRectangle(0, -70, 10, 10, 10, 0xED3D85);
+
+            // Define os pontos de começo e fim do slider
+            this.musicSlider.slider = this.plugins.get('rexsliderplugin').add(this.musicSlider, {
+                endPoints: [{
+                        x: this.musicSlider.x - 125,
+                        y: this.musicSlider.y
+                    },
+                    {
+                        x: this.musicSlider.x + 125,
+                        y: this.musicSlider.y
+                    }
+                ],
+                value: this.musicVolume
+            });
+
+            // Retângulo para preencher a área à esquerda do retângulo deslizante de música
+            this.musicFillRect = this.add.graphics().lineStyle(15, 0xED3D85, 1).strokePoints([{
+                x: -125,
+                y: this.musicSlider.y
+            },
+            {
+                x: this.musicSlider.x,
+                y: this.musicSlider.y
+            }]);
+
+            this.soundLabel = this.add.text(0, 0 , 'Sons', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5),
+            this.soundSlider = this.add.rexRoundRectangle(0, 50, 10, 10, 10, 0xED3D85);
+
+            this.soundSlider.slider = this.plugins.get('rexsliderplugin').add(this.soundSlider, {
+                endPoints: [{
+                        x: this.soundSlider.x - 125,
+                        y: this.soundSlider.y
+                    },
+                    {
+                        x: this.soundSlider.x + 125,
+                        y: this.soundSlider.y
+                    }
+                ],
+                value: this.soundVolume
+            });
+
+            // Retângulo para preencher a área à esquerda do retângulo deslizante de sons
+            this.soundFillRect = this.add.graphics().lineStyle(15, 0xED3D85, 1).strokePoints([{
+                x: -125,
+                y: this.soundSlider.y
+            },
+            {
+                x: this.soundSlider.x,
+                y: this.soundSlider.y
+            }]);
+            
+            this.supportBtn = this.add.image(0, 160, 'supportBtn1').setOrigin(0.5).setScale(1.1);
+            this.supportBtn.disableInteractive();
+    
+            this.backBtn = this.add.image(0, 277, 'backBtn1').setOrigin(0.5);
+            this.backBtn.disableInteractive();
+
+            // Adiciona os elementos à janela de configuração
+            this.configWindow.add([
+                this.bgWindow,
+                this.musicLabel,
+                this.add.graphics().lineStyle(15, 0x27F1FF, 1).strokePoints(this.musicSlider.slider.endPoints),
+                this.musicFillRect,
+                this.musicSlider, 
+                this.soundLabel,
+                this.add.graphics().lineStyle(15, 0x27F1FF, 1).strokePoints(this.soundSlider.slider.endPoints),
+                this.soundFillRect,
+                this.soundSlider,
+                this.supportBtn,
+                this.backBtn
+            ]);
+
+            this.configWindow.setVisible(false);
+        }
+    
     }
 
     showConfigWindow() {
         this.configWindow.setDepth(4);
         this.configWindow.setVisible(true);
         this.overlay.setVisible(true);
-        this.musicSlider.setVisible(true);
+        this.tweens.add({
+            targets: this.configWindow,
+            alpha: 1, // Transparece o retangulo que cobre a tela
+            duration: 100, // Tempo da animação em milissegundos (2 segundos)
+        });
         this.supportBtn.setInteractive();
-        this.supportBtn.setFrame(0);
         this.backBtn.setInteractive();
-        this.backBtn.setFrame(0);
+
+        this.supportBtn.on('pointerdown', () => {
+            this.showSupportWindow();
+        });
+        this.supportBtn.on('pointerover', () => {
+            this.supportBtn.setTexture('supportBtn2')
+            this.hover.play();
+        });
+
+        this.supportBtn.on('pointerout', () => {
+            this.supportBtn.setTexture('supportBtn1')
+        });
 
         this.backBtn.on('pointerdown', () => {
             this.saveConfig(this.musicSlider.slider.value, this.soundSlider.slider.value);
@@ -259,34 +406,48 @@ class Home extends Phaser.Scene {
             this.checkProgress();
         });
         this.backBtn.on('pointerover', () => {
-            this.backBtn.setFrame(1);
+            this.backBtn.setTexture('backBtn2')
             this.hover.play();
         });
         this.backBtn.on('pointerout', () => {
-            this.backBtn.setFrame(0);
+            this.backBtn.setTexture('backBtn1')
         });
 
         this.supportBtn.on('pointerdown', () => {
             window.alert(`Janela de suporte!`);
         });
         this.supportBtn.on('pointerover', () => {
-            this.supportBtn.setFrame(1);
+            this.supportBtn.setTexture('supportBtn2')
             this.hover.play();
         });
         this.supportBtn.on('pointerout', () => {
-            this.supportBtn.setFrame(0);
+            this.supportBtn.setTexture('supportBtn1')
         });
     }
 
+    showSupportWindow() {
+        this.supportWindow.setDepth(5);
+        this.supportWindow.setVisible(true);
+        this.overlay.setVisible(true);
+        this.supportBtn.setInteractive();
+        this.backBtn.setInteractive();
+    }
+
     hideConfigWindow() {
-        this.configWindow.setVisible(false);
+        this.tweens.add({
+            targets: this.configWindow,
+            alpha: 0, // Transparece o retangulo que cobre a tela
+            duration: 100, // Tempo da animação em milissegundos (2 segundos)
+            onComplete: () => {
+                this.configWindow.setVisible(false);
+            }
+        });
         this.overlay.setVisible(false);
-        this.musicSlider.setVisible(false);
         this.playBtn.setInteractive();
         this.loadBtn.setInteractive();
         this.quitBtn.setInteractive();
         this.settingsBtn.setInteractive();
-        this.settingsBtn.setStyle({fontSize: '36px', fill: '#fff'});
+        this.settingsBtn.setStyle({fontSize: this.menuFont, fill: '#ddd'});
     }
 
     // Função para salvar o progresso do jogador

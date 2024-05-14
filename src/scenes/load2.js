@@ -11,13 +11,14 @@ class Load2 extends Phaser.Scene {
     }
 
     preload() {
+        this.load.plugin('rexroundrectangleplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexroundrectangleplugin.min.js', true);      
         this.load.image('quarto', './assets/img/quarto.png');
         this.load.audio('correct', './assets/sfx/correct.mp3');
         this.load.audio('wrong', './assets/sfx/wrong.mp3');
-        this.load.image('menuIcon', './assets/img/menu-icon.jpg');
+        this.load.image('backIcon', './assets/img/back-icon.png');
         this.load.audio('hover', './assets/sfx/interface.mp3');
         this.load.audio('select', './assets/sfx/decide.mp3');
-
+        this.load.audio('gameOver', './assets/sfx/game-over.mp3');
 
         if (this.faseInicial == 0) {
             this.load.image('zack1', './assets/img/zack1.png');

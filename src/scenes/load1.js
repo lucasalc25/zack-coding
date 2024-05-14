@@ -17,8 +17,10 @@ class Load1 extends Phaser.Scene {
         this.load.image('configWindow', './assets/img/configWindow.png');
         this.load.image('musicOn', './assets/img/music-on.png');
         this.load.image('musicOff', './assets/img/music-off.png');
-        this.load.spritesheet('supportBtn', './assets/img/support-button.png', { frameWidth: 120.05, frameHeight: 48.35});
-        this.load.spritesheet('backBtn', './assets/img/back-button.png', { frameWidth: 154, frameHeight: 49.35 });
+        this.load.image('supportBtn1', './assets/img/support-button1.png');
+        this.load.image('supportBtn2', './assets/img/support-button2.png');
+        this.load.image('backBtn1', './assets/img/back-button1.png');
+        this.load.image('backBtn2', './assets/img/back-button2.png');
         this.load.audio('hover', './assets/sfx/interface.mp3');
         this.load.audio('select', './assets/sfx/decide.mp3');
         this.load.audio('typing', './assets/sfx/typing.mp3');
