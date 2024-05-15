@@ -12,7 +12,7 @@ class Load1 extends Phaser.Scene {
     preload() {
         this.load.plugin('rexroundrectangleplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexroundrectangleplugin.min.js', true);
         this.load.plugin('rexsliderplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsliderplugin.min.js', true);
-        this.load.audio('menuMusic', './assets/sfx/menu.mp3');
+        this.load.audio('menuMusic', './assets/sfx/war.mp3');
         this.load.image('bgMenu', './assets/img/bgMenu.jpg');
         this.load.image('configWindow', './assets/img/configWindow.png');
         this.load.image('musicOn', './assets/img/music-on.png');
@@ -23,8 +23,7 @@ class Load1 extends Phaser.Scene {
         this.load.image('backBtn2', './assets/img/back-button2.png');
         this.load.audio('hover', './assets/sfx/interface.mp3');
         this.load.audio('select', './assets/sfx/decide.mp3');
-        this.load.audio('typing', './assets/sfx/typing.mp3');
-        this.load.audio('playMusic', './assets/sfx/play.mp3');
+        this.load.audio('select2', './assets/sfx/select2.mp3');
 
         if(!localStorage.getItem("musicVolume")) {
             localStorage.setItem("musicVolume", 0.5);

@@ -39,17 +39,18 @@ class Play extends Phaser.Scene {
         // Verifica o estado da música
         if (this.registry.get('musicOn')) {
             this.playMusic = this.sound.add('playMusic', { loop: true });
-            this.playMusic.setVolume(localStorage.getItem("musicVolume"));
+            this.playMusic.setVolume(localStorage.getItem("musicVolume") * 0.4);
             this.playMusic.play();
         }
 
         this.typing = this.sound.add('typing');
         this.hover = this.sound.add('hover');
         this.select = this.sound.add('select');
+        this.select2 = this.sound.add('select2');
         this.typing.setVolume(localStorage.getItem("soundVolume"));
-        this.hover.setVolume(localStorage.getItem("soundVolume"));
-        this.select.setVolume(localStorage.getItem("soundVolume") * 0.4);
-
+        this.hover.setVolume(localStorage.getItem("soundVolume")* 0.4);
+        this.select.setVolume(localStorage.getItem("soundVolume") * 0.25);
+        this.select2.setVolume(localStorage.getItem("soundVolume") * 0.6);
 
         this.showScreen();
 
@@ -230,7 +231,7 @@ class Play extends Phaser.Scene {
             button.on('pointerdown', () => {
                 this.nivel = button.text;
                 localStorage.setItem("nivel", this.nivel);
-                this.select.play();
+                this.select2.play();
                 this.textTitle.setText('');
                 [this.basic, this.intermediary, this.advanced].forEach(option => {
                     option.destroy();

@@ -8,15 +8,16 @@ class BeginnerQuiz extends Phaser.Scene {
         this.phases = [
             {
                 phase: 1,
-                title: "Fase 1: Monte a estrutura base de um pseudocódigo",
-                tips: ["Campo das variáveis primeiro, algoritmo depois"],
+                title: "Fase 1: Monte a estrutura base de um pseudocódigo.",
+                tip: "Campo das variáveis primeiro, algoritmo depois",
                 code: ["var",
                     "inicio",
                     "fimalgoritmo"]
             },
             {
                 phase: 2,
-                title: "Fase 2: Monte o código para declarar duas variáveis do tipo inteiro", tips: ["Declarações de variáveis são feitas no campo 'var'"],
+                title: "Fase 2: Monte o código para declarar duas variáveis do tipo inteiro", 
+                tip: "Variáveis não podem ser declaradas dentro do algoritmo",
                 code: ["var",
                     "num1, num2: inteiro",
                     "inicio",
@@ -24,7 +25,8 @@ class BeginnerQuiz extends Phaser.Scene {
             },
             {
                 phase: 3,
-                title: "Fase 3: Ler um número inteiro e mostrá-lo na tela", tips: ["Praticamente o mesmo de antes, porém também irá LER e depois MOSTRAR"],
+                title: "Fase 3: Ler um número inteiro e mostrá-lo na tela", 
+                tip: "O comando LEIA atribui um dado informado pelo usuário à uma variável. Já o ESCREVA, mostra o dado atribuído",
                 code: ["var",
                     "num: inteiro",
                     "inicio",
@@ -34,7 +36,8 @@ class BeginnerQuiz extends Phaser.Scene {
             },
             {
                 phase: 4,
-                title: "Fase 4: Ler dois números e exibir a soma deles", tips: ["Não há como somar valores que ainda não foram lidos e nem mostrar o resultado sem antes calculá-lo"],
+                title: "Fase 4: Ler dois números e exibir a soma deles", 
+                tip: "Primeiro é preciso se conhecer os números para se realizar a soma",
                 code: ["var",
                     "num1, num2, soma: inteiro",
                     "inicio",
@@ -46,7 +49,8 @@ class BeginnerQuiz extends Phaser.Scene {
             },
             {
                 phase: 5,
-                title: "Fase 5: Ler um número inteiro e mostrar se ele é par ou ímpar", tips: ["O operador '%' calcula o resto de uma divisão"],
+                title: "Fase 5: Ler um número inteiro e mostrar se ele é par ou ímpar", 
+                tip: "'%' é um operador que calcula o resto de uma divisão. Se o número for par será feito algo, senão será feito outra.",
                 code: ["var",
                     "num: inteiro",
                     "inicio",
@@ -66,7 +70,7 @@ class BeginnerQuiz extends Phaser.Scene {
         this.phaseIndex = data.faseInicial || 0; // Define a fase inicial como 0 se não for fornecida
         this.phase = this.phases[this.phaseIndex];
         this.phaseTitle;
-        this.phaseTips;
+        this.phaseTip;
         this.phaseCode;
         this.lines;
         this.quizzCode = [];
@@ -91,12 +95,14 @@ class BeginnerQuiz extends Phaser.Scene {
         // Verifica o estado da música
         if (this.registry.get('musicOn')) {
             this.playMusic = this.sound.add('playMusic', { loop: true });
-            this.playMusic.setVolume(localStorage.getItem("musicVolume"));
+            this.playMusic.setVolume(localStorage.getItem("musicVolume")* 0.4);
             this.playMusic.play();
         }
 
         this.select = this.sound.add('select');
-        this.select.setVolume(localStorage.getItem("soundVolume"));
+        this.select.setVolume(localStorage.getItem("soundVolume") * 0.25);
+        this.select2 = this.sound.add('select2');
+        this.select2.setVolume(localStorage.getItem("soundVolume") * 0.6);
         this.correct = this.sound.add('correct');
         this.correct.setVolume(localStorage.getItem("soundVolume"));
         this.wrong = this.sound.add('wrong');
@@ -124,6 +130,7 @@ class BeginnerQuiz extends Phaser.Scene {
             this.playMusic.setVolume(localStorage.getItem("musicVolume"));
             this.playMusic.play();
         }
+
     }
 
     // Função para embaralhar uma lista
@@ -152,8 +159,10 @@ class BeginnerQuiz extends Phaser.Scene {
     showQuizScreen(phase) {
         this.phase = phase;
         this.phaseTitle = this.phase.title;
-        this.phaseTips = this.phase.tips;
+        this.phaseTip = this.phase.tip;
         this.phaseCode = this.phase.code;
+
+        this.createTipWindow(this.phaseTip);
 
         // Mostrando parte da dialogueBox
         this.tweens.add({
@@ -375,21 +384,22 @@ class BeginnerQuiz extends Phaser.Scene {
 
         // Evento de hover
         this.confirmBtn.on('pointerover', () => {
-            this.confirmBtnText.setStyle({ fontSize: '20px' });
-            this.confirmBtn.setFillStyle('0x00BBFF').setSize(135, 55);
+            this.confirmBtnText.setStyle({ fill: '#001B68' });
+            this.confirmBtn.setFillStyle('0x00BBFF').setSize(133, 53);
         });
 
         // Evento de hout
         this.confirmBtn.on('pointerout', () => {
-            this.confirmBtnText.setStyle({ fontSize: '18px'});
+            this.confirmBtnText.setStyle({ fill: '#FFFFFF' });
             this.confirmBtn.setFillStyle('0x0077FF').setSize(130, 50);
         });
 
         // Ícone do menu
-        this.backIcon = this.add.image(panelX + 40, this.game.canvas.height - 40, 'backIcon').setOrigin(0.5);
-        this.backIcon.setInteractive();
-        this.backIcon.on('pointerdown', () => {
+        this.backBtn = this.add.image(panelX + 40, this.game.canvas.height - 40, 'backIcon').setOrigin(0.5);
+        this.backBtn.setInteractive();
+        this.backBtn.on('pointerdown', () => {
             // Quando o ícone do menu for clicado, mostra a janela de confirmação
+            this.select2.play();
             this.confirmBtn.disableInteractive();
             this.confirmWindow.setVisible(true).setDepth(2);
             this.tweens.add({
@@ -401,6 +411,9 @@ class BeginnerQuiz extends Phaser.Scene {
             column.style.zIndex = -10;
         });
 
+        setTimeout(() => {
+            this.showTipWindow();
+        }, 1000);
     }
 
     // Função para exibir o texto de forma gradual
@@ -492,6 +505,83 @@ class BeginnerQuiz extends Phaser.Scene {
 
         // Adiciona a div pai ao corpo do documento
         document.body.appendChild(column);
+    }
+
+    createTipWindow(dicaAtual) {
+        // Cria uma janela de dica centralizada
+        const tipWindowWidth = this.game.canvas.width < 600 ? this.panel.width : 600;
+        const numberLines = this.phaseTip.length / 51;
+        const heightForLine = numberLines * 40;
+        const tipWindowHeight = 100 + heightForLine;
+        const tipWindowX = this.game.canvas.width / 2;
+        const tipWindowY = this.game.canvas.height / 2;
+        console.log(tipWindowX)
+        console.log(tipWindowY)
+        console.log(tipWindowHeight)
+
+        this.tipWindow = this.add.container(0, 0);
+
+        const windowBackground = this.add.rexRoundRectangle(tipWindowX, tipWindowY, tipWindowWidth * 0.9, tipWindowHeight, 20, 0x001B68).setOrigin(0.5);
+        this.tipWindow.add(windowBackground);
+
+        this.tipText = this.add.text(tipWindowX, tipWindowY - 35, 'Dica: ' + dicaAtual, { fontFamily: 'Arial', fontSize: '20px', fill: '#FFFFFF', align: 'center' }).setWordWrapWidth(tipWindowWidth * 0.8).setOrigin(0.5);
+        this.tipWindow.add(this.tipText);
+
+        this.tipBtn = this.add.rexRoundRectangle(tipWindowX, tipWindowY + (tipWindowHeight / 2) - 50, 75, 40, 10, 0xED3D85).setOrigin(0.5)
+        this.tipBtnText = this.add.text(tipWindowX, tipWindowY + (tipWindowHeight / 2) - 50, 'Ok', { fontFamily: 'Arial Black', fontSize: '18px', fill: '#FFFFFF', padding: 20 }).setOrigin(0.5).setDepth(3);
+
+
+        this.tipWindow.add(this.tipBtn);
+        this.tipWindow.add(this.tipBtnText);
+
+        // Inicialmente, a janela de confirmação estará invisível
+        this.tipWindow.setVisible(false).setDepth(2).setAlpha(0);
+    }
+
+    showTipWindow() {
+        this.confirmBtn.disableInteractive();
+        this.backBtn.disableInteractive();
+        this.tipWindow.setVisible(true);
+        this.tweens.add({
+            targets: this.tipWindow,
+            alpha: 1, // Transparece o retangulo que cobre a tela
+            duration: 300, // Tempo da animação em milissegundos (2 segundos)
+        });
+        this.overlay.setVisible(true).setDepth(1);
+
+        const column = document.querySelectorAll(".column");
+        column.forEach(column => {
+            column.style.zIndex = -5;
+        });
+
+        this.tipBtn.setInteractive();
+
+        this.tipBtn.on('pointerdown', () => {
+            this.select2.play();
+            this.tweens.add({
+                targets: this.tipWindow,
+                alpha: 0, // Transparece o retangulo que cobre a tela
+                duration: 150, // Tempo da animação em milissegundos (2 segundos)
+                onComplete: () => {
+                    this.tipWindow.setVisible(false).setDepth(0); // Esconde a janela de confirmação
+                    column.forEach(column => {
+                        column.style.zIndex = 5;
+                    });
+                }
+            });
+            this.overlay.setVisible(false).setDepth(0);
+            this.confirmBtn.setInteractive();
+            this.backBtn.setInteractive();
+        });
+        
+        this.tipBtn.on('pointerover', () => {
+            this.tipBtn.setFillStyle('0xFF0066').setSize(78, 43);
+            this.tipBtnText.setStyle({ fill: '#001B68' });
+        });
+        this.tipBtn.on('pointerout', () => {
+            this.tipBtn.setFillStyle('0xED3D85').setSize(75, 40);
+            this.tipBtnText.setStyle({ fill: '#FFFFFF' });
+        });
     }
 
     clearCode() {
@@ -593,16 +683,16 @@ class BeginnerQuiz extends Phaser.Scene {
             button.setInteractive();
 
             button.on('pointerdown', () => {
+                this.select2.play();
                 if(button.x < confirmWindowX) {
                     // Ação ao clicar em "Sim"
-                   this.clearCode();
-                   this.select.play();
-                   button.destroy();
-                   // Pare a música de fundo ou quaisquer sons que estejam tocando
-                   if(this.registry.get('musicOn')) {
-                       this.playMusic.stop();
-                   }
-                   this.scene.start('Load1');
+                    this.clearCode();
+                    button.destroy();
+                    // Pare a música de fundo ou quaisquer sons que estejam tocando
+                    if(this.registry.get('musicOn')) {
+                        this.playMusic.stop();
+                    }
+                    this.scene.start('Load1');
                } else {
                     // Ação ao clicar em "Não"
                     this.tweens.add({
@@ -658,7 +748,7 @@ class BeginnerQuiz extends Phaser.Scene {
         this.overlay.setVisible(true);
         this.overlay.fillStyle(0x000000, 1); // Cor preta com 50% de opacidade
         this.clearCode()
-        this.backIcon.disableInteractive();
+        this.backBtn.disableInteractive();
         this.confirmBtn.disableInteractive();
 
         this.playMusic.stop();
@@ -697,6 +787,7 @@ class BeginnerQuiz extends Phaser.Scene {
                             button.setInteractive();
 
                             button.on('pointerdown', () => {
+                                this.select2.play();
                                 if(button.text === 'REINICIAR') {
                                     this.resetGame();
                                 } else {
@@ -705,10 +796,11 @@ class BeginnerQuiz extends Phaser.Scene {
                             });
 
                             button.on('pointerover', () => {
-                                button.setStyle({fontSize: 26})
+                                this.hover.play();
+                                button.setStyle({fontSize: 26, fill: '#ffffff'})
                             })
                             button.on('pointerout', () => {
-                                button.setStyle({fontSize: 24})
+                                button.setStyle({fontSize: 24, fill: '#ff0000'})
                             })
                         });
                        

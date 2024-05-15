@@ -35,8 +35,10 @@ class Home extends Phaser.Scene {
         this.menuMusic.setVolume(this.musicVolume);
         this.hover = this.sound.add('hover');
         this.select = this.sound.add('select');
+        this.select2 = this.sound.add('select2');
         this.select.setVolume(this.soundVolume * 0.4);
-        this.hover.setVolume(this.soundVolume);
+        this.select2.setVolume(this.soundVolume * 0.7);
+        this.hover.setVolume(this.soundVolume * 0.6);
 
         //Cria a janela de configuraçao e a deixa invisivel
         this.createConfigWindow();
@@ -76,12 +78,14 @@ class Home extends Phaser.Scene {
                     this.scene.stop();
                     this.loadProgress();
                 } else if (button.text == 'Configurações') {
+                    this.select2.play();
                     this.playBtn.disableInteractive();
                     this.loadBtn.disableInteractive();
                     this.quitBtn.disableInteractive();
                     this.settingsBtn.disableInteractive();
                     this.showConfigWindow(true);
                 } else if (button.text == 'Sair') {
+                    this.select.play();
                     this.quitGame();
                 }
             });
@@ -98,12 +102,13 @@ class Home extends Phaser.Scene {
 
     update() {
         // Efeito parallax
-        this.bgImage.tilePositionY += 0.75; 
+        this.bgImage.tilePositionY += 0.5; 
         
         // Atualiza os volumes a cada frame de acordo com a posição dos sliders 
         this.menuMusic.setVolume(this.musicSlider.slider.value);
-        this.select.setVolume(this.soundSlider.slider.value * 0.4);
-        this.hover.setVolume(this.soundSlider.slider.value);
+        this.select.setVolume(this.soundSlider.slider.value * 0.25);
+        this.select2.setVolume(this.soundSlider.slider.value * 0.6);
+        this.hover.setVolume(this.soundSlider.slider.value * 0.6);
     
         const sliderWidth = 250; // Largura total da faixa do slider
         let musicFillWidth = sliderWidth * this.musicSlider.slider.value; // Largura do preenchimento slider de musica
@@ -389,11 +394,11 @@ class Home extends Phaser.Scene {
         this.backBtn.setInteractive();
 
         this.supportBtn.on('pointerdown', () => {
+            this.select2.play();
             this.showSupportWindow();
         });
         this.supportBtn.on('pointerover', () => {
             this.supportBtn.setTexture('supportBtn2')
-            this.hover.play();
         });
 
         this.supportBtn.on('pointerout', () => {
@@ -401,13 +406,13 @@ class Home extends Phaser.Scene {
         });
 
         this.backBtn.on('pointerdown', () => {
+            this.select2.play();
             this.saveConfig(this.musicSlider.slider.value, this.soundSlider.slider.value);
             this.hideConfigWindow();
             this.checkProgress();
         });
         this.backBtn.on('pointerover', () => {
             this.backBtn.setTexture('backBtn2')
-            this.hover.play();
         });
         this.backBtn.on('pointerout', () => {
             this.backBtn.setTexture('backBtn1')
@@ -418,7 +423,6 @@ class Home extends Phaser.Scene {
         });
         this.supportBtn.on('pointerover', () => {
             this.supportBtn.setTexture('supportBtn2')
-            this.hover.play();
         });
         this.supportBtn.on('pointerout', () => {
             this.supportBtn.setTexture('supportBtn1')
