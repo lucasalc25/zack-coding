@@ -54,10 +54,10 @@ class Home extends Phaser.Scene {
         this.menuFont = (1.73 * this.game.canvas.width)/100 + 28;
 
         // Adicionando opções do menu
-        this.playBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.2, 'Novo Jogo', { fontFamily: 'Poetsen One', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
-        this.loadBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.4, 'Carregar', { fontFamily: 'Poetsen One', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
-        this.settingsBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.6, 'Configurações', { fontFamily: 'Poetsen One', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
-        this.quitBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.8, 'Sair', { fontFamily: 'Poetsen One', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
+        this.playBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.2, 'Novo Jogo', { fontFamily: 'Cooper Black', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
+        this.loadBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.4, 'Carregar', { fontFamily: 'Cooper Black', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
+        this.settingsBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.6, 'Configurações', { fontFamily: 'Cooper Black', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
+        this.quitBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.8, 'Sair', { fontFamily: 'Cooper Black', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
 
         // Configurando interações dos botões
         [this.playBtn, this.loadBtn, this.settingsBtn, this.quitBtn].forEach(button => {
@@ -222,7 +222,7 @@ class Home extends Phaser.Scene {
             this.bgWindow = this.add.image(0, 0, 'configWindow');
             this.bgWindow.setDisplaySize(this.bgWindow.width * 0.9, this.bgWindow.height * 0.9);
 
-            this.musicLabel = this.add.text(0, -100, 'Música', { fontFamily: 'Poetsen One', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5);
+            this.musicLabel = this.add.text(0, -100, 'Música', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5);
             this.musicSlider = this.add.rexRoundRectangle(0, -60, 10, 10, 10, 0xED3D85);
 
             // Define os pontos de começo e fim do slider
@@ -249,7 +249,7 @@ class Home extends Phaser.Scene {
                 y: this.musicSlider.y
             }]);
 
-            this.soundLabel = this.add.text(0, -20 , 'Sons', { fontFamily: 'Poetsen One', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5),
+            this.soundLabel = this.add.text(0, -20 , 'Sons', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5),
             this.soundSlider = this.add.rexRoundRectangle(0, 20, 10, 10, 10, 0xED3D85);
 
             this.soundSlider.slider = this.plugins.get('rexsliderplugin').add(this.soundSlider, {
@@ -278,7 +278,8 @@ class Home extends Phaser.Scene {
             this.supportBtn = this.add.image(0, 95, 'supportBtn1').setOrigin(0.5);
             this.supportBtn.disableInteractive();
     
-            this.backBtn = this.add.image(0, 188, 'backBtn1').setOrigin(0.5);
+            this.backBtn = this.add.image(0, 188.5, 'backBtn1').setOrigin(0.5);
+            this.backBtn.setDisplaySize(145, 56);
             this.backBtn.disableInteractive();
     
             // Adiciona os elementos à janela de configuração
@@ -302,7 +303,7 @@ class Home extends Phaser.Scene {
             this.bgWindow = this.add.image(0, 0, 'configWindow');
             this.bgWindow.setDisplaySize(this.bgWindow.width * 1.2, this.bgWindow.height * 1.3);
             
-            this.musicLabel = this.add.text(0, -120 , 'Música', { fontFamily: 'Poetsen One', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5);
+            this.musicLabel = this.add.text(0, -120 , 'Música', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5);
             this.musicSlider = this.add.rexRoundRectangle(0, -70, 10, 10, 10, 0xED3D85);
 
             // Define os pontos de começo e fim do slider
@@ -329,7 +330,7 @@ class Home extends Phaser.Scene {
                 y: this.musicSlider.y
             }]);
 
-            this.soundLabel = this.add.text(0, 0 , 'Sons', { fontFamily: 'Poetsen One', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5),
+            this.soundLabel = this.add.text(0, 0 , 'Sons', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5),
             this.soundSlider = this.add.rexRoundRectangle(0, 50, 10, 10, 10, 0xED3D85);
 
             this.soundSlider.slider = this.plugins.get('rexsliderplugin').add(this.soundSlider, {

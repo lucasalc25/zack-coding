@@ -60,8 +60,8 @@ class Load1 extends Phaser.Scene {
             y: this.height / 2 - 20,
             text: 'Carregando...',
             style: {
-                fontFamily: 'Anton',
-                fontSize: '24px',
+                fontFamily: 'Cooper Black',
+                fontSize: '20px',
                 fill: '#01B2DE'
             }
         });
@@ -72,7 +72,7 @@ class Load1 extends Phaser.Scene {
             y: this.height / 2 + 15,
             text: '0%',
             style: {
-                fontFamily: 'Anton',
+                fontFamily: 'Cooper Black',
                 fontSize: '18px',
                 fill: '#FFFFFF',
 
