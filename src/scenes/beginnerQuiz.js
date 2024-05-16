@@ -1,57 +1,85 @@
 class BeginnerQuiz extends Phaser.Scene {
     constructor() {
         super({ key: 'BeginnerQuiz' });
-        this.bgImage;
-        this.dialogueBoxAnimated;
-        this.correct;
-        this.wrong;
         this.phases = [
             {
                 phase: 1,
-                title: "Fase 1: Monte a estrutura base de um pseudocódigo.",
-                tip: "VAR é o campo onde são declaradas as variáveis. Sempre iniciamos o código com as declarações.",
-                code: ["var",
+                title: "Fase 1: Declarar duas variáveis do tipo inteiro", 
+                tip: "Variáveis armazenam dados, que podem ser números, caracteres, entre outros.",
+                code: [
+                    "var",
+                    "num1, num2: inteiro",
                     "inicio",
-                    "fimalgoritmo"]
+                    "fim"
+                ]
             },
             {
                 phase: 2,
-                title: "Fase 2: Monte o código para declarar duas variáveis do tipo inteiro", 
-                tip: "Variáveis armazenam dados, que podem ser números, caracteres, entre outros.",
-                code: ["var",
-                    "num1, num2: inteiro",
-                    "inicio",
-                    "fimalgoritmo"]
-            },
-            {
-                phase: 3,
-                title: "Fase 3: Ler um número inteiro e mostrá-lo na tela", 
-                tip: "O comando LEIA atribui um dado informado pelo usuário à uma variável. Já o ESCREVA, mostra este dado na tela.",
-                code: ["var",
+                title: "Fase 2: Ler um número inteiro e mostrá-lo na tela", 
+                tip: "O comando 'leia' recebe um dado informado pelo usuário e o atribui à uma variável. Já o 'escreva', mostra este dado na tela.",
+                code: [
+                    "var",
                     "num: inteiro",
                     "inicio",
                     "leia(num)",
                     "escreva(num)",
-                    "fimalgoritmo"]
+                    "fim"
+                ]
             },
             {
-                phase: 4,
-                title: "Fase 4: Ler dois números e exibir a soma entre eles", 
-                tip: "Ler primeiro, calcular depois",
-                code: ["var",
+                phase: 3,
+                title: "Fase 3: Ler dois números e exibir a soma entre eles", 
+                tip: "O operador '<-' atribui um dado à uma variável",
+                code: [
+                    "var",
                     "num1, num2, soma: inteiro",
                     "inicio",
                     "leia(num1)",
                     "leia(num2)",
                     "soma <- num1 + num2",
                     "escreva('A soma dos números é: ', soma)",
-                    "fimalgoritmo"]
+                    "fim"
+                ]
+            },
+            {
+                phase: 4,
+                title: "Fase 4: Receber o peso e altura de uma pessoa e então calcular e exibir o seu IMC.", 
+                tip: "IMC é o peso dividido pela altura ao quadrado.",
+                code: [
+                    "var",
+                    "peso, altura, imc: real",
+                    "inicio",
+                    "leia(peso)",
+                    "leia(altura)",
+                    "imc <- peso / (altura * altura)",
+                    "escreva(imc)",
+                    "fim"
+                ]
             },
             {
                 phase: 5,
-                title: "Fase 5: Ler um número inteiro e mostrar se ele é par ou ímpar", 
-                tip: "'%' é um operador que calcula o resto de uma divisão. Dependendo disso, o programa deverá tomar decisões",
-                code: ["var",
+                title: "Fase 5: Ler dois números inteiros e indicar qual deles é o maior",
+                tip: "A estrutura condicional 'se-entao' pode comparar dados e executar comandos apenas se a comparação for atendida. Após todas estas comparações é que a estrutura chega ao fim.",
+                code: [
+                    "var",
+                    "num1, num2: inteiro",
+                    "inicio",
+                    "leia(num1)",
+                    "leia(num2)",
+                    "se num1 > num2 entao",
+                    "escreva('O primeiro numero é maior')",
+                    "senao",
+                    "escreva('O segundo numero e maior')",
+                    "fimse",
+                    "fim",
+                ]
+            },
+            {
+                phase: 6,
+                title: "Fase 6: Ler um número inteiro e mostrar se ele é par ou ímpar", 
+                tip: "Use o operador '%' e a estrutura 'se-entao' para determinar se o número é divisível por 2",
+                code: [
+                    "var",
                     "num: inteiro",
                     "inicio",
                     "leia(num)",
@@ -60,8 +88,56 @@ class BeginnerQuiz extends Phaser.Scene {
                     "senao",
                     "escreva(num, ' é ímpar.')",
                     "fimse",
-                    "fimalgoritmo"]
+                    "fim"
+                ]
             },
+            {
+                phase: 7,
+                title: "Fase 7: Receber um número inteiro e exibir se é positivo, negativo ou zero.", 
+                tip: "O comando 'senao se' é executado apenas se a comparação anterior não foi atendida e se a sua própria for atendida",
+                code: [
+                    "var",
+                    "num: inteiro",
+                    "inicio",
+                    "leia(num)",
+                    "se num > 0 entao",
+                    "escreva('O numero é positivo')",
+                    "senao se num < 0 entao",
+                    "escreva('O numero é negativo')",
+                    "senao",
+                    "escreva('O numero é zero')",
+                    "fimse",
+                    "fim"
+                ]
+            },
+            /* {
+                phase: 8,
+                title: "Fase 8: Ler 2 números reais e uma operação para ser feita entre eles", 
+                tip: "A estrutura de seleção 'escolha-caso' realiza a operação escolhida pelo usuário",
+                code: [
+                    "var",
+                    "num1, num2, resultado: real",
+                    "operacao: caractere",
+                    "inicio",
+                    "leia(num1)",
+                    "leia(num2)",
+                    "leia(operacao)",
+                    "escolha(operacao)",
+                    "caso '+'",
+                    "resultado <- num1 + num2",
+                    "caso '-'",
+                    "resultado <- num1 - num2",
+                    "caso '*'",
+                    "resultado <- num1 * num2",
+                    "caso '/'",
+                    "resultado <- num1 / num2",
+                    "caso contrario",
+                    "escreva('Operacao inválida')",
+                    "fimescolha",
+                    "escreva(resultado)",
+                    "fim"
+                ]
+            }, */
         ]
     }
 
@@ -97,7 +173,7 @@ class BeginnerQuiz extends Phaser.Scene {
         this.wrong = this.sound.add('wrong');
         this.wrong.setVolume(localStorage.getItem("soundVolume") / 2);
         this.gameOverSound = this.sound.add('gameOver');
-        this.gameOverSound.setVolume(localStorage.getItem("soundVolume") * 0.4);
+        this.gameOverSound.setVolume(localStorage.getItem("soundVolume") * 2);
         this.winnerMusic = this.sound.add('winnerMusic');
         this.winnerMusic.setVolume(localStorage.getItem("musicVolume") * 0.8);
 
@@ -525,8 +601,8 @@ class BeginnerQuiz extends Phaser.Scene {
         this.tipText = this.add.text(tipWindowX, tipWindowY - 35, 'Dica: ' + dicaAtual, { fontFamily: 'Arial', fontSize: '20px', fill: '#FFFFFF', align: 'center' }).setWordWrapWidth(windowBackground.width * 0.8).setOrigin(0.5);
         this.tipWindow.add(this.tipText);
 
-        this.tipBtn = this.add.rexRoundRectangle(tipWindowX, tipWindowY + (tipWindowHeight / 2) - 50, 75, 40, 10, 0xED3D85).setOrigin(0.5)
-        this.tipBtnText = this.add.text(tipWindowX, tipWindowY + (tipWindowHeight / 2) - 50, 'Ok', { fontFamily: 'Cooper Black', fontSize: '18px', fill: '#FFFFFF', padding: 20 }).setOrigin(0.5).setDepth(3);
+        this.tipBtn = this.add.rexRoundRectangle(tipWindowX, tipWindowY + (tipWindowHeight / 2) - 40, 75, 40, 10, 0xED3D85).setOrigin(0.5)
+        this.tipBtnText = this.add.text(tipWindowX, tipWindowY + (tipWindowHeight / 2) - 40, 'Ok', { fontFamily: 'Cooper Black', fontSize: '18px', fill: '#FFFFFF', padding: 20 }).setOrigin(0.5).setDepth(3);
 
 
         this.tipWindow.add(this.tipBtn);
@@ -591,8 +667,11 @@ class BeginnerQuiz extends Phaser.Scene {
     }
 
     showCorrect() {
-        if(this.isShowingWrong) document.querySelector('#message-wrong').style.zIndex = -1;
-        this.isShowingWrong = false;
+        if(this.isShowingWrong) {
+            const prevMessageDiv = document.getElementById('message-wrong');
+            document.body.removeChild(prevMessageDiv);
+            this.isShowingWrong = false;
+        } 
 
         const messageDiv = document.createElement("div");
         messageDiv.className = "message";
@@ -624,7 +703,12 @@ class BeginnerQuiz extends Phaser.Scene {
     }
 
     showWrong() {
+        if(this.isShowingWrong) {
+            const prevMessageDiv = document.getElementById('message-wrong');
+            document.body.removeChild(prevMessageDiv);
+        } 
         this.isShowingWrong = true;
+
         const messageDiv = document.createElement("div");
         messageDiv.className = "message";
         messageDiv.textContent = "Errado! Tente de novo!";
@@ -647,7 +731,7 @@ class BeginnerQuiz extends Phaser.Scene {
 
         // Remove a mensagem após algum tempo
         setTimeout(() => {
-            document.body.removeChild(messageDiv);
+            document.body.removeChild(document.getElementById('message-wrong'));
             this.isShowingWrong = false;
         }, 3000); // Tempo em milissegundos antes de remover a mensagem
     }
@@ -751,6 +835,14 @@ class BeginnerQuiz extends Phaser.Scene {
         this.confirmBtnText.destroy();
         this.confirmBtn.destroy();
 
+        if(this.isShowingWrong) {
+            const prevMessageDiv = document.getElementById('message-wrong');
+            document.body.removeChild(prevMessageDiv);
+            this.isShowingWrong = false;
+        } 
+
+        this.isShowingWrong = false;
+
         this.playMusic.stop();
         this.gameOverSound.play();
 
@@ -761,6 +853,7 @@ class BeginnerQuiz extends Phaser.Scene {
             fontFamily: 'Cooper Black',
             fontSize: gameOverFont,
             color: '#ff0000',
+            align: 'center',
             wordWrap: { width: 400 }
         }).setOrigin(0.5);
 
@@ -812,7 +905,7 @@ class BeginnerQuiz extends Phaser.Scene {
         });
 
         // Centraliza o texto e define a quebra de linha para evitar que ultrapasse a tela
-        gameOverTitle.setWordWrapWidth(this.game.canvas.width * 0.8, true);
+        gameOverTitle.setWordWrapWidth(this.game.canvas.width * 0.9, true);
         gameOverTitle.setOrigin(0.5);
         gameOverTitle.setDepth(2);
         gameOverTitle.setPosition(this.game.canvas.width / 2, this.game.canvas.height / 2.5);
