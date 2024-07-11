@@ -11,7 +11,13 @@ class BeginnerQuiz extends Phaser.Scene {
                     "num1, num2: inteiro",
                     "inicio",
                     "fim"
-                ]
+                ],
+                hints: {
+                    "var": "Dica: O comando 'var' é usado para declarar variáveis.",
+                    "num1, num2: inteiro": "Dica: Após declarar 'var', você deve especificar as variáveis e seus tipos.",
+                    "inicio": "Dica: Use 'inicio' para marcar o início do bloco de código.",
+                    "fim": "Dica: Use 'fim' para marcar o fim do bloco de código."
+                }
             },
             {
                 phase: 2,
@@ -24,7 +30,15 @@ class BeginnerQuiz extends Phaser.Scene {
                     "leia(num)",
                     "escreva(num)",
                     "fim"
-                ]
+                ],
+                hints: {
+                    "var": "Dica: O comando 'var' é usado para declarar variáveis.",
+                    "num: inteiro": "Dica: Após declarar 'var', você deve especificar a variável e seu tipo.",
+                    "inicio": "Dica: Use 'inicio' para marcar o início do bloco de código.",
+                    "leia(num)": "Dica: Use 'leia' para receber um valor do usuário e atribuí-lo à variável 'num'.",
+                    "escreva(num)": "Dica: Use 'escreva' para mostrar o valor da variável 'num' na tela.",
+                    "fim": "Dica: Use 'fim' para marcar o fim do bloco de código."
+                }
             },
             {
                 phase: 3,
@@ -39,9 +53,19 @@ class BeginnerQuiz extends Phaser.Scene {
                     "soma <- num1 + num2",
                     "escreva('A soma dos números é: ', soma)",
                     "fim"
-                ]
+                ],
+                hints: {
+                    "var": "Dica: O comando 'var' é usado para declarar variáveis.",
+                    "num1, num2, soma: inteiro": "Dica: Após declarar 'var', você deve especificar as variáveis e seus tipos.",
+                    "inicio": "Dica: Use 'inicio' para marcar o início do bloco de código.",
+                    "leia(num1)": "Dica: Use 'leia' para receber um valor do usuário e atribuí-lo à variável 'num1'.",
+                    "leia(num2)": "Dica: Use 'leia' para receber um valor do usuário e atribuí-lo à variável 'num2'.",
+                    "soma <- num1 + num2": "Dica: Use '<-' para atribuir o resultado da soma de 'num1' e 'num2' à variável 'soma'.",
+                    "escreva('A soma dos números é: ', soma)": "Dica: Use 'escreva' para mostrar o valor da variável 'soma' na tela junto com uma mensagem.",
+                    "fim": "Dica: Use 'fim' para marcar o fim do bloco de código."
+                }
             },
-            {
+            /*{
                 phase: 4,
                 title: "Fase 4: Receber o peso e altura de uma pessoa e então calcular e exibir o seu IMC.", 
                 tip: "IMC é o peso dividido pela altura ao quadrado.",
@@ -110,7 +134,7 @@ class BeginnerQuiz extends Phaser.Scene {
                     "fim"
                 ]
             },
-            /* {
+            {
                 phase: 8,
                 title: "Fase 8: Ler 2 números reais e uma operação para ser feita entre eles", 
                 tip: "A estrutura de seleção 'escolha-caso' realiza a operação escolhida pelo usuário",
@@ -227,6 +251,7 @@ class BeginnerQuiz extends Phaser.Scene {
         this.phase = phase;
         this.phaseTitle = this.phase.title;
         this.phaseTip = this.phase.tip;
+        this.phaseHints = this.phase.hints;
         this.phaseCode = this.phase.code;
         this.phaseNumber = this.phase.phase;
 
@@ -390,73 +415,26 @@ class BeginnerQuiz extends Phaser.Scene {
         })
 
         // Botão para verificar a ordem das opções
-        this.confirmBtn = this.add.rexRoundRectangle(this.game.canvas.width / 2, this.game.canvas.height - 40, 130, 50, 5, 0x0077FF).setOrigin(0.5);
+        this.confirmBtn = this.add.rexRoundRectangle(this.game.canvas.width / 2, this.game.canvas.height - 40, 130, 50, 10, 0x0077FF).setOrigin(0.5);
 
         this.confirmBtnText = this.add.text(this.game.canvas.width / 2, this.game.canvas.height - 40, 'Confirmar', { fontFamily: 'Poetsen One', fontSize: '18px', fill: '#fff', fontWeight: 'bold' }).setOrigin(0.5);
 
         this.confirmBtn.setInteractive();
 
-        let attempts = localStorage.getItem("tentativas");
+        /* let attempts = localStorage.getItem("tentativas");
 
         if(!attempts || attempts > 0) {
             attempts = 0;
             localStorage.setItem("tentativas", 0);
-        }
+        } */
 
         this.confirmBtn.on('pointerdown', () => {
-            attempts++;
+            // attempts++;
 
             // Verifica a ordem quando necessário (por exemplo, quando o jogador clica em um botão)
-            if (this.checkOrder()) {
-                this.confirmBtn.disableInteractive();
-                this.showCorrect();
-                this.correct.play();
-
-                // Itera sobre cada elemento filho e aplica uma cor de fundo
-                for (var i = 0; i < lines.length - 1; i++) {
-                    lines[i].style.backgroundColor = '#228b22'; // Defina a cor de fundo desejada aqui
-                }
-                
-                console.log(this.phaseNumber)
-                console.log(this.numberPhases)
-                if(this.phaseNumber == this.numberPhases) {
-                    setTimeout(() => {
-                        this.gameFinished();
-                    }, 3000);
-                }
-                else {
-                    this.save(this.phaseIndex);
-                    this.phaseIndex++;
-                    this.phase = this.phases[this.phaseIndex];
-                    localStorage.setItem("tentativas", 0);
-                    setTimeout(() => {
-                        this.clearCode();
-                        this.textPhaseTitle.destroy();
-                        this.confirmBtn.destroy();
-                        this.confirmBtnText.destroy();
-                        this.showQuizScreen(this.phase);
-                    }, 3000);
-                }    
-            } else {
-                if (attempts == 1) {
-                    this.confirmBtn.disableInteractive();
-                    this.showWrong(this.game.canvas.height);
-                    this.wrong.play();
-                    this.confirmBtn.setInteractive();
-                } 
-                if (attempts == 2){
-                    this.confirmBtn.disableInteractive();
-                    this.showWrong(this.game.canvas.height);
-                    this.wrong.play();
-                    this.confirmBtn.setInteractive();
-                }
-                if (attempts === 3) {
-                    localStorage.setItem("tentativas", 0);
-                    this.gameOver();             
-                }
-
-                localStorage.setItem("tentativas", attempts);
-            }
+            this.checkOrder();
+            this.confirmBtnText.setStyle({ fill: '#FFFFFF' });
+            this.confirmBtn.setFillStyle('0x0077FF').setSize(130, 50);
         });
 
         // Evento de hover
@@ -515,11 +493,43 @@ class BeginnerQuiz extends Phaser.Scene {
         // Verifica se a ordem dos textos nas divs é a mesma que o array inicial
         for (let i = 0; i < lineDivs.length - 1; i++) {
             if (lineDivs[i].textContent !== this.phaseCode[i]) {
-                return false;
+                this.wrong.play();
+                const hintMessage = this.phaseHints[this.phaseCode[i]];
+                this.createHintWindow(hintMessage);
+                this.showHintWindow();
+                return
             }
         }
 
-        return true;
+        this.confirmBtn.disableInteractive();
+        this.showCorrect();
+        this.correct.play();
+
+        // Itera sobre cada elemento filho e aplica uma cor de fundo
+        for (var i = 0; i < lineDivs.length - 1; i++) {
+            lineDivs[i].style.backgroundColor = '#228b22'; // Defina a cor de fundo desejada aqui
+        }
+        
+        console.log(this.phaseNumber)
+        console.log(this.numberPhases)
+        if(this.phaseNumber == this.numberPhases) {
+            setTimeout(() => {
+                this.gameFinished();
+            }, 3000);
+        }
+        else {
+            this.save(this.phaseIndex);
+            this.phaseIndex++;
+            this.phase = this.phases[this.phaseIndex];
+            localStorage.setItem("tentativas", 0);
+            setTimeout(() => {
+                this.clearCode();
+                this.textPhaseTitle.destroy();
+                this.confirmBtn.destroy();
+                this.confirmBtnText.destroy();
+                this.showQuizScreen(this.phase);
+            }, 3000);
+        } 
     }
 
     // Função para salvar o progresso do jogador
@@ -657,6 +667,80 @@ class BeginnerQuiz extends Phaser.Scene {
             this.tipBtnText.setStyle({ fill: '#FFFFFF' });
         });
     }
+
+    createHintWindow(hint) {
+        const tipWindowWidth = this.game.canvas.width < 600 ? this.panel.width : 600;
+        const numberLines = this.phaseTip.length / 51;
+        const heightForLine = this.game.canvas.width < 600 ? numberLines * 70 : numberLines * 40 ;
+        const tipWindowHeight = 100 + heightForLine;
+        const tipWindowX = this.game.canvas.width / 2;
+        const tipWindowY = this.game.canvas.height / 2;
+
+        this.hintWindow = this.add.container(0, 0);
+
+        const windowBackground = this.add.rexRoundRectangle(tipWindowX, tipWindowY, tipWindowWidth * 0.9, tipWindowHeight, 20, 0x001B68).setOrigin(0.5);
+        this.hintWindow.add(windowBackground);
+
+        this.hintText = this.add.text(tipWindowX, tipWindowY - 35, hint, { fontFamily: 'Arial', fontSize: '20px', fill: '#FFFFFF', align: 'center' }).setWordWrapWidth(windowBackground.width * 0.8).setOrigin(0.5);
+        this.hintWindow.add(this.hintText);
+
+        this.hintBtn = this.add.rexRoundRectangle(tipWindowX, tipWindowY + (tipWindowHeight / 2) - 40, 75, 40, 10, 0xED3D85).setOrigin(0.5)
+        this.hintBtnText = this.add.text(tipWindowX, tipWindowY + (tipWindowHeight / 2) - 40, 'Ok', { fontFamily: 'Cooper Black', fontSize: '18px', fill: '#FFFFFF', padding: 20 }).setOrigin(0.5).setDepth(3);
+
+
+        this.hintWindow.add(this.hintBtn);
+        this.hintWindow.add(this.hintBtnText);
+
+        // Inicialmente, a janela de confirmação estará invisível
+        this.hintWindow.setVisible(false).setDepth(2).setAlpha(0);
+    }
+
+    showHintWindow() {
+        this.confirmBtn.disableInteractive();
+        this.backBtn.disableInteractive();
+        this.hintWindow.setVisible(true);
+        this.tweens.add({
+            targets: this.hintWindow,
+            alpha: 1, // Transparece o retangulo que cobre a tela
+            duration: 300, // Tempo da animação em milissegundos (2 segundos)
+        });
+        this.overlay.setVisible(true).setDepth(1);
+
+        const column = document.querySelectorAll(".column");
+        column.forEach(column => {
+            column.style.zIndex = -5;
+        });
+
+        this.hintBtn.setInteractive();
+
+        this.hintBtn.on('pointerdown', () => {
+            this.select2.play();
+            this.tweens.add({
+                targets: this.hintWindow,
+                alpha: 0, // Transparece o retangulo que cobre a tela
+                duration: 150, // Tempo da animação em milissegundos (2 segundos)
+                onComplete: () => {
+                    this.hintWindow.setVisible(false).setDepth(0); // Esconde a janela de confirmação
+                    column.forEach(column => {
+                        column.style.zIndex = 5;
+                    });
+                }
+            });
+            this.overlay.setVisible(false).setDepth(0);
+            this.confirmBtn.setInteractive();
+            this.backBtn.setInteractive();
+        });
+        
+        this.hintBtn.on('pointerover', () => {
+            this.hintBtn.setFillStyle('0xFF0066').setSize(78, 43);
+            this.hintBtnText.setStyle({ fill: '#001B68' });
+        });
+        this.hintBtn.on('pointerout', () => {
+            this.hintBtn.setFillStyle('0xED3D85').setSize(75, 40);
+            this.hintBtnText.setStyle({ fill: '#FFFFFF' });
+        });
+    }
+
 
     clearCode() {
         const column = document.querySelectorAll(".column");
