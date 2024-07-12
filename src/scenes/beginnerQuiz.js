@@ -510,8 +510,6 @@ class BeginnerQuiz extends Phaser.Scene {
             lineDivs[i].style.backgroundColor = '#228b22'; // Defina a cor de fundo desejada aqui
         }
         
-        console.log(this.phaseNumber)
-        console.log(this.numberPhases)
         if(this.phaseNumber == this.numberPhases) {
             setTimeout(() => {
                 this.gameFinished();
@@ -907,94 +905,6 @@ class BeginnerQuiz extends Phaser.Scene {
         this.confirmWindow.setVisible(false).setDepth(2).setAlpha(0);
     }
 
-    gameOver(){
-        localStorage.setItem("faseAtual", 0);
-        localStorage.setItem("tentativas", 0);
-
-        this.overlay.setVisible(true);
-        this.overlay.fillStyle(0x000000, 1); // Cor preta com 50% de opacidade
-        this.clearCode()
-        this.textPhaseTitle.destroy();
-        this.backBtn.destroy();
-        this.confirmBtnText.destroy();
-        this.confirmBtn.destroy();
-
-        if(this.isShowingWrong) {
-            const prevMessageDiv = document.getElementById('message-wrong');
-            document.body.removeChild(prevMessageDiv);
-            this.isShowingWrong = false;
-        } 
-
-        this.isShowingWrong = false;
-
-        this.playMusic.stop();
-        this.gameOverSound.play();
-
-        let gameOverFont = (1.8 * this.game.canvas.width)/100 + 32;
-        
-        // Cria a animação da palavra "Game Over"
-        const gameOverTitle = this.add.text(0, 0, '', {
-            fontFamily: 'Cooper Black',
-            fontSize: gameOverFont,
-            color: '#ff0000',
-            align: 'center',
-            wordWrap: { width: 400 }
-        }).setOrigin(0.5);
-
-        this.restartBtn = this.add.text(this.game.canvas.width / 2, (this.game.canvas.height / 2) + 30, 'REINICIAR', { fontFamily: 'Cooper Black', fontSize: '22px', fill: '#ff0000', padding: 10 }).setOrigin(0.5).setDepth(2).setVisible(false);
-
-        this.quitBtn = this.add.text(this.game.canvas.width / 2, (this.game.canvas.height / 2) + 90, 'SAIR', { fontFamily: 'Cooper Black', fontSize: '22px', fill: '#ff0000', padding: 10 }).setOrigin(0.5).setDepth(2).setVisible(false);
-
-        // Configura a animação para que cada letra apareça sequencialmente
-        const gameOver = 'VOCÊ PERDEU!';
-        let index = 0;
-
-        this.time.addEvent({
-            delay: 150, // Intervalo de 100 milissegundos entre cada letra
-            callback: () => {
-                gameOverTitle.text += gameOver[index];
-                index++;
-                if (index === gameOver.length) {
-                    // Toda a palavra foi mostrada, pare o evento de tempo
-                    this.time.removeAllEvents();
-                    setTimeout(() => {
-
-                        [this.restartBtn, this.quitBtn].forEach(button => {
-                            button.setVisible(true);
-                            button.setInteractive();
-
-                            button.on('pointerdown', () => {
-                                this.select2.play();
-                                if(button.text === 'REINICIAR') {
-                                    this.resetGame();
-                                } else {
-                                    this.quitGame();
-                                }
-                            });
-
-                            button.on('pointerover', () => {
-                                button.setStyle({fontSize: 26, fill: '#ffffff'})
-                            })
-                            button.on('pointerout', () => {
-                                button.setStyle({fontSize: 24, fill: '#ff0000'})
-                            })
-                        });
-                       
- 
-                    }, 1000);
-                }
-            },
-            callbackScope: this,
-            loop: true, // Mantém o evento em loop até que todas as letras sejam mostradas
-        });
-
-        // Centraliza o texto e define a quebra de linha para evitar que ultrapasse a tela
-        gameOverTitle.setWordWrapWidth(this.game.canvas.width * 0.9, true);
-        gameOverTitle.setOrigin(0.5);
-        gameOverTitle.setDepth(2);
-        gameOverTitle.setPosition(this.game.canvas.width / 2, this.game.canvas.height / 2.5);
-    }
-
     resetGame() {
 
         // Pare a música de fundo ou quaisquer sons que estejam tocando
@@ -1100,6 +1010,94 @@ class BeginnerQuiz extends Phaser.Scene {
         winnerTitle.setDepth(2);
         winnerTitle.setPosition(this.game.canvas.width / 2, this.game.canvas.height / 2);
 
+    }
+
+    gameOver(){
+        localStorage.setItem("faseAtual", 0);
+        localStorage.setItem("tentativas", 0);
+
+        this.overlay.setVisible(true);
+        this.overlay.fillStyle(0x000000, 1); // Cor preta com 50% de opacidade
+        this.clearCode()
+        this.textPhaseTitle.destroy();
+        this.backBtn.destroy();
+        this.confirmBtnText.destroy();
+        this.confirmBtn.destroy();
+
+        if(this.isShowingWrong) {
+            const prevMessageDiv = document.getElementById('message-wrong');
+            document.body.removeChild(prevMessageDiv);
+            this.isShowingWrong = false;
+        } 
+
+        this.isShowingWrong = false;
+
+        this.playMusic.stop();
+        this.gameOverSound.play();
+
+        let gameOverFont = (1.8 * this.game.canvas.width)/100 + 32;
+        
+        // Cria a animação da palavra "Game Over"
+        const gameOverTitle = this.add.text(0, 0, '', {
+            fontFamily: 'Cooper Black',
+            fontSize: gameOverFont,
+            color: '#ff0000',
+            align: 'center',
+            wordWrap: { width: 400 }
+        }).setOrigin(0.5);
+
+        this.restartBtn = this.add.text(this.game.canvas.width / 2, (this.game.canvas.height / 2) + 30, 'REINICIAR', { fontFamily: 'Cooper Black', fontSize: '22px', fill: '#ff0000', padding: 10 }).setOrigin(0.5).setDepth(2).setVisible(false);
+
+        this.quitBtn = this.add.text(this.game.canvas.width / 2, (this.game.canvas.height / 2) + 90, 'SAIR', { fontFamily: 'Cooper Black', fontSize: '22px', fill: '#ff0000', padding: 10 }).setOrigin(0.5).setDepth(2).setVisible(false);
+
+        // Configura a animação para que cada letra apareça sequencialmente
+        const gameOver = 'VOCÊ PERDEU!';
+        let index = 0;
+
+        this.time.addEvent({
+            delay: 150, // Intervalo de 100 milissegundos entre cada letra
+            callback: () => {
+                gameOverTitle.text += gameOver[index];
+                index++;
+                if (index === gameOver.length) {
+                    // Toda a palavra foi mostrada, pare o evento de tempo
+                    this.time.removeAllEvents();
+                    setTimeout(() => {
+
+                        [this.restartBtn, this.quitBtn].forEach(button => {
+                            button.setVisible(true);
+                            button.setInteractive();
+
+                            button.on('pointerdown', () => {
+                                this.select2.play();
+                                if(button.text === 'REINICIAR') {
+                                    this.resetGame();
+                                } else {
+                                    this.quitGame();
+                                }
+                            });
+
+                            button.on('pointerover', () => {
+                                button.setStyle({fontSize: 26, fill: '#ffffff'})
+                            })
+                            button.on('pointerout', () => {
+                                button.setStyle({fontSize: 24, fill: '#ff0000'})
+                            })
+                        });
+                       
+ 
+                    }, 1000);
+                }
+            },
+            callbackScope: this,
+            loop: true, // Mantém o evento em loop até que todas as letras sejam mostradas
+        });
+
+        // Centraliza o texto e define a quebra de linha para evitar que ultrapasse a tela
+        gameOverTitle.setWordWrapWidth(this.game.canvas.width * 0.9, true);
+        gameOverTitle.setOrigin(0.5);
+        gameOverTitle.setDepth(2);
+        gameOverTitle.setPosition(this.game.canvas.width / 2, this.game.canvas.height / 2.5);
     }
 
 }
