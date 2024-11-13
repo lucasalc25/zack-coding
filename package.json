@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.21.1",
     "phaser": "^3.80.1",
-    "plugins": "^0.4.2"
+    "plugins": "^0.4.2",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",

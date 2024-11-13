@@ -8,7 +8,7 @@ const sqlite3 = require('sqlite3').verbose();
 const app = express();
 
 // Conecta ao banco de dados SQLite chamado 'jogo.db' (deve estar no mesmo diretório)
-const db = new sqlite3.Database('./jogo.db');
+const db = new sqlite3.Database('./zack_coding.db');
 
 // Middleware para permitir que o servidor interprete JSON no corpo das requisições
 app.use(express.json());
