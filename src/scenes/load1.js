@@ -9,7 +9,7 @@ class Load1 extends Phaser.Scene {
         this.loaded = false;
     }
 
-    preload() {
+    async preload() {
         this.load.plugin('rexroundrectangleplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexroundrectangleplugin.min.js', true);
         this.load.plugin('rexsliderplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsliderplugin.min.js', true);
         this.load.audio('menuMusic', './assets/sfx/war.mp3');
@@ -25,19 +25,32 @@ class Load1 extends Phaser.Scene {
         this.load.audio('select', './assets/sfx/decide.mp3');
         this.load.audio('select2', './assets/sfx/select2.mp3');
 
-        if(!localStorage.getItem("musicVolume")) {
+        const idMaquina = 'id_unico_da_maquina'; // Identificador da máquina (substitua com algo dinâmico, como hash)
+
+        // Busca ou cria jogador
+        const jogador = await this.buscarDadosJogador(idMaquina);
+
+        if (jogador) {
+            this.add.text(50, 50, `Bem-vindo, ${jogador.nome}!`, {
+                font: '16px Arial',
+                fill: '#fff',
+            });
+        } else {
+            this.add.text(50, 50, 'Erro ao buscar ou criar jogador.', {
+                font: '16px Arial',
+                fill: '#ff0000',
+            });
+        }
+
+        if (!localStorage.getItem("musicVolume")) {
             localStorage.setItem("musicVolume", 0.5);
         }
 
-        if(!localStorage.getItem("soundVolume")) {
+        if (!localStorage.getItem("soundVolume")) {
             localStorage.setItem("soundVolume", 0.3);
         }
 
         this.createLoadingBar();
-    }
-
-    create() {
-
     }
 
     update() {
