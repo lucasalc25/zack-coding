@@ -40,7 +40,7 @@ class Load1 extends Phaser.Scene {
         const idMaquina = window.navigator.userAgent; // Identificador da máquina (substitua com algo dinâmico, como hash)
 
         // Busca ou cria jogador
-        const jogador = await this.buscarDadosJogador(idMaquina);
+        const jogador = await buscarDadosJogador(idMaquina);
 
         if (jogador) {
             this.add.text(50, 50, `Bem-vindo, ${jogador.nome}!`, {
@@ -60,6 +60,55 @@ class Load1 extends Phaser.Scene {
             this.scene.stop('Load1');
             this.scene.start('Home');
         }
+    }
+
+    createLoadingBar() {
+        // Barra de progresso
+        const progressBar = this.add.graphics();
+        const progressBox = this.add.graphics();
+        progressBox.fillStyle(0x01B2DE, 0.8);
+        progressBox.fillRect(this.width / 6, this.height / 2, this.width / 1.5, 30);
+
+
+        const loadingText = this.make.text({
+            x: this.width / 2,
+            y: this.height / 2 - 20,
+            text: 'Carregando...',
+            style: {
+                fontFamily: 'Anton',
+                fontSize: '24px',
+                fontFamily: 'Cooper Black',
+                fontSize: '20px',
+                fill: '#01B2DE'
+            }
+        });
+        loadingText.setOrigin(0.5, 0.5);
+
+        const percentText = this.make.text({
+            x: this.width / 2,
+            y: this.height / 2 + 15,
+            text: '0%',
+            style: {
+                fontFamily: 'Anton',
+                fontFamily: 'Cooper Black',
+                fontSize: '18px',
+                fill: '#FFFFFF',
+
+            }
+        });
+        percentText.setOrigin(0.5, 0.5);
+
+        this.load.on('progress', (value) => {
+            progressBar.clear();
+            progressBar.fillStyle(0xffffff, 1);
+            progressBar.fillRect(this.width / 6, this.height / 2, (this.width / 1.5) * value, 30);
+
+            percentText.setText(parseInt(value * 100) + '%');
+        });
+
+        this.load.on('complete', () => {
+            this.loaded = true;
+        });
     }
 
 }
