@@ -48,7 +48,7 @@ class Play extends Phaser.Scene {
         this.select = this.sound.add('select');
         this.select2 = this.sound.add('select2');
         this.typing.setVolume(localStorage.getItem("soundVolume"));
-        this.hover.setVolume(localStorage.getItem("soundVolume")* 0.4);
+        this.hover.setVolume(localStorage.getItem("soundVolume") * 0.4);
         this.select.setVolume(localStorage.getItem("soundVolume") * 0.25);
         this.select2.setVolume(localStorage.getItem("soundVolume") * 0.6);
 
@@ -253,16 +253,16 @@ class Play extends Phaser.Scene {
                 this.typeText(this.dialogueText, `Ok, começaremos do ${localStorage.getItem("nivel")} então. Vamos lá!`, 0, () => {
                     this.typing.stop();
                     speakTween.stop();
-                
+
                     // Espera pelo clique do jogador
                     this.input.once('pointerdown', () => {
                         this.endScene();
                         setTimeout(() => {
-                            if(this.registry.get('musicOn')) {
+                            if (this.registry.get('musicOn')) {
                                 this.playMusic.stop();
                             }
                             this.scene.stop('Play');
-                            if(this.nivel === 'Básico') this.scene.start('BeginnerQuiz');
+                            if (this.nivel === 'Básico') this.scene.start('BeginnerQuiz');
                             // if(localStorage.getItem("nivel") === 'Intermediário') this.scene.start('BeginnerQuiz');
                             // if(localStorage.getItem("nivel") === 'Avançado') this.scene.start('BeginnerQuiz');
                         }, 1200);

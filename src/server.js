@@ -1,50 +1,151 @@
-// Importa o framework Express para criar o servidor web
-const express = require('express');
+import express from 'express';
+import cors from 'cors'; // Importa o middleware CORS
+import bodyParser from 'body-parser';
+import pool from './db.js';
 
-// Importa o SQLite para interagir com o banco de dados local
-const sqlite3 = require('sqlite3').verbose();
-
-// Cria uma instância do Express para configurar o servidor
 const app = express();
 
-// Conecta ao banco de dados SQLite chamado 'jogo.db' (deve estar no mesmo diretório)
-const db = new sqlite3.Database('./src/zack_coding.db');
+app.use(express.json()); // Para processar dados JSON
 
-// Middleware para permitir que o servidor interprete JSON no corpo das requisições
-app.use(express.json());
+// Habilita o CORS para todas as origens
+app.use(cors());
 
-// Rota para buscar dados de todos os jogadores
-app.get('/jogadores', (req, res) => {
-    // Executa uma consulta SQL para obter todos os registros da tabela 'jogadores'
-    db.all('SELECT * FROM jogadores', [], (err, rows) => {
-        if (err) {
-            // Retorna erro 500 se houver problemas com o banco de dados
-            res.status(500).send(err.message);
-        } else {
-            // Retorna os dados obtidos no formato JSON
-            res.json(rows);
-        }
-    });
+// Middleware para parsing de JSON
+app.use(bodyParser.json());
+
+// Rota para buscar dispositivo
+app.get('/get-device/:deviceId', async (req, res) => {
+    const { deviceId } = req.params;
+    const query = `SELECT * FROM devices WHERE id = $1;`;
+
+    try {
+        const { rows } = await pool.query(query, [deviceId]);
+        res.json(rows.length > 0 ? rows[0] : null);
+    } catch (error) {
+        console.error('Erro ao buscar dispositivo no banco:', error);
+        res.status(500).json({ error: 'Erro ao buscar dispositivo' });
+    }
 });
 
-// Rota para salvar a pontuação de um jogador no banco de dados
-app.post('/salvar', (req, res) => {
-    // Extrai o nome e a pontuação do corpo da requisição
-    const { nome, pontuacao } = req.body;
-
-    // Insere um novo registro na tabela 'jogadores'
-    db.run('INSERT INTO jogadores (nome, pontuacao) VALUES (?, ?)', [nome, pontuacao], (err) => {
-        if (err) {
-            // Retorna erro 500 se houver problemas durante a inserção
-            res.status(500).send(err.message);
-        } else {
-            // Retorna uma mensagem de sucesso
-            res.send('Pontuação salva com sucesso!');
-        }
-    });
+// Rota para registrar dispositivo
+app.post('/register-device', async (req, res) => {
+    const query = `INSERT INTO devices DEFAULT VALUES RETURNING id;`;
+    try {
+        const { rows } = await pool.query(query);
+        res.json({ deviceId: rows[0].id });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao registrar o dispositivo' });
+    }
 });
 
-// Inicia o servidor na porta 3000
+app.get('/get-player/:deviceId', async (req, res) => {
+    const { deviceId } = req.params;
+    const query = `SELECT * FROM players WHERE id = $1;`;
+
+    try {
+        const { rows } = await pool.query(query, [deviceId]);
+        res.json(rows.length > 0 ? rows[0] : null);
+    } catch (error) {
+        console.error('Erro ao buscar jogador no banco:', error);
+        res.status(500).json({ error: 'Erro ao buscar jogador' });
+    }
+});
+
+
+// Rota para criar jogador
+app.post('/register-player', async (req, res) => {
+    const { deviceId, nomeJogador } = req.body;
+    const query = `
+        INSERT INTO players (device_id, name)
+        VALUES ($1, $2)
+        ON CONFLICT (device_id) DO NOTHING
+        RETURNING *;
+    `;
+    try {
+        const { rows } = await pool.query(query, [deviceId, nomeJogador]);
+        res.json(rows.length > 0 ? rows[0] : { message: 'Jogador já existe' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao criar jogador' });
+    }
+});
+
+
+app.put('/update-player', async (req, res) => {
+    const { deviceId, name, currentLevel, phasesCompleted, totalScore } = req.body;
+
+    if (!deviceId) {
+        return res.status(400).json({ error: 'deviceId é obrigatório' });
+    }
+
+    const queryUpdatePlayer = `
+        UPDATE players
+        SET 
+            name = COALESCE($1, name),
+            current_level = COALESCE($2, current_level),
+            phases_completed = COALESCE($3, phases_completed),
+            total_score = COALESCE($4, total_score),
+            last_played = CURRENT_TIMESTAMP
+        WHERE device_id = $5
+        RETURNING *;
+    `;
+
+    try {
+        const { rows } = await pool.query(queryUpdatePlayer, [
+            name,
+            currentLevel,
+            phasesCompleted,
+            totalScore,
+            deviceId
+        ]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Jogador não encontrado' });
+        }
+
+        res.json(rows[0]); // Retorna o jogador atualizado
+    } catch (error) {
+        console.error('Erro ao atualizar jogador:', error);
+        res.status(500).json({ error: 'Erro ao atualizar jogador' });
+    }
+});
+
+// Rota para obter as configurações do jogador
+app.get('/get-settings/:deviceId', async (req, res) => {
+    const { deviceId } = req.params;
+    const query = `
+        SELECT music_volume, sound_effects_volume, updated_at
+        FROM game_settings
+        WHERE device_id = $1;
+    `;
+    try {
+        const { rows } = await pool.query(query, [deviceId]);
+        res.json(rows.length > 0 ? rows[0] : null);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar configurações do jogador' });
+    }
+});
+
+// Rota para atualizar as configurações do jogador
+app.put('/update-settings/:deviceId', async (req, res) => {
+    const { deviceId } = req.params;
+    const { musicVolume, soundEffectsVolume } = req.body;
+    const query = `
+        UPDATE game_settings
+        SET music_volume = $1, sound_effects_volume = $2, updated_at = CURRENT_TIMESTAMP
+        WHERE device_id = $3
+        RETURNING *;
+    `;
+    try {
+        const { rows } = await pool.query(query, [musicVolume, soundEffectsVolume, deviceId]);
+        res.json(rows.length > 0 ? rows[0] : null);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao atualizar configurações do jogador' });
+    }
+});
+
+
+
+// Iniciar servidor
 app.listen(3000, () => {
-    console.log('Servidor rodando em http://localhost:3000');
+    console.log('Servidor backend rodando na porta 3000');
 });

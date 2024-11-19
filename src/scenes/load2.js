@@ -11,7 +11,7 @@ class Load2 extends Phaser.Scene {
     }
 
     preload() {
-        this.load.plugin('rexroundrectangleplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexroundrectangleplugin.min.js', true);      
+        this.load.plugin('rexroundrectangleplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexroundrectangleplugin.min.js', true);
         this.load.image('quarto', './assets/img/quarto.png');
         this.load.audio('correct', './assets/sfx/correct.mp3');
         this.load.audio('wrong', './assets/sfx/wrong.mp3');
@@ -29,7 +29,7 @@ class Load2 extends Phaser.Scene {
             this.load.audio('typing', './assets/sfx/typing.mp3');
             this.load.image('touch', './assets/img/touch.png');
         }
-         
+
         this.createLoadingBar();
 
     }
@@ -42,8 +42,8 @@ class Load2 extends Phaser.Scene {
             this.scene.stop('Load2');
             let nivel = localStorage.getItem("nivel");
 
-            if(nivel) {
-                if(nivel === 'Básico') this.scene.start('BeginnerQuiz', { faseInicial: this.faseInicial });
+            if (nivel) {
+                if (nivel === 'Básico') this.scene.start('BeginnerQuiz', { faseInicial: this.faseInicial });
                 // if(this.nivel === 'Intermediário') this.scene.start('IntermediaryQuiz', { faseInicial: this.faseInicial });
                 // if(this.nivel === 'Avançado') this.scene.start('AdvancedQuiz', { faseInicial: this.faseInicial });
             } else {

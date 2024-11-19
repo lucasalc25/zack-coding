@@ -1,4 +1,6 @@
-class Load1 extends Phaser.Scene {
+import { registerPlayer, getPlayer, updatePlayer, registerDevice } from "../db/api.js";
+
+export default class Load1 extends Phaser.Scene {
     constructor() {
         super({ key: 'Load1', active: false });
     }
@@ -25,34 +27,53 @@ class Load1 extends Phaser.Scene {
         this.load.audio('select', './assets/sfx/decide.mp3');
         this.load.audio('select2', './assets/sfx/select2.mp3');
 
-        if (!localStorage.getItem("musicVolume")) {
-            localStorage.setItem("musicVolume", 0.5);
+        const storedDeviceId = localStorage.getItem("deviceId")
+
+        // Se já existe um deviceId armazenado, verificamos no banco de dados
+        if (storedDeviceId) {
+            try {
+                console.log("Existe um storedDevice:", storedDeviceId)
+                const responseId = await fetch(`http://localhost:3000/get-device/${storedDeviceId}`);
+                if (responseId.ok) {
+                    const device = await responseId.json();
+                    if (device) {
+                        console.log('Dispositivo encontrado no banco de dados:', device);
+                        const responsePlayer = await getPlayer(storedDeviceId)
+                        console.log(responsePlayer)
+
+                    } else {
+                        console.warn('DeviceId armazenado localmente não está no banco de dados. Registrando novo dispositivo.');
+                        await registerDevice();
+                        await registerPlayer(storedDeviceId, 'JogadorTeste');
+                        const playerData = await getPlayer(storedDeviceId)
+
+                        if (playerData) {
+                            console.log('Dados do jogador obtidos:', playerData);
+                        } else {
+                            console.log('Nenhum jogador vinculado ao dispositivo:', storedDeviceId);
+                        }
+                    }
+                } else {
+                    // Se o deviceId local não for válido ou não existir, registra um novo
+                    console.warn('DeviceId armazenado localmente não está na localStorage. Registrando novo dispositivo.');
+                    await registerDevice();
+                    await registerPlayer(storedDeviceId, 'JogadorTeste');
+                    const playerData = await getPlayer(storedDeviceId)
+
+                    if (playerData) {
+                        console.log('Dados do jogador obtidos:', playerData);
+                    } else {
+                        console.log('Nenhum jogador vinculado ao dispositivo:', storedDeviceId);
+                    }
+                }
+
+                this.createLoadingBar();
+            } catch (error) {
+                console.error('Erro ao verificar dispositivo no banco:', error);
+            }
         }
 
-        if (!localStorage.getItem("soundVolume")) {
-            localStorage.setItem("soundVolume", 0.3);
-        }
 
-        this.createLoadingBar();
-    }
-
-    async create() {
-        const idMaquina = window.navigator.userAgent; // Identificador da máquina (substitua com algo dinâmico, como hash)
-
-        // Busca ou cria jogador
-        const jogador = await buscarDadosJogador(idMaquina);
-
-        if (jogador) {
-            this.add.text(50, 50, `Bem-vindo, ${jogador.nome}!`, {
-                font: '16px Arial',
-                fill: '#fff',
-            });
-        } else {
-            this.add.text(50, 50, 'Erro ao buscar ou criar jogador.', {
-                font: '16px Arial',
-                fill: '#ff0000',
-            });
-        }
     }
 
     update() {

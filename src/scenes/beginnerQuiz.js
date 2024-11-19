@@ -4,7 +4,7 @@ class BeginnerQuiz extends Phaser.Scene {
         this.phases = [
             {
                 phase: 1,
-                title: "Fase 1: Declarar duas variáveis do tipo inteiro", 
+                title: "Fase 1: Declarar duas variáveis do tipo inteiro",
                 tip: "Variáveis armazenam dados, que podem ser números, caracteres, entre outros.",
                 code: [
                     "var",
@@ -21,7 +21,7 @@ class BeginnerQuiz extends Phaser.Scene {
             },
             {
                 phase: 2,
-                title: "Fase 2: Ler um número inteiro e mostrá-lo na tela", 
+                title: "Fase 2: Ler um número inteiro e mostrá-lo na tela",
                 tip: "O comando 'leia' recebe um dado informado pelo usuário e o atribui à uma variável. Já o 'escreva', mostra este dado na tela.",
                 code: [
                     "var",
@@ -42,7 +42,7 @@ class BeginnerQuiz extends Phaser.Scene {
             },
             {
                 phase: 3,
-                title: "Fase 3: Ler dois números e exibir a soma entre eles", 
+                title: "Fase 3: Ler dois números e exibir a soma entre eles",
                 tip: "O operador '<-' atribui um dado à uma variável",
                 code: [
                     "var",
@@ -184,7 +184,7 @@ class BeginnerQuiz extends Phaser.Scene {
         // Verifica o estado da música
         if (this.registry.get('musicOn')) {
             this.playMusic = this.sound.add('playMusic', { loop: true });
-            this.playMusic.setVolume(localStorage.getItem("musicVolume")* 0.7);
+            this.playMusic.setVolume(localStorage.getItem("musicVolume") * 0.7);
             this.playMusic.play();
         }
 
@@ -216,7 +216,7 @@ class BeginnerQuiz extends Phaser.Scene {
     update() {
         this.musicOn = this.registry.get("musicOn")
 
-        if(this.musicOn == false) {
+        if (this.musicOn == false) {
             this.playMusic = this.sound.add('playMusic', { loop: true });
             this.playMusic.setVolume(localStorage.getItem("musicVolume"));
             this.playMusic.play();
@@ -271,7 +271,7 @@ class BeginnerQuiz extends Phaser.Scene {
             this.tweens.add({
                 targets: this.panel, // O alvo da animação é o sprite do personagem
                 x: panelX, // Fator de escala horizontal
-                width: panelWidth, 
+                width: panelWidth,
                 duration: 200, // Duração da animação em milissegundos (0.5 segundo neste caso)
                 ease: 'Linear', // Tipo de easing (suavização) da animação
                 onComplete: () => {
@@ -282,7 +282,7 @@ class BeginnerQuiz extends Phaser.Scene {
             });
         }, 300);
 
-        let titleFont = (1.73 * this.game.canvas.width)/100 + 12;
+        let titleFont = (1.73 * this.game.canvas.width) / 100 + 12;
         let titleWordWrap = this.game.canvas.width > 600 ? 540 : this.game.canvas.width * 0.75;
 
         // Adiciona o titulo no painel
@@ -509,8 +509,8 @@ class BeginnerQuiz extends Phaser.Scene {
         for (var i = 0; i < lineDivs.length - 1; i++) {
             lineDivs[i].style.backgroundColor = '#228b22'; // Defina a cor de fundo desejada aqui
         }
-        
-        if(this.phaseNumber == this.numberPhases) {
+
+        if (this.phaseNumber == this.numberPhases) {
             setTimeout(() => {
                 this.gameFinished();
             }, 3000);
@@ -527,7 +527,7 @@ class BeginnerQuiz extends Phaser.Scene {
                 this.confirmBtnText.destroy();
                 this.showQuizScreen(this.phase);
             }, 3000);
-        } 
+        }
     }
 
     // Função para salvar o progresso do jogador
@@ -537,8 +537,8 @@ class BeginnerQuiz extends Phaser.Scene {
             // Salva a fase atual do jogador no localStorage
             faseAtual++;
             localStorage.setItem("faseAtual", faseAtual);
-            
-            let saveTextFont = (1.73 * this.game.canvas.width)/100 + 12;
+
+            let saveTextFont = (1.73 * this.game.canvas.width) / 100 + 12;
             this.saveText = this.add.text(this.game.canvas.width / 2, 100, 'Salvando progresso...', { fontSize: saveTextFont, fill: '#FFFFFF', align: 'center' }).setWordWrapWidth(this.game.canvas.width * 0.9).setOrigin(0.5);
 
             // Define a escala inicial do texto como zero
@@ -596,7 +596,7 @@ class BeginnerQuiz extends Phaser.Scene {
         // Cria uma janela de dica centralizada
         const tipWindowWidth = this.game.canvas.width < 600 ? this.panel.width : 600;
         const numberLines = this.phaseTip.length / 51;
-        const heightForLine = this.game.canvas.width < 600 ? numberLines * 70 : numberLines * 40 ;
+        const heightForLine = this.game.canvas.width < 600 ? numberLines * 70 : numberLines * 40;
         const tipWindowHeight = 100 + heightForLine;
         const tipWindowX = this.game.canvas.width / 2;
         const tipWindowY = this.game.canvas.height / 2;
@@ -655,7 +655,7 @@ class BeginnerQuiz extends Phaser.Scene {
             this.confirmBtn.setInteractive();
             this.backBtn.setInteractive();
         });
-        
+
         this.tipBtn.on('pointerover', () => {
             this.tipBtn.setFillStyle('0xFF0066').setSize(78, 43);
             this.tipBtnText.setStyle({ fill: '#001B68' });
@@ -669,7 +669,7 @@ class BeginnerQuiz extends Phaser.Scene {
     createHintWindow(hint) {
         const tipWindowWidth = this.game.canvas.width < 600 ? this.panel.width : 600;
         const numberLines = this.phaseTip.length / 51;
-        const heightForLine = this.game.canvas.width < 600 ? numberLines * 70 : numberLines * 40 ;
+        const heightForLine = this.game.canvas.width < 600 ? numberLines * 70 : numberLines * 40;
         const tipWindowHeight = 100 + heightForLine;
         const tipWindowX = this.game.canvas.width / 2;
         const tipWindowY = this.game.canvas.height / 2;
@@ -728,7 +728,7 @@ class BeginnerQuiz extends Phaser.Scene {
             this.confirmBtn.setInteractive();
             this.backBtn.setInteractive();
         });
-        
+
         this.hintBtn.on('pointerover', () => {
             this.hintBtn.setFillStyle('0xFF0066').setSize(78, 43);
             this.hintBtnText.setStyle({ fill: '#001B68' });
@@ -742,18 +742,18 @@ class BeginnerQuiz extends Phaser.Scene {
 
     clearCode() {
         const column = document.querySelectorAll(".column");
-        
+
         column.forEach((column) => {
             document.body.removeChild(column);
         });
     }
 
     showCorrect() {
-        if(this.isShowingWrong) {
+        if (this.isShowingWrong) {
             const prevMessageDiv = document.getElementById('message-wrong');
             document.body.removeChild(prevMessageDiv);
             this.isShowingWrong = false;
-        } 
+        }
 
         const messageDiv = document.createElement("div");
         messageDiv.className = "message";
@@ -785,10 +785,10 @@ class BeginnerQuiz extends Phaser.Scene {
     }
 
     showWrong() {
-        if(this.isShowingWrong) {
+        if (this.isShowingWrong) {
             const prevMessageDiv = document.getElementById('message-wrong');
             document.body.removeChild(prevMessageDiv);
-        } 
+        }
         this.isShowingWrong = true;
 
         const messageDiv = document.createElement("div");
@@ -836,28 +836,28 @@ class BeginnerQuiz extends Phaser.Scene {
         this.confirmWindow.add(this.confirmText);
 
         this.confirmYesBtn = this.add.rexRoundRectangle(confirmWindowX / 1.4, confirmWindowY + 30, 75, 40, 10, 0xED3D85).setOrigin(0.5)
-        this.confirmYesText = this.add.text(confirmWindowX / 1.4, confirmWindowY + 30, 'Sim', { fontFamily: 'Cooper Black',fontSize: '20px', fill: '#FFFFFF', padding: 15 }).setOrigin(0.5).setDepth(3);
+        this.confirmYesText = this.add.text(confirmWindowX / 1.4, confirmWindowY + 30, 'Sim', { fontFamily: 'Cooper Black', fontSize: '20px', fill: '#FFFFFF', padding: 15 }).setOrigin(0.5).setDepth(3);
 
 
         this.confirmNoBtn = this.add.rexRoundRectangle(confirmWindowX / 0.75, confirmWindowY + 30, 75, 40, 10, 0xED3D85).setOrigin(0.5)
         this.confirmNoText = this.add.text(confirmWindowX / 0.75, confirmWindowY + 30, 'Não', { fontFamily: 'Cooper Black', fontSize: '20px', fill: '#FFFFFF', padding: 15 }).setOrigin(0.5).setDepth(3);
-        
+
 
         [this.confirmYesBtn, this.confirmNoBtn].forEach(button => {
             button.setInteractive();
 
             button.on('pointerdown', () => {
                 this.select2.play();
-                if(button.x < confirmWindowX) {
+                if (button.x < confirmWindowX) {
                     // Ação ao clicar em "Sim"
                     this.clearCode();
                     button.destroy();
                     // Pare a música de fundo ou quaisquer sons que estejam tocando
-                    if(this.registry.get('musicOn')) {
+                    if (this.registry.get('musicOn')) {
                         this.playMusic.stop();
                     }
                     this.scene.start('Load1');
-               } else {
+                } else {
                     // Ação ao clicar em "Não"
                     this.tweens.add({
                         targets: this.confirmWindow,
@@ -878,23 +878,23 @@ class BeginnerQuiz extends Phaser.Scene {
 
             button.on('pointerover', () => {
                 button.setFillStyle('0xFF0066').setSize(80, 45);
-                if(button.x < confirmWindowX) { 
+                if (button.x < confirmWindowX) {
                     this.confirmYesText.setStyle({ fontSize: '22px' });
                 } else {
                     this.confirmNoText.setStyle({ fontSize: '22px' });
                 }
             });
 
-            button.on('pointerout', () => { 
+            button.on('pointerout', () => {
                 button.setFillStyle('0xED3D85').setSize(75, 40);
-                if(button.x < confirmWindowX) { 
+                if (button.x < confirmWindowX) {
                     this.confirmYesText.setStyle({ fontSize: '20px' });
                 } else {
                     this.confirmNoText.setStyle({ fontSize: '20px' });
                 }
             });
 
-        }); 
+        });
 
         this.confirmWindow.add(this.confirmYesBtn);
         this.confirmWindow.add(this.confirmYesText);
@@ -908,11 +908,11 @@ class BeginnerQuiz extends Phaser.Scene {
     resetGame() {
 
         // Pare a música de fundo ou quaisquer sons que estejam tocando
-        if(this.registry.get('musicOn')) {
+        if (this.registry.get('musicOn')) {
             this.playMusic.stop();
         }
-        
-        if(localStorage.getItem("nivel") === 'Básico') {
+
+        if (localStorage.getItem("nivel") === 'Básico') {
             this.scene.stop('BeginnerQuiz'); // Encerre a cena atual e retorne ao menu principal
             this.scene.start('Load2', { faseInicial: this.faseInicial });
         }
@@ -924,17 +924,17 @@ class BeginnerQuiz extends Phaser.Scene {
             this.scene.stop('AdvancedQuiz'); // Encerre a cena atual e retorne ao menu principal
             this.scene.start('Load2', { faseInicial: this.faseInicial });
         } */
-        
+
     }
 
     quitGame() {
         // Pare a música de fundo ou quaisquer sons que estejam tocando
-        if(this.registry.get('musicOn')) {
+        if (this.registry.get('musicOn')) {
             this.playMusic.stop();
         }
 
         // Encerre a cena atual e retorne ao menu principal
-        if(localStorage.getItem("nivel") === 'Básico') {
+        if (localStorage.getItem("nivel") === 'Básico') {
             this.scene.stop('BeginnerQuiz'); // Encerre a cena atual e retorne ao menu principal
         }
         /* if(localStorage.getItem("nivel") === 'Intermediário') {
@@ -954,9 +954,9 @@ class BeginnerQuiz extends Phaser.Scene {
 
         this.playMusic.stop();
         this.winnerMusic.play();
-        
-        let winnerFont = (1.8 * this.game.canvas.width)/100 + 22;
-        
+
+        let winnerFont = (1.8 * this.game.canvas.width) / 100 + 22;
+
         // Cria a animação da palavra "Game Over"
         const winnerTitle = this.add.text(0, 0, '', {
             fontFamily: 'Cooper Black',
@@ -983,7 +983,7 @@ class BeginnerQuiz extends Phaser.Scene {
                         // Configura a animação para que cada letra apareça sequencialmente
                         const winner2 = 'Você concluiu a versão beta de Zack Coding!';
                         index = 0;
-            
+
                         this.time.addEvent({
                             delay: 50, // Intervalo de 100 milissegundos entre cada letra
                             callback: () => {
@@ -1012,7 +1012,7 @@ class BeginnerQuiz extends Phaser.Scene {
 
     }
 
-    gameOver(){
+    gameOver() {
         localStorage.setItem("faseAtual", 0);
         localStorage.setItem("tentativas", 0);
 
@@ -1024,19 +1024,19 @@ class BeginnerQuiz extends Phaser.Scene {
         this.confirmBtnText.destroy();
         this.confirmBtn.destroy();
 
-        if(this.isShowingWrong) {
+        if (this.isShowingWrong) {
             const prevMessageDiv = document.getElementById('message-wrong');
             document.body.removeChild(prevMessageDiv);
             this.isShowingWrong = false;
-        } 
+        }
 
         this.isShowingWrong = false;
 
         this.playMusic.stop();
         this.gameOverSound.play();
 
-        let gameOverFont = (1.8 * this.game.canvas.width)/100 + 32;
-        
+        let gameOverFont = (1.8 * this.game.canvas.width) / 100 + 32;
+
         // Cria a animação da palavra "Game Over"
         const gameOverTitle = this.add.text(0, 0, '', {
             fontFamily: 'Cooper Black',
@@ -1070,7 +1070,7 @@ class BeginnerQuiz extends Phaser.Scene {
 
                             button.on('pointerdown', () => {
                                 this.select2.play();
-                                if(button.text === 'REINICIAR') {
+                                if (button.text === 'REINICIAR') {
                                     this.resetGame();
                                 } else {
                                     this.quitGame();
@@ -1078,14 +1078,14 @@ class BeginnerQuiz extends Phaser.Scene {
                             });
 
                             button.on('pointerover', () => {
-                                button.setStyle({fontSize: 26, fill: '#ffffff'})
+                                button.setStyle({ fontSize: 26, fill: '#ffffff' })
                             })
                             button.on('pointerout', () => {
-                                button.setStyle({fontSize: 24, fill: '#ff0000'})
+                                button.setStyle({ fontSize: 24, fill: '#ff0000' })
                             })
                         });
-                       
- 
+
+
                     }, 1000);
                 }
             },

@@ -1,5 +1,4 @@
-
-class Home extends Phaser.Scene {
+export default class Home extends Phaser.Scene {
     constructor() {
         super({ key: 'Home' });
         this.bgImage;
@@ -51,7 +50,7 @@ class Home extends Phaser.Scene {
         this.overlay.setVisible(false); // Inicialmente, o overlay estará invisível
 
 
-        this.menuFont = (1.73 * this.game.canvas.width)/100 + 28;
+        this.menuFont = (1.73 * this.game.canvas.width) / 100 + 28;
 
         // Adicionando opções do menu
         this.playBtn = this.add.text(this.game.canvas.width / 2, this.game.canvas.height * 0.2, 'Novo Jogo', { fontFamily: 'Cooper Black', fontSize: this.menuFont, fill: '#ddd' }).setOrigin(0.5, 0).setDepth(2);
@@ -102,74 +101,74 @@ class Home extends Phaser.Scene {
 
     update() {
         // Efeito parallax
-        this.bgImage.tilePositionY += 0.5; 
-        
+        this.bgImage.tilePositionY += 0.5;
+
         // Atualiza os volumes a cada frame de acordo com a posição dos sliders 
         this.menuMusic.setVolume(this.musicSlider.slider.value);
         this.select.setVolume(this.soundSlider.slider.value * 0.25);
         this.select2.setVolume(this.soundSlider.slider.value * 0.6);
         this.hover.setVolume(this.soundSlider.slider.value * 0.6);
-    
+
         const sliderWidth = 250; // Largura total da faixa do slider
         let musicFillWidth = sliderWidth * this.musicSlider.slider.value; // Largura do preenchimento slider de musica
         let soundFillWidth = sliderWidth * this.soundSlider.slider.value; // Largura do preenchimento slider de sons
 
-        if(this.game.canvas.width < 400) {
+        if (this.game.canvas.width < 400) {
             this.musicFillRect.clear(); // Limpa o retângulo de preenchimento
             this.musicFillRect.lineStyle(10, 0xED3D85, 1); // Define o estilo de linha e cor do preenchimento
             this.musicFillRect.strokePoints([{
-                    x: -125,
-                    y: this.musicSlider.y
-                },
-                {
-                    x: -125 + musicFillWidth, // Atualiza a posição x do ponto final do preenchimento
-                    y: this.musicSlider.y
-                }
+                x: -125,
+                y: this.musicSlider.y
+            },
+            {
+                x: -125 + musicFillWidth, // Atualiza a posição x do ponto final do preenchimento
+                y: this.musicSlider.y
+            }
             ]);
 
             this.soundFillRect.clear();
-            this.soundFillRect.lineStyle(10, 0xED3D85, 1); 
+            this.soundFillRect.lineStyle(10, 0xED3D85, 1);
             this.soundFillRect.strokePoints([{
-                    x: -125,
-                    y: this.soundSlider.y
-                },
-                {
-                    x: -125 + soundFillWidth,
-                    y: this.soundSlider.y
-                }
+                x: -125,
+                y: this.soundSlider.y
+            },
+            {
+                x: -125 + soundFillWidth,
+                y: this.soundSlider.y
+            }
             ]);
         } else {
             this.musicFillRect.clear(); // Limpa o retângulo de preenchimento
             this.musicFillRect.lineStyle(15, 0xED3D85, 1); // Define o estilo de linha e cor do preenchimento
             this.musicFillRect.strokePoints([{
-                    x: -125,
-                    y: this.musicSlider.y
-                },
-                {
-                    x: -125 + musicFillWidth, // Atualiza a posição x do ponto final do preenchimento
-                    y: this.musicSlider.y
-                }
+                x: -125,
+                y: this.musicSlider.y
+            },
+            {
+                x: -125 + musicFillWidth, // Atualiza a posição x do ponto final do preenchimento
+                y: this.musicSlider.y
+            }
             ]);
 
             this.soundFillRect.clear();
-            this.soundFillRect.lineStyle(15, 0xED3D85, 1); 
+            this.soundFillRect.lineStyle(15, 0xED3D85, 1);
             this.soundFillRect.strokePoints([{
-                    x: -125,
-                    y: this.soundSlider.y
-                },
-                {
-                    x: -125 + soundFillWidth,
-                    y: this.soundSlider.y
-                }
+                x: -125,
+                y: this.soundSlider.y
+            },
+            {
+                x: -125 + soundFillWidth,
+                y: this.soundSlider.y
+            }
             ]);
         }
-        
+
     }
 
     resizeBackground(bg) {
         var width = window.innerWidth;
         var height = window.innerHeight;
-    
+
         bg.width = width;
         bg.height = height;
     }
@@ -191,7 +190,7 @@ class Home extends Phaser.Scene {
     checkProgress() {
         // Verifica se há progresso salvo e retorna verdadeiro se houver, falso caso contrário
         let faseAtual = localStorage.getItem("faseAtual");
-        
+
         // Verifica se há progresso salvo
         if (faseAtual == 0 || !faseAtual) {
             // Se não houver, desabilita o botão de carregar
@@ -212,12 +211,12 @@ class Home extends Phaser.Scene {
     }
 
     createConfigWindow() {
-        var labelFont = (1.73 * this.game.canvas.width)/100 + 16;
+        var labelFont = (1.73 * this.game.canvas.width) / 100 + 16;
 
         // Cria a imagem da janela de configuração
         this.configWindow = this.add.container(this.game.canvas.width / 2, this.game.canvas.height / 2).setAlpha(0);
 
-        if(this.game.canvas.width < 400) {
+        if (this.game.canvas.width < 400) {
 
             this.bgWindow = this.add.image(0, 0, 'configWindow');
             this.bgWindow.setDisplaySize(this.bgWindow.width * 0.9, this.bgWindow.height * 0.9);
@@ -228,13 +227,13 @@ class Home extends Phaser.Scene {
             // Define os pontos de começo e fim do slider
             this.musicSlider.slider = this.plugins.get('rexsliderplugin').add(this.musicSlider, {
                 endPoints: [{
-                        x: this.musicSlider.x - 125,
-                        y: this.musicSlider.y
-                    },
-                    {
-                        x: this.musicSlider.x + 125,
-                        y: this.musicSlider.y
-                    }
+                    x: this.musicSlider.x - 125,
+                    y: this.musicSlider.y
+                },
+                {
+                    x: this.musicSlider.x + 125,
+                    y: this.musicSlider.y
+                }
                 ],
                 value: this.musicVolume
             });
@@ -249,18 +248,18 @@ class Home extends Phaser.Scene {
                 y: this.musicSlider.y
             }]);
 
-            this.soundLabel = this.add.text(0, -20 , 'Sons', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5),
-            this.soundSlider = this.add.rexRoundRectangle(0, 20, 10, 10, 10, 0xED3D85);
+            this.soundLabel = this.add.text(0, -20, 'Sons', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5),
+                this.soundSlider = this.add.rexRoundRectangle(0, 20, 10, 10, 10, 0xED3D85);
 
             this.soundSlider.slider = this.plugins.get('rexsliderplugin').add(this.soundSlider, {
                 endPoints: [{
-                        x: this.soundSlider.x - 125,
-                        y: this.soundSlider.y
-                    },
-                    {
-                        x: this.soundSlider.x + 125,
-                        y: this.soundSlider.y
-                    }
+                    x: this.soundSlider.x - 125,
+                    y: this.soundSlider.y
+                },
+                {
+                    x: this.soundSlider.x + 125,
+                    y: this.soundSlider.y
+                }
                 ],
                 value: this.soundVolume
             });
@@ -277,24 +276,24 @@ class Home extends Phaser.Scene {
 
             this.supportBtn = this.add.image(0, 95, 'supportBtn1').setOrigin(0.5);
             this.supportBtn.disableInteractive();
-    
+
             this.backBtn = this.add.image(0, 188.5, 'backBtn1').setOrigin(0.5);
             this.backBtn.setDisplaySize(145, 56);
             this.backBtn.disableInteractive();
-    
+
             // Adiciona os elementos à janela de configuração
             this.configWindow.add([
                 this.bgWindow,
                 this.musicLabel,
                 this.add.graphics().lineStyle(10, 0x27F1FF, 1).strokePoints(this.musicSlider.slider.endPoints),
                 this.musicFillRect,
-                this.musicSlider, 
+                this.musicSlider,
                 this.soundLabel,
                 this.add.graphics().lineStyle(10, 0x27F1FF, 1).strokePoints(this.soundSlider.slider.endPoints),
                 this.soundFillRect,
                 this.soundSlider,
                 this.supportBtn,
-                this.backBtn 
+                this.backBtn
             ]);
 
             this.configWindow.setVisible(false);
@@ -302,20 +301,20 @@ class Home extends Phaser.Scene {
         } else {
             this.bgWindow = this.add.image(0, 0, 'configWindow');
             this.bgWindow.setDisplaySize(this.bgWindow.width * 1.2, this.bgWindow.height * 1.3);
-            
-            this.musicLabel = this.add.text(0, -120 , 'Música', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5);
+
+            this.musicLabel = this.add.text(0, -120, 'Música', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5);
             this.musicSlider = this.add.rexRoundRectangle(0, -70, 10, 10, 10, 0xED3D85);
 
             // Define os pontos de começo e fim do slider
             this.musicSlider.slider = this.plugins.get('rexsliderplugin').add(this.musicSlider, {
                 endPoints: [{
-                        x: this.musicSlider.x - 125,
-                        y: this.musicSlider.y
-                    },
-                    {
-                        x: this.musicSlider.x + 125,
-                        y: this.musicSlider.y
-                    }
+                    x: this.musicSlider.x - 125,
+                    y: this.musicSlider.y
+                },
+                {
+                    x: this.musicSlider.x + 125,
+                    y: this.musicSlider.y
+                }
                 ],
                 value: this.musicVolume
             });
@@ -330,18 +329,18 @@ class Home extends Phaser.Scene {
                 y: this.musicSlider.y
             }]);
 
-            this.soundLabel = this.add.text(0, 0 , 'Sons', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5),
-            this.soundSlider = this.add.rexRoundRectangle(0, 50, 10, 10, 10, 0xED3D85);
+            this.soundLabel = this.add.text(0, 0, 'Sons', { fontFamily: 'Cooper Black', fontSize: labelFont, fill: '#fff' }).setOrigin(0.5),
+                this.soundSlider = this.add.rexRoundRectangle(0, 50, 10, 10, 10, 0xED3D85);
 
             this.soundSlider.slider = this.plugins.get('rexsliderplugin').add(this.soundSlider, {
                 endPoints: [{
-                        x: this.soundSlider.x - 125,
-                        y: this.soundSlider.y
-                    },
-                    {
-                        x: this.soundSlider.x + 125,
-                        y: this.soundSlider.y
-                    }
+                    x: this.soundSlider.x - 125,
+                    y: this.soundSlider.y
+                },
+                {
+                    x: this.soundSlider.x + 125,
+                    y: this.soundSlider.y
+                }
                 ],
                 value: this.soundVolume
             });
@@ -355,10 +354,10 @@ class Home extends Phaser.Scene {
                 x: this.soundSlider.x,
                 y: this.soundSlider.y
             }]);
-            
+
             this.supportBtn = this.add.image(0, 160, 'supportBtn1').setOrigin(0.5).setScale(1.1);
             this.supportBtn.disableInteractive();
-    
+
             this.backBtn = this.add.image(0, 277, 'backBtn1').setOrigin(0.5);
             this.backBtn.disableInteractive();
 
@@ -368,7 +367,7 @@ class Home extends Phaser.Scene {
                 this.musicLabel,
                 this.add.graphics().lineStyle(15, 0x27F1FF, 1).strokePoints(this.musicSlider.slider.endPoints),
                 this.musicFillRect,
-                this.musicSlider, 
+                this.musicSlider,
                 this.soundLabel,
                 this.add.graphics().lineStyle(15, 0x27F1FF, 1).strokePoints(this.soundSlider.slider.endPoints),
                 this.soundFillRect,
@@ -379,7 +378,7 @@ class Home extends Phaser.Scene {
 
             this.configWindow.setVisible(false);
         }
-    
+
     }
 
     showConfigWindow() {
@@ -452,7 +451,7 @@ class Home extends Phaser.Scene {
         this.loadBtn.setInteractive();
         this.quitBtn.setInteractive();
         this.settingsBtn.setInteractive();
-        this.settingsBtn.setStyle({fontSize: this.menuFont, fill: '#ddd'});
+        this.settingsBtn.setStyle({ fontSize: this.menuFont, fill: '#ddd' });
     }
 
     // Função para salvar o progresso do jogador
@@ -464,7 +463,7 @@ class Home extends Phaser.Scene {
 
     quitGame() {
         // Pare a música de fundo ou quaisquer sons que estejam tocando
-        if(this.registry.get('musicOn')) {
+        if (this.registry.get('musicOn')) {
             this.menuMusic.stop();
         }
 

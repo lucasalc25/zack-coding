@@ -10,7 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "pg": "^8.13.1",
     "phaser": "^3.80.1",
     "plugins": "^0.4.2",
     "sqlite3": "^5.1.7"
@@ -22,5 +25,6 @@
     "phaser3-rex-plugins": "^1.80.2",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
-  }
+  },
+  "type": "module"
 }
