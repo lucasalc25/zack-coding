@@ -1,6 +1,9 @@
-export default class Home extends Phaser.Scene {
+import NovoJogo from "./newGame.js";
+import Jogo from './play.js';
+
+export default class MainMenu extends Phaser.Scene {
     constructor() {
-        super({ key: 'Home' });
+        super({ key: 'MainMenu' });
         this.bgImage;
         this.musicVolume;
         this.soundVolume;
@@ -69,8 +72,8 @@ export default class Home extends Phaser.Scene {
                 if (button.text == 'Novo Jogo') {
                     this.select.play();
                     this.menuMusic.stop();
-                    this.scene.stop('Home');
-                    this.scene.start('Load2', { faseInicial: 0 });
+                    this.scene.stop('MainMenu');
+                    this.scene.start('NovoJogo');
                 } else if (button.text == 'Carregar') {
                     this.select.play();
                     this.menuMusic.stop();
@@ -204,9 +207,9 @@ export default class Home extends Phaser.Scene {
         let faseSalva = localStorage.getItem("faseAtual");
 
         if (faseSalva > 0) {
-            this.scene.start('Load2', { faseInicial: faseSalva }); // Inicia a cena de carregamento com a fase salva
+            this.scene.start('Loading', { nextScene: Jogo, faseAtual: faseSalva }); // Inicia a cena de carregamento com a fase salva
         } else {
-            this.scene.start('Load2', { faseInicial: 0 });
+            this.scene.start('Loading', { nextScene: Jogo, faseAtual: 0 });
         }
     }
 
@@ -470,7 +473,7 @@ export default class Home extends Phaser.Scene {
         // Limpe qualquer recurso ou dados que precisem ser liberados
 
         // Encerre a cena atual e retorne ao menu principal
-        this.scene.stop('Home');
+        this.scene.stop('MainMenu');
     }
 
 }

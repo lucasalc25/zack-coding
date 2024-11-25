@@ -6,35 +6,49 @@ import pool from './db.js';
 
 const app = express();
 
-app.use(express.json()); // Para processar dados JSON
-
 // Habilita o CORS para todas as origens
 app.use(cors());
 
 // Middleware para parsing de JSON
 app.use(bodyParser.json());
 
+app.use(express.json()); // Para processar dados JSON
+
 // Rota para buscar dispositivo
-app.get('/get-device/:deviceId', async (req, res) => {
-    const { deviceId } = req.params;
+app.get('/getPlayer/:deviceId/', async (req, res) => {
+    const { id } = req.params;
 
     try {
-        // Consultar a tabela de jogadores e o progresso baseado no deviceId
-        const result = await pool.query(`
-            SELECT p.nome, pp.pontuacao, pp.desempenho, pp.criado_em, pp.atualizado_em 
-            FROM players p
-            JOIN player_progress pp ON p.id = pp.id_jogador
-            WHERE p.device_id = $1
-        `, [deviceId]);
+        const result = await pool.query(
+            `SELECT * FROM jogador WHERE id = $1`,
+            [id]
+        );
+        res.status(200).json(result.rows);
 
-        if (result.rows.length > 0) {
-            res.json(result.rows[0]);
-        } else {
-            res.status(404).json({ message: 'Jogador não encontrado' });
-        }
+    } catch (error) {
+        console.error('Erro ao carregar progresso:', error);
+        res.status(500).json({ message: 'Erro ao carregar progresso.' });
+    }
+});
+
+// Rota para criar um jogador
+app.post('/createPlayer', async (req, res) => {
+    const { nome_jogador } = req.body;
+    try {
+        const query = `
+            INSERT INTO jogador (nome_jogador, fase_atual, pontuacao, desempenho) 
+            VALUES ($1, 1, 0, {"tempo": 0, "acertos": 0, "erros": 0}, now(),now(),now())
+            RETURNING *;
+        `;
+        const values = [nome_jogador];
+
+        const result = await pool.query(query, values);
+
+        // Retornar o jogador recém-criado
+        res.status(201).json(result.rows[0]);
     } catch (err) {
-        console.error('Erro ao acessar o banco de dados:', err);
-        res.status(500).json({ message: 'Erro interno no servidor' });
+        console.error(err);
+        res.status(500).send('Erro ao salvar pontuação');
     }
 });
 

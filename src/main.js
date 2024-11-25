@@ -1,5 +1,7 @@
-import Load1 from './scenes/load1.js';
-import Home from './scenes/home.js';
+import NovoJogo from './scenes/newGame.js';
+import Loading from './scenes/loading.js';
+import MainMenu from './scenes/mainMenu.js';
+import Jogo from './scenes/play.js'
 
 var config = {
     type: Phaser.AUTO,
@@ -9,7 +11,7 @@ var config = {
         mode: Phaser.Scale.RESIZE,
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
-    scene: [Load1, Home],
+    scene: [Loading, MainMenu, NovoJogo, Jogo],
 };
 
 // Inicializa o jogo

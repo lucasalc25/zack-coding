@@ -1,54 +1,49 @@
 // Função para buscar o progresso do jogador
-export async function loadPlayerProgress(deviceId) {
+export async function loadProgress(deviceId) {
     try {
-        const response = await fetch(`http://localhost:3000/api/player/${deviceId}`);
-
-        if (response.ok) {
-            const data = await response.json();
-            console.log('Dados completos do jogador carregados:', data);
-            return data; // Retorna o objeto completo
-
-        } else if (response.status === 404) {
-            console.log('Jogador não encontrado.');
-            return null;
-        } else {
-            console.error('Erro ao carregar progresso do jogador:', response.status);
-            return null;
-        }
+        const response = await fetch(`http://localhost:3000/getPlayer/${deviceId}`);
+        const data = await response.json();
+        return data;
     } catch (error) {
-        console.error('Erro ao acessar a API do jogador:', error);
+        console.error('Erro ao buscar dados:', error);
+        return [];
     }
 }
 
 // Função para criar um novo jogador
-export async function createNewPlayer() {
+export async function createPlayer() {
     const deviceId = generateDeviceId(); // Gerar ou recuperar um ID único para o dispositivo
+    console.log("ID gerado:", deviceId)
     localStorage.setItem('deviceId', deviceId); // Salvar no localStorage
+    console.log("ID salvo na localStorage")
 
     try {
-        const response = await fetch('http://localhost:3000/api/player', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ deviceId, nome: 'Novo Jogador' }),
+        const response = await fetch('http://localhost:3000/createPlayer', {
+            method: 'POST', // Definindo que a requisição será POST
+            headers: {
+                'Content-Type': 'application/json', // Tipo de conteúdo que estamos enviando
+            },
+            body: JSON.stringify({
+                nome_jogador: nomeJogador,  // Envia o nome do jogador
+            }),
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log('Novo jogador criado:', data);
-
-            // Configurar os dados do jogador no Phaser
-            gameState.playerName = data.nome;
-            gameState.deviceId = data.device_id;
-        } else {
-            console.error('Erro ao criar novo jogador:', response.status);
+        if (!response.ok) {
+            throw new Error('Erro ao salvar os dados');
         }
+
+        const data = await response.json();
+        console.log('Dados salvos com sucesso:', data);
+        return data; // Retorna os dados inseridos no banco
     } catch (error) {
-        console.error('Erro ao criar jogador:', error);
+        console.error('Erro ao salvar dados:', error);
+        return null; // Retorna null em caso de erro
     }
 }
 
 // Função para gerar um ID único para o dispositivo
 function generateDeviceId() {
     // Exemplo: Gera um UUID básico
-    return `device_${Math.random().toString(36).substr(2, 9)}`;
+    console.log("Gerando ID...")
+    return `${Math.random().toString(36).substr(2, 9)}`;
 }
