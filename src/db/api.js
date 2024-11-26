@@ -3,6 +3,7 @@ export async function loadProgress(deviceId) {
     try {
         const response = await fetch(`http://localhost:3000/getPlayer/${deviceId}`);
         const data = await response.json();
+        console.log('Dados recebidos:', data); // Verifique o conteúdo aqui
         return data;
     } catch (error) {
         console.error('Erro ao buscar dados:', error);

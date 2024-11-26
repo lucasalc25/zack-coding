@@ -1,6 +1,13 @@
+import { loadProgress } from "../db/api.js";
+
 export default class Loading extends Phaser.Scene {
     constructor() {
         super({ key: 'Loading', active: false });
+        this.faseAtual;
+        this.nome_jogador;
+        this.fase_atual;
+        this.pontuacao;
+        this.desempenho;
     }
 
     init(data) {
@@ -71,14 +78,18 @@ export default class Loading extends Phaser.Scene {
         this.load.audio('typing', './assets/sfx/typing.mp3');
         this.load.audio('winnerMusic', './assets/sfx/winner.mp3');
 
-        if (!localStorage.getItem("musicVolume")) {
-            localStorage.setItem("musicVolume", 0.5);
-        }
+        const deviceId = 'b38ff626-1b4e-4a0b-86e1-32cc160a5a81';
 
-        if (!localStorage.getItem("soundVolume")) {
-            localStorage.setItem("soundVolume", 0.3);
-        }
+        const playerData = await loadProgress(deviceId)
 
+        // Armazena os dados em um objeto global do jogo
+        this.game.playerData = {
+            nomeJogador: playerData.nome_jogador,
+            faseAtual: playerData.fase_atual,
+            pontuacao: playerData.pontuacao,
+            desempenho: playerData.desempenho,
+            configuracoes: playerData.configuracoes
+        };
 
         this.load.on('progress', (value) => {
             progressBar.clear();
@@ -89,7 +100,7 @@ export default class Loading extends Phaser.Scene {
     }
 
     create() {
-        // Após o carregamento dos assets, inicia a próxima cena
+        // Inicia a próxima cena
         this.scene.start(this.nextScene, { faseAtual: this.faseAtual }); // Começa a cena passada como parâmetro
 
     }

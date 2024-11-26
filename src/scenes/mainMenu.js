@@ -20,6 +20,8 @@ export default class MainMenu extends Phaser.Scene {
     }
 
     create() {
+        const { nomeJogador, faseAtual, pontuacao, desempenho, configuracoes } = this.game.playerData;
+
         this.showScreen();
 
         this.bgImage = this.add.tileSprite(0, 0, this.game.canvas.width, this.game.canvas.height, 'bgMenu').setOrigin(0).setDepth(1);
