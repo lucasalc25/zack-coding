@@ -1,4 +1,3 @@
-// Função para buscar o progresso do jogador
 export async function loadProgress(deviceId) {
     try {
         const response = await fetch(`http://localhost:3000/getPlayer/${deviceId}`);

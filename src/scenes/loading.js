@@ -1,4 +1,4 @@
-import { loadProgress } from "../db/api.js";
+import { loadProgress } from "../api.js";
 
 export default class Loading extends Phaser.Scene {
     constructor() {
@@ -78,18 +78,19 @@ export default class Loading extends Phaser.Scene {
         this.load.audio('typing', './assets/sfx/typing.mp3');
         this.load.audio('winnerMusic', './assets/sfx/winner.mp3');
 
-        const deviceId = 'b38ff626-1b4e-4a0b-86e1-32cc160a5a81';
+        const deviceId = '238cea35-871a-4652-9330-75d3d72298a6';
 
-        const playerData = await loadProgress(deviceId)
+        loadProgress(deviceId).then(dados => {
+            this.game.playerData = {
+                nomeJogador: dados.nome_jogador,
+                faseAtual: dados.fase_atual,
+                pontuacao: dados.pontuacao,
+                desempenho: dados.desempenho,
+                configuracoes: dados.configuracoes
+            };
+        });
 
-        // Armazena os dados em um objeto global do jogo
-        this.game.playerData = {
-            nomeJogador: playerData.nome_jogador,
-            faseAtual: playerData.fase_atual,
-            pontuacao: playerData.pontuacao,
-            desempenho: playerData.desempenho,
-            configuracoes: playerData.configuracoes
-        };
+        console.log(this.game.playerData)
 
         this.load.on('progress', (value) => {
             progressBar.clear();

@@ -16,14 +16,19 @@ app.use(express.json()); // Para processar dados JSON
 
 // Rota para buscar dispositivo
 app.get('/getPlayer/:deviceId/', async (req, res) => {
-    const { id } = req.params;
+    const { deviceId } = req.params;
 
     try {
         const result = await pool.query(
             `SELECT * FROM jogador WHERE id = $1`,
-            [id]
+            [deviceId]
         );
-        res.status(200).json(result.rows);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Progresso não encontrado para o jogador.' });
+        }
+
+        res.json(result.rows[0]);
 
     } catch (error) {
         console.error('Erro ao carregar progresso:', error);
@@ -34,21 +39,23 @@ app.get('/getPlayer/:deviceId/', async (req, res) => {
 // Rota para criar um jogador
 app.post('/createPlayer', async (req, res) => {
     const { nome_jogador } = req.body;
+
     try {
         const query = `
-            INSERT INTO jogador (nome_jogador, fase_atual, pontuacao, desempenho) 
-            VALUES ($1, 1, 0, {"tempo": 0, "acertos": 0, "erros": 0}, now(),now(),now())
+            INSERT INTO jogador (id, nome_jogador, fase_atual, pontuacao, desempenho, configuracoes, criado_em, atualizado_em)
+            VALUES (gen_random_uuid(), $1, 1, 0, $2, $3, now(), now())
             RETURNING *;
         `;
-        const values = [nome_jogador];
+        const desempenho = JSON.stringify({ tempo: 0, acertos: 0, erros: 0 });
+        const configuracoes = JSON.stringify({ som: true, dificuldade: 'normal' });
+        const values = [nome_jogador, desempenho, configuracoes];
 
         const result = await pool.query(query, values);
 
-        // Retornar o jogador recém-criado
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error(err);
-        res.status(500).send('Erro ao salvar pontuação');
+        res.status(500).send('Erro ao criar jogador.');
     }
 });
 
