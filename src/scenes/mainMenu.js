@@ -21,6 +21,7 @@ export default class MainMenu extends Phaser.Scene {
 
     create() {
         const { nomeJogador, faseAtual, pontuacao, desempenho, configuracoes } = this.game.playerData;
+        console.log(configuracoes.volume_musica)
 
         this.showScreen();
 
@@ -32,17 +33,15 @@ export default class MainMenu extends Phaser.Scene {
         // Inicializa o soundManager
         this.registry.soundManager = new Phaser.Sound.HTML5AudioSoundManager(this.game);
         this.registry.set('musicOn', true);
-        this.musicVolume = localStorage.getItem("musicVolume");
-        this.soundVolume = localStorage.getItem("soundVolume");
         this.menuMusic = this.sound.add('menuMusic', { loop: true });
         this.menuMusic.play();
-        this.menuMusic.setVolume(this.musicVolume);
+        this.menuMusic.setVolume(configuracoes.volume_musica);
         this.hover = this.sound.add('hover');
         this.select = this.sound.add('select');
         this.select2 = this.sound.add('select2');
-        this.select.setVolume(this.soundVolume * 0.4);
-        this.select2.setVolume(this.soundVolume * 0.7);
-        this.hover.setVolume(this.soundVolume * 0.6);
+        this.select.setVolume(configuracoes.volume_som * 0.4);
+        this.select2.setVolume(configuracoes.volume_som * 0.7);
+        this.hover.setVolume(configuracoes.volume_som * 0.6);
 
         //Cria a janela de configuraçao e a deixa invisivel
         this.createConfigWindow();
@@ -53,7 +52,6 @@ export default class MainMenu extends Phaser.Scene {
         this.overlay.fillRect(0, 0, this.game.canvas.width, this.game.canvas.height);
         this.overlay.setDepth(3);
         this.overlay.setVisible(false); // Inicialmente, o overlay estará invisível
-
 
         this.menuFont = (1.73 * this.game.canvas.width) / 100 + 28;
 

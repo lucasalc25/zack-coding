@@ -78,7 +78,7 @@ export default class Loading extends Phaser.Scene {
         this.load.audio('typing', './assets/sfx/typing.mp3');
         this.load.audio('winnerMusic', './assets/sfx/winner.mp3');
 
-        const deviceId = '238cea35-871a-4652-9330-75d3d72298a6';
+        const deviceId = '6c728983-2cd1-4db6-b3b8-53c705b0003c';
 
         loadProgress(deviceId).then(dados => {
             this.game.playerData = {
