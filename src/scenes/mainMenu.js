@@ -21,7 +21,7 @@ export default class MainMenu extends Phaser.Scene {
 
     create() {
         const { nomeJogador, faseAtual, pontuacao, desempenho, configuracoes } = this.game.playerData;
-        console.log(configuracoes.volume_musica)
+        console.log(configuracoes.volume_som)
 
         this.showScreen();
 
@@ -103,14 +103,9 @@ export default class MainMenu extends Phaser.Scene {
     }
 
     update() {
-        // Efeito parallax
         this.bgImage.tilePositionY += 0.5;
-
-        // Atualiza os volumes a cada frame de acordo com a posição dos sliders 
-        this.menuMusic.setVolume(this.musicSlider.slider.value);
-        this.select.setVolume(this.soundSlider.slider.value * 0.25);
-        this.select2.setVolume(this.soundSlider.slider.value * 0.6);
-        this.hover.setVolume(this.soundSlider.slider.value * 0.6);
+        this.updateVolume();
+        this.updateSliderGraphics();
 
         const sliderWidth = 250; // Largura total da faixa do slider
         let musicFillWidth = sliderWidth * this.musicSlider.slider.value; // Largura do preenchimento slider de musica
@@ -175,6 +170,17 @@ export default class MainMenu extends Phaser.Scene {
         bg.width = width;
         bg.height = height;
     }
+
+    updateVolume() {
+        const { value: musicValue } = this.musicSlider.slider;
+        const { value: soundValue } = this.soundSlider.slider;
+
+        this.menuMusic.setVolume(musicValue);
+        this.select.setVolume(soundValue * 0.25);
+        this.select2.setVolume(soundValue * 0.6);
+        this.hover.setVolume(soundValue * 0.6);
+    }
+
 
     showScreen() {
         // Adicionando um retângulo preto que cobre a tela inteira
