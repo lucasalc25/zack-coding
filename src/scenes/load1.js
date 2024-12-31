@@ -1,3 +1,4 @@
+<<<<<<< HEAD:src/scenes/loading.js
 import { loadProgress } from "../api.js";
 
 export default class Loading extends Phaser.Scene {
@@ -8,45 +9,22 @@ export default class Loading extends Phaser.Scene {
         this.fase_atual;
         this.pontuacao;
         this.desempenho;
+=======
+import { loadPlayerProgress, createNewPlayer } from "../db/api.js";
+
+export default class Load1 extends Phaser.Scene {
+    constructor() {
+        super({ key: 'Load1', active: false });
+>>>>>>> parent of 7a934807 (v2.7):src/scenes/load1.js
     }
 
-    init(data) {
-        this.nextScene = data.nextScene || 'MainMenu';  // Se não for fornecido, usa 'mainScene' como padrão
-        this.faseAtual = data.faseAtual || 0;
+    init() {
         this.width = this.game.canvas.width;
         this.height = this.game.canvas.height;
         this.loaded = false;
     }
 
     async preload() {
-        // Barra de progresso
-        const progressBar = this.add.graphics();
-        const progressBox = this.add.graphics();
-        progressBox.fillStyle(0x01B2DE, 0.3);
-        progressBox.fillRect(this.width / 6, this.height / 2, this.width / 1.5, 30);
-
-
-        const loadingText = this.make.text({
-            x: this.width / 2 + 15,
-            y: this.height / 2 - 20,
-            text: 'Carregando...',
-            style: {
-                font: '24px monospace',
-                fill: '#01B2DE'
-            }
-        }).setOrigin(0.5, 0.5);
-
-        const percentText = this.make.text({
-            x: this.width / 2,
-            y: this.height / 2 + 15,
-            text: '0%',
-            style: {
-                font: '18px monospace',
-                fill: '#FFFFFF',
-
-            }
-        }).setOrigin(0.5, 0.5);
-
         this.load.plugin('rexroundrectangleplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexroundrectangleplugin.min.js', true);
         this.load.plugin('rexsliderplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsliderplugin.min.js', true);
         this.load.audio('menuMusic', './assets/sfx/war.mp3');
@@ -61,23 +39,8 @@ export default class Loading extends Phaser.Scene {
         this.load.audio('hover', './assets/sfx/interface.mp3');
         this.load.audio('select', './assets/sfx/decide.mp3');
         this.load.audio('select2', './assets/sfx/select2.mp3');
-        this.load.image('quarto', './assets/img/quarto.png');
-        this.load.audio('musicGameplay', './assets/sfx/play.mp3');
-        this.load.audio('typing', './assets/sfx/typing.mp3');
-        this.load.image('zack1', './assets/img/zack1.png');
-        this.load.image('zack2', './assets/img/zack2.png');
-        this.load.image('touch', './assets/img/touch.png');
-        this.load.image('quarto', './assets/img/quarto.png');
-        this.load.audio('musicGameplay', './assets/sfx/play.mp3');
-        this.load.audio('correct', './assets/sfx/correct.mp3');
-        this.load.audio('wrong', './assets/sfx/wrong.mp3');
-        this.load.image('backIcon', './assets/img/back-icon.png');
-        this.load.audio('hover', './assets/sfx/interface.mp3');
-        this.load.audio('select', './assets/sfx/decide.mp3');
-        this.load.audio('gameOver', './assets/sfx/game-over.mp3');
-        this.load.audio('typing', './assets/sfx/typing.mp3');
-        this.load.audio('winnerMusic', './assets/sfx/winner.mp3');
 
+<<<<<<< HEAD:src/scenes/loading.js
         const deviceId = '238cea35-871a-4652-9330-75d3d72298a6';
 
         loadProgress(deviceId).then(dados => {
@@ -91,18 +54,87 @@ export default class Loading extends Phaser.Scene {
         });
 
         console.log(this.game.playerData)
+=======
+        const deviceId = localStorage.getItem('deviceId');
+
+        if (deviceId) {
+            const jogadorExiste = await loadPlayerProgress(deviceId);
+
+            if (!jogadorExiste) {
+                await createNewPlayer();
+            }
+        } else {
+            // Criar um novo jogador caso não tenha um deviceId salvo
+            await createNewPlayer();
+        }
+
+        this.createLoadingBar();
+
+    }
+
+    update() {
+        if (this.loaded) {
+            this.scene.stop('Load1');
+            this.scene.start('Home');
+        }
+    }
+
+    createLoadingBar() {
+        // Barra de progresso
+        const progressBar = this.add.graphics();
+        const progressBox = this.add.graphics();
+        progressBox.fillStyle(0x01B2DE, 0.8);
+        progressBox.fillRect(this.width / 6, this.height / 2, this.width / 1.5, 30);
+
+
+        const loadingText = this.make.text({
+            x: this.width / 2,
+            y: this.height / 2 - 20,
+            text: 'Carregando...',
+            style: {
+                fontFamily: 'Anton',
+                fontSize: '24px',
+                fontFamily: 'Cooper Black',
+                fontSize: '20px',
+                fill: '#01B2DE'
+            }
+        });
+        loadingText.setOrigin(0.5, 0.5);
+
+        const percentText = this.make.text({
+            x: this.width / 2,
+            y: this.height / 2 + 15,
+            text: '0%',
+            style: {
+                fontFamily: 'Anton',
+                fontFamily: 'Cooper Black',
+                fontSize: '18px',
+                fill: '#FFFFFF',
+
+            }
+        });
+        percentText.setOrigin(0.5, 0.5);
+>>>>>>> parent of 7a934807 (v2.7):src/scenes/load1.js
 
         this.load.on('progress', (value) => {
             progressBar.clear();
-            progressBar.fillStyle(0x01B2DE, 1);
+            progressBar.fillStyle(0xffffff, 1);
             progressBar.fillRect(this.width / 6, this.height / 2, (this.width / 1.5) * value, 30);
+
             percentText.setText(parseInt(value * 100) + '%');
+        });
+
+        this.load.on('complete', () => {
+            this.loaded = true;
         });
     }
 
+<<<<<<< HEAD:src/scenes/loading.js
     create() {
         // Inicia a próxima cena
         this.scene.start(this.nextScene, { faseAtual: this.faseAtual }); // Começa a cena passada como parâmetro
 
     }
+=======
+>>>>>>> parent of 7a934807 (v2.7):src/scenes/load1.js
 }
