@@ -40,8 +40,12 @@ export default class Load1 extends Phaser.Scene {
         this.load.audio('select', './assets/sfx/decide.mp3');
         this.load.audio('select2', './assets/sfx/select2.mp3');
 
+<<<<<<< HEAD:src/scenes/load1.js
 <<<<<<< HEAD:src/scenes/loading.js
         const deviceId = '238cea35-871a-4652-9330-75d3d72298a6';
+=======
+        const deviceId = '6c728983-2cd1-4db6-b3b8-53c705b0003c';
+>>>>>>> parent of c98a436a (v3.1):src/scenes/loading.js
 
         loadProgress(deviceId).then(dados => {
             this.game.playerData = {
