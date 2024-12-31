@@ -98,8 +98,11 @@ export default class Load1 extends Phaser.Scene {
             style: {
                 fontFamily: 'Anton',
                 fontSize: '24px',
+<<<<<<< HEAD
                 fontFamily: 'Cooper Black',
                 fontSize: '20px',
+=======
+>>>>>>> parent of 5d0a7e8a (V2.5.2)
                 fill: '#01B2DE'
             }
         });
@@ -111,7 +114,10 @@ export default class Load1 extends Phaser.Scene {
             text: '0%',
             style: {
                 fontFamily: 'Anton',
+<<<<<<< HEAD
                 fontFamily: 'Cooper Black',
+=======
+>>>>>>> parent of 5d0a7e8a (V2.5.2)
                 fontSize: '18px',
                 fill: '#FFFFFF',
 

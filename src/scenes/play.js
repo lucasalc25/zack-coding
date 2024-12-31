@@ -39,7 +39,7 @@ class Play extends Phaser.Scene {
         // Verifica o estado da música
         if (this.registry.get('musicOn')) {
             this.playMusic = this.sound.add('playMusic', { loop: true });
-            this.playMusic.setVolume(localStorage.getItem("musicVolume") * 0.7);
+            this.playMusic.setVolume(localStorage.getItem("musicVolume") * 0.4);
             this.playMusic.play();
         }
 
